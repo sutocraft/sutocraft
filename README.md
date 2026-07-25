@@ -1,16 +1,61 @@
-## Hi there 👋
+# SUTOCRAFT
 
-<!--
-**sutocraft/sutocraft** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Development-gold?style=for-the-badge" />
+</p>
 
-Here are some ideas to get you started:
+## Official Sutocraft E-commerce Platform
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+Sutocraft is a premium clothing brand focused on quality, simplicity, and timeless fashion.
+
+This repository contains the complete source code for the official Sutocraft e-commerce platform.
+
+---
+
+## Technology Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Supabase
+- Vercel
+
+---
+
+## Project Status
+
+🚧 Under Development
+
+---
+
+## Features
+
+- Customer Website
+- Admin Dashboard
+- Product Management
+- Order Management
+- Inventory Management
+- Responsive Design
+- SEO Optimized
+- Fast Performance
+
+---
+
+## Deployment
+
+Production
+
+Coming Soon
+
+---
+
+## Repository
+
+Private
+
+---
+
+## License
+
+Private © Sutocraft
