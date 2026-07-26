@@ -46,6 +46,66 @@ const [search, setSearch] = useState("");
     setProducts((data as Product[]) || []);
   }
 
+async function duplicateProduct(productId: string) {
+
+  const { data: product, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", productId)
+    .single();
+
+  if (error || !product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const { data: newProduct, error: insertError } =
+    await supabase
+      .from("products")
+      .insert({
+
+        category_id: product.category_id,
+
+        name: `${product.name} (Copy)`,
+
+        slug: `${product.slug}-${Date.now()}`,
+
+        sku: `${product.sku}-COPY`,
+
+        short_description: product.short_description,
+
+        description: product.description,
+
+        price: product.price,
+
+        sale_price: product.sale_price,
+
+        stock: 0,
+
+        featured: false,
+
+        active: false,
+
+        image_url: product.image_url,
+
+      })
+      .select()
+      .single();
+
+  if (insertError) {
+
+    alert(insertError.message);
+
+    return;
+
+  }
+
+  loadProducts();
+
+  alert("Product Duplicated Successfully");
+
+}
+
   async function deleteProduct(id: string) {
     const ok = confirm("Are you sure you want to delete this product?");
 
@@ -275,18 +335,29 @@ const [search, setSearch] = useState("");
 
       <td className="border p-2">
 
-        <Link href={`/admin/products/edit/${product.id}`}>
-          <button className="bg-blue-600 px-3 py-1 rounded">
-            Edit
-          </button>
-        </Link>
+        <div className="flex gap-2">
 
-        <button
-          onClick={() => deleteProduct(product.id)}
-          className="bg-red-600 px-3 py-1 rounded ml-2"
-        >
-          Delete
-        </button>
+  <Link href={`/admin/products/edit/${product.id}`}>
+    <button className="bg-blue-600 px-3 py-1 rounded">
+      Edit
+    </button>
+  </Link>
+
+  <button
+    onClick={() => duplicateProduct(product.id)}
+    className="bg-green-600 px-3 py-1 rounded"
+  >
+    Duplicate
+  </button>
+
+  <button
+    onClick={() => deleteProduct(product.id)}
+    className="bg-red-600 px-3 py-1 rounded"
+  >
+    Delete
+  </button>
+
+</div>
 
       </td>
 
