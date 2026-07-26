@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function AdminLayout({
   children,
 }: {
@@ -15,12 +17,43 @@ export default function AdminLayout({
       >
         <h2>Sutocraft Admin</h2>
 
-        <hr />
+        <hr style={{ margin: "15px 0" }} />
 
-        <p>Dashboard</p>
-        <p>Categories</p>
-        <p>Products</p>
-        <p>Orders</p>
+        <nav
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+          }}
+        >
+          <Link
+            href="/admin"
+            style={{ color: "#fff", textDecoration: "none" }}
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            href="/admin/categories"
+            style={{ color: "#fff", textDecoration: "none" }}
+          >
+            Categories
+          </Link>
+
+          <Link
+            href="/admin/products"
+            style={{ color: "#fff", textDecoration: "none" }}
+          >
+            Products
+          </Link>
+
+          <Link
+            href="/admin/orders"
+            style={{ color: "#fff", textDecoration: "none" }}
+          >
+            Orders
+          </Link>
+        </nav>
       </aside>
 
       <main
