@@ -9,6 +9,12 @@ type Category = {
   name: string;
 };
 
+type GalleryImage = {
+  id: string;
+  image_url: string;
+  sort_order: number;
+};
+
 export default function EditProductPage() {
   const params = useParams();
   const router = useRouter();
@@ -18,16 +24,35 @@ export default function EditProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const [categoryId, setCategoryId] = useState("");
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [sku, setSku] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [salePrice, setSalePrice] = useState("");
-  const [stock, setStock] = useState("0");
-  const [featured, setFeatured] = useState(false);
-  const [active, setActive] = useState(true);
+
+const [name, setName] = useState("");
+const [slug, setSlug] = useState("");
+
+const [sku, setSku] = useState("");
+
+const [shortDescription, setShortDescription] = useState("");
+
+const [description, setDescription] = useState("");
+
+const [price, setPrice] = useState("");
+
+const [salePrice, setSalePrice] = useState("");
+
+const [stock, setStock] = useState("");
+
+const [featured, setFeatured] = useState(false);
+
+const [active, setActive] = useState(true);
+
+const [imagePreview, setImagePreview] = useState("");
+
+const [imageFile, setImageFile] = useState<File | null>(null);
+
+const [gallery, setGallery] = useState<GalleryImage[]>([]);
+
+const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+
+const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
   const [slugEdited, setSlugEdited] = useState(true);
 
@@ -35,7 +60,8 @@ export default function EditProductPage() {
     if (!id) return;
 
     loadCategories();
-    loadProduct();
+loadProduct();
+loadGallery();
   }, [id]);
 
   useEffect(() => {
@@ -77,20 +103,48 @@ export default function EditProductPage() {
       return;
     }
 
-    setCategoryId(data.category_id || "");
-    setName(data.name || "");
-    setSlug(data.slug || "");
-    setSku(data.sku || "");
-    setShortDescription(data.short_description || "");
-    setDescription(data.description || "");
-    setPrice(String(data.price || ""));
-    setSalePrice(String(data.sale_price || ""));
-    setStock(String(data.stock || 0));
-    setFeatured(data.featured ?? false);
-    setActive(data.active ?? true);
+    setCategoryId(data.category_id);
+
+setName(data.name);
+
+setSlug(data.slug);
+
+setSku(data.sku || "");
+
+setShortDescription(data.short_description || "");
+
+setDescription(data.description || "");
+
+setPrice(String(data.price));
+
+setSalePrice(String(data.sale_price ?? ""));
+
+setStock(String(data.stock));
+
+setFeatured(data.featured);
+
+setActive(data.active);
+
+setImagePreview(data.image_url || "");
 
     setSlugEdited(true);
   }
+
+  async function loadGallery() {
+
+  const { data } = await supabase
+    .from("product_images")
+    .select("*")
+    .eq("product_id", id)
+    .order("sort_order");
+
+  if (data) {
+
+    setGallery(data);
+
+  }
+
+}
 
   async function updateProduct() {
     if (!categoryId || !name || !slug) {
