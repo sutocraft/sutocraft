@@ -402,18 +402,60 @@ setGalleryPreviews([]);
 
 {galleryPreviews.length > 0 && (
 
-  <div className="grid grid-cols-3 gap-3 mt-4">
+  <div className="mt-4">
 
-    {galleryPreviews.map((preview, index) => (
+    <p className="mb-3 font-medium">
 
-      <img
-        key={index}
-        src={preview}
-        alt=""
-        className="w-28 h-28 rounded object-cover border"
-      />
+      Gallery Preview ({galleryPreviews.length})
 
-    ))}
+    </p>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+      {galleryPreviews.map((preview, index) => (
+
+        <div
+          key={index}
+          className="relative border rounded-lg overflow-hidden"
+        >
+
+          <img
+            src={preview}
+            alt=""
+            className="w-full h-32 object-cover"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+
+              const newFiles =
+                [...galleryFiles];
+
+              const newPreview =
+                [...galleryPreviews];
+
+              newFiles.splice(index, 1);
+
+              newPreview.splice(index, 1);
+
+              setGalleryFiles(newFiles);
+
+              setGalleryPreviews(newPreview);
+
+            }}
+            className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full"
+          >
+
+            ✕
+
+          </button>
+
+        </div>
+
+      ))}
+
+    </div>
 
   </div>
 
@@ -448,13 +490,13 @@ setGalleryPreviews([]);
         </label>
 
         <button
-          disabled={uploading}
-          onClick={addProduct}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
+  disabled={uploading}
+  onClick={addProduct}
+  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-5 py-2 rounded-lg"
+>
           {uploading
-            ? "Uploading..."
-            : "Save Product"}
+  ? `Uploading ${galleryFiles.length} Gallery Image(s)...`
+  : "Save Product"}
         </button>
 
       </div>
