@@ -3,15 +3,61 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
+<style jsx global>{`
+  select option {
+    background: #111827;
+    color: white;
+  }
+
+  select {
+    color-scheme: dark;
+  }
+`}</style>
+
 type Category = {
+  id: string;
+  name: string;
+};
+
+type SubCategory = {
+  id: string;
+  name: string;
+};
+
+type Brand = {
+  id: string;
+  name: string;
+};
+
+type Color = {
+  id: string;
+  name: string;
+};
+
+type Size = {
+  id: string;
+  name: string;
+};
+
+type StockStatus = {
   id: string;
   name: string;
 };
 
 export default function NewProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+const [brands, setBrands] = useState<Brand[]>([]);
+const [colors, setColors] = useState<Color[]>([]);
+const [sizes, setSizes] = useState<Size[]>([]);
+const [stockStatuses, setStockStatuses] = useState<StockStatus[]>([]);
 
   const [categoryId, setCategoryId] = useState("");
+  const [subCategoryId, setSubCategoryId] = useState("");
+const [brandId, setBrandId] = useState("");
+const [colorId, setColorId] = useState("");
+const [sizeId, setSizeId] = useState("");
+const [stockStatusId, setStockStatusId] = useState("");
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [sku, setSku] = useState("");
@@ -38,8 +84,13 @@ const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    loadCategories();
-  }, []);
+  loadCategories();
+  loadSubCategories();
+  loadBrands();
+  loadColors();
+  loadSizes();
+  loadStockStatuses();
+}, []);
 
   useEffect(() => {
     if (slugEdited) return;
@@ -72,6 +123,53 @@ const [uploading, setUploading] = useState(false);
 
     setCategories(data || []);
   }
+
+async function loadSubCategories() {
+  const { data } = await supabase
+    .from("sub_categories")
+    .select("id,name")
+    .order("name");
+
+  setSubCategories(data || []);
+}
+
+async function loadBrands() {
+  const { data } = await supabase
+    .from("brands")
+    .select("id,name")
+    .order("name");
+
+  setBrands(data || []);
+}
+
+async function loadColors() {
+  const { data } = await supabase
+    .from("colors")
+    .select("id,name")
+    .order("name");
+
+  setColors(data || []);
+}
+
+async function loadSizes() {
+  const { data } = await supabase
+    .from("sizes")
+    .select("id,name")
+    .order("name");
+
+  setSizes(data || []);
+}
+
+async function loadStockStatuses() {
+  const { data } = await supabase
+    .from("stock_statuses")
+    .select("id,name")
+    .order("name");
+
+  setStockStatuses(data || []);
+}
+
+
 
   // ==========================
   // UPLOAD IMAGE
@@ -243,7 +341,7 @@ setGalleryPreviews([]);
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
         >
           <option value="">
             Select Category
@@ -259,15 +357,110 @@ setGalleryPreviews([]);
           ))}
         </select>
 
+        <select
+  value={subCategoryId}
+  onChange={(e) => setSubCategoryId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Sub Category
+  </option>
+
+  {subCategories.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
+
+<select
+  value={brandId}
+  onChange={(e) => setBrandId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Brand
+  </option>
+
+  {brands.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
+
+<select
+  value={colorId}
+  onChange={(e) => setColorId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Color
+  </option>
+
+  {colors.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
+
+<select
+  value={sizeId}
+  onChange={(e) => setSizeId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Size
+  </option>
+
+  {sizes.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
+
+<select
+  value={stockStatusId}
+  onChange={(e) => setStockStatusId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Stock Status
+  </option>
+
+  {stockStatuses.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
+
         <input
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Product Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
         <input
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Slug"
           value={slug}
           onChange={(e) => {
@@ -277,7 +470,7 @@ setGalleryPreviews([]);
         />
 
         <input
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="SKU"
           value={sku}
           onChange={(e) => setSku(e.target.value)}
@@ -285,7 +478,7 @@ setGalleryPreviews([]);
 
         <textarea
           rows={2}
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Short Description"
           value={shortDescription}
           onChange={(e) =>
@@ -295,7 +488,7 @@ setGalleryPreviews([]);
 
         <textarea
           rows={5}
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Description"
           value={description}
           onChange={(e) =>
@@ -305,7 +498,7 @@ setGalleryPreviews([]);
 
         <input
           type="number"
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Regular Price"
           value={price}
           onChange={(e) =>
@@ -315,7 +508,7 @@ setGalleryPreviews([]);
 
         <input
           type="number"
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Sale Price"
           value={salePrice}
           onChange={(e) =>
@@ -325,7 +518,7 @@ setGalleryPreviews([]);
 
         <input
           type="number"
-          className="border p-2 w-full rounded"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
           placeholder="Stock"
           value={stock}
           onChange={(e) =>
@@ -342,7 +535,7 @@ setGalleryPreviews([]);
   <input
     type="file"
     accept="image/*"
-    className="border p-2 w-full rounded mt-2"
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded mt-2"
     onChange={(e) => {
 
       const file = e.target.files?.[0];
@@ -370,7 +563,7 @@ setGalleryPreviews([]);
     type="file"
     multiple
     accept="image/*"
-    className="border p-2 w-full rounded mt-2"
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded mt-2"
     onChange={(e) => {
 
       const files = Array.from(
