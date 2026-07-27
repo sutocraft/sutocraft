@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import GeneralSection from "./components/GeneralSection";
 import GallerySection from "./components/GallerySection";
-import VariantManager from "./components/VariantManager";
+
 
 type Category = {
   id: string;
@@ -386,12 +386,12 @@ router.push("/admin/products");
   galleryPreviews={galleryPreviews}
   setGalleryPreviews={setGalleryPreviews}
 />
-<VariantManager
-  productId={id}
-/>
+
+</div>
 
 
-      </div>
     </div>
+
   );
+
 }
