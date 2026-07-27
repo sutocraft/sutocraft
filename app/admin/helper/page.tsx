@@ -4,6 +4,7 @@ import Brands from "./components/Brands";
 import Colors from "./components/Colors";
 import Sizes from "./components/Sizes";
 import StockStatuses from "./components/StockStatuses";
+import SubCategories from "./components/SubCategories";
 
 export default function HelperPage() {
   return (
@@ -13,7 +14,7 @@ export default function HelperPage() {
       </h1>
 
       <p className="mb-8 text-gray-500">
-        Manage Categories, Brands, Colors, Sizes and Stock Status.
+        Manage Categories, SubCategories, Brands, Colors, Sizes and Stock Status.
       </p>
 
       <HelperCard
@@ -21,6 +22,13 @@ export default function HelperPage() {
   description="Create and manage product categories."
 >
   <Categories />
+</HelperCard>
+
+<HelperCard
+  title="SubCategories"
+  description="Create and manage product subcategories."
+>
+  <SubCategories />
 </HelperCard>
 
       <HelperCard
