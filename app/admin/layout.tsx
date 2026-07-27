@@ -34,11 +34,11 @@ export default function AdminLayout({
           </Link>
 
           <Link
-            href="/admin/categories"
-            style={{ color: "#fff", textDecoration: "none" }}
-          >
-            Categories
-          </Link>
+  href="/admin/helper"
+  style={{ color: "#fff", textDecoration: "none" }}
+>
+  Helper
+</Link>
 
           <Link
             href="/admin/products"
