@@ -81,11 +81,6 @@ const [imagePreview, setImagePreview] = useState("");
 const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
-useEffect(() => {
-  return () => {
-    // cleanup only
-  };
-}, []);
 
 const [uploading, setUploading] = useState(false);
 const [uploadStatus, setUploadStatus] = useState("");
