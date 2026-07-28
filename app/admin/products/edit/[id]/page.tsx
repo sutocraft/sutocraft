@@ -726,7 +726,38 @@ setUploading(false);
 
 )}
 
-{galleryPreviews.length > 0 && (
+{gallery.length > 0 && (
+
+  <div className="mt-4">
+
+    <p className="mb-3 font-medium">
+      Existing Gallery ({gallery.length})
+    </p>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+      {gallery.map((img) => (
+
+        <div
+          key={img.id}
+          className="border rounded overflow-hidden"
+        >
+
+          <img
+            src={img.image_url}
+            alt=""
+            className="w-full h-32 object-cover"
+          />
+
+        </div>
+
+      ))}
+
+    </div>
+
+  </div>
+
+)}
 
   <div className="mt-4">
 
