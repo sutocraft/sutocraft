@@ -45,6 +45,13 @@ type StockStatus = {
   name: string;
 };
 
+type GalleryImage = {
+  id: string;
+  product_id: string;
+  image_url: string;
+  sort_order: number;
+};
+
 export default function EditProductPage() {
 
   const params = useParams();
@@ -83,6 +90,8 @@ const [stockStatusId, setStockStatusId] = useState("");
 
   const [imageFile, setImageFile] = useState<File | null>(null);
 const [imagePreview, setImagePreview] = useState("");
+
+const [gallery, setGallery] = useState<GalleryImage[]>([]);
 
 const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
