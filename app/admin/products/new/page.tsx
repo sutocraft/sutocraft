@@ -81,6 +81,16 @@ const [imagePreview, setImagePreview] = useState("");
 const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
+useEffect(() => {
+  return () => {
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
+    galleryPreviews.forEach((url) => URL.revokeObjectURL(url));
+  };
+}, [imagePreview, galleryPreviews]);
+
 const [uploading, setUploading] = useState(false);
 const [uploadStatus, setUploadStatus] = useState("");
 
@@ -391,7 +401,13 @@ alert("Product Added Successfully");
     setActive(true);
     setSlugEdited(false);
 
-    setImageFile(null);
+    if (imagePreview) {
+  URL.revokeObjectURL(imagePreview);
+}
+
+galleryPreviews.forEach((url) => URL.revokeObjectURL(url));
+
+setImageFile(null);
 setImagePreview("");
 
 setGalleryFiles([]);
@@ -708,11 +724,13 @@ setUploading(false);
 
               newFiles.splice(index, 1);
 
-              newPreview.splice(index, 1);
+              URL.revokeObjectURL(newPreview[index]);
 
-              setGalleryFiles(newFiles);
+newPreview.splice(index, 1);
 
-              setGalleryPreviews(newPreview);
+setGalleryFiles(newFiles);
+
+setGalleryPreviews(newPreview);
 
             }}
             className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full"
