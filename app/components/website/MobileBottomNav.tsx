@@ -1,123 +1,94 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import Container from "./Container";
+import { usePathname } from "next/navigation";
+import {
+  FiHome,
+  FiGrid,
+  FiSearch,
+  FiShoppingCart,
+  FiUser,
+} from "react-icons/fi";
 
-export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+export default function MobileBottomNav() {
+  const pathname = usePathname();
+
+  const menus = [
+    {
+      title: "Home",
+      href: "/",
+      icon: FiHome,
+    },
+    {
+      title: "Products",
+      href: "/products",
+      icon: FiGrid,
+    },
+    {
+      title: "Search",
+      href: "/search",
+      icon: FiSearch,
+    },
+    {
+      title: "Cart",
+      href: "/cart",
+      icon: FiShoppingCart,
+    },
+    {
+      title: "Account",
+      href: "/login",
+      icon: FiUser,
+    },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#E8E1CE] bg-white">
-      <Container>
-        {/* Top Bar */}
-        <div className="flex h-16 items-center justify-between lg:h-[72px]">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-3xl font-bold tracking-tight text-[#98691D] lg:text-5xl"
-          >
-            SutoCraft
-          </Link>
+    <div className="fixed bottom-0 left-0 right-0 z-[999] lg:hidden">
+      <div className="mx-3 mb-3 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
 
-          {/* Desktop Menu */}
-          <nav className="hidden items-center gap-10 lg:flex">
-            <Link
-              href="/"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-            >
-              Home
-            </Link>
+        <div className="grid grid-cols-5">
 
-            <Link
-              href="/products"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-            >
-              Products
-            </Link>
+          {menus.map((menu) => {
+            const Icon = menu.icon;
 
-            <Link
-              href="/about"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-            >
-              About
-            </Link>
+            const active =
+              pathname === menu.href ||
+              (menu.href !== "/" && pathname.startsWith(menu.href));
 
-            <Link
-              href="/contact"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-            >
-              Contact
-            </Link>
-          </nav>
+            return (
+              <Link
+                key={menu.title}
+                href={menu.href}
+                className="relative flex flex-col items-center justify-center gap-1 py-3"
+              >
+                {active && (
+                  <span className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full bg-[#98691D]" />
+                )}
 
-          {/* Desktop Right */}
-          <div className="hidden items-center gap-3 lg:flex">
-            <button className="rounded-xl border border-[#98691D] px-6 py-3 font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white">
-              Login
-            </button>
+                <Icon
+                  size={22}
+                  className={
+                    active
+                      ? "text-[#98691D]"
+                      : "text-gray-500"
+                  }
+                />
 
-            <button className="rounded-xl bg-[#98691D] px-6 py-3 font-semibold text-white transition hover:bg-[#B48630]">
-              Cart (0)
-            </button>
-          </div>
+                <span
+                  className={`text-[11px] font-medium ${
+                    active
+                      ? "text-[#98691D]"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {menu.title}
+                </span>
+              </Link>
+            );
+          })}
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#98691D] text-2xl font-bold text-[#98691D] lg:hidden"
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
         </div>
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="border-t border-[#E8E1CE] bg-white py-6 lg:hidden">
-            <nav className="flex flex-col gap-6">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-              >
-                Home
-              </Link>
-
-              <Link
-                href="/products"
-                onClick={() => setMenuOpen(false)}
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-              >
-                Products
-              </Link>
-
-              <Link
-                href="/about"
-                onClick={() => setMenuOpen(false)}
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-              >
-                About
-              </Link>
-
-              <Link
-                href="/contact"
-                onClick={() => setMenuOpen(false)}
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
-              >
-                Contact
-              </Link>
-
-              <button className="mt-2 rounded-xl border border-[#98691D] py-3 text-lg font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white">
-                Login
-              </button>
-
-              <button className="rounded-xl bg-[#98691D] py-3 text-lg font-semibold text-white transition hover:bg-[#B48630]">
-                Cart (0)
-              </button>
-            </nav>
-          </div>
-        )}
-      </Container>
-    </header>
+      </div>
+    </div>
   );
 }
