@@ -40,6 +40,7 @@ sizes: {
 stock_statuses: {
   name: string;
 } | null;
+};
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
