@@ -3,6 +3,8 @@ import Hero from "./components/website/Hero";
 import Categories from "./components/website/Categories";
 import NewArrivals from "./components/website/NewArrivals";
 import FeaturedProducts from "./components/website/FeaturedProducts";
+import WhyChooseUs from "./components/website/WhyChooseUs";
+import Newsletter from "./components/website/Newsletter";
 
 export default function HomePage() {
   return (
@@ -12,6 +14,8 @@ export default function HomePage() {
       <Categories />
       <NewArrivals />
       <FeaturedProducts />
+      <WhyChooseUs />
+      <Newsletter />
     </>
   );
 }
