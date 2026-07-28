@@ -4,14 +4,16 @@ export default function Footer() {
   return (
     <footer className="bg-[#1F1F1F] text-white">
       <Container>
-        <div className="grid gap-12 py-20 md:grid-cols-2 lg:grid-cols-4">
+        {/* Top */}
+        <div className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:py-20">
+
           {/* Company */}
           <div>
             <h2 className="text-3xl font-bold text-[#D9A441]">
               SutoCraft
             </h2>
 
-            <p className="mt-6 leading-8 text-gray-400">
+            <p className="mt-5 text-sm leading-7 text-gray-400 lg:text-base">
               Premium quality T-Shirts crafted for everyday comfort.
               Designed with style, quality and durability for every occasion.
             </p>
@@ -19,11 +21,11 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-6 text-xl font-semibold">
+            <h3 className="mb-5 text-xl font-semibold">
               Quick Links
             </h3>
 
-            <ul className="space-y-4 text-gray-400">
+            <ul className="space-y-3 text-sm text-gray-400 lg:text-base">
               <li>
                 <a href="/" className="transition hover:text-[#D9A441]">
                   Home
@@ -31,59 +33,29 @@ export default function Footer() {
               </li>
 
               <li>
-                <a href="/products" className="transition hover:text-[#D9A441]">
+                <a
+                  href="/products"
+                  className="transition hover:text-[#D9A441]"
+                >
                   Products
                 </a>
               </li>
 
               <li>
-                <a href="/about" className="transition hover:text-[#D9A441]">
+                <a
+                  href="/about"
+                  className="transition hover:text-[#D9A441]"
+                >
                   About Us
                 </a>
               </li>
 
               <li>
-                <a href="/contact" className="transition hover:text-[#D9A441]">
+                <a
+                  href="/contact"
+                  className="transition hover:text-[#D9A441]"
+                >
                   Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div>
-            <h3 className="mb-6 text-xl font-semibold">
-              Customer Service
-            </h3>
-
-            <ul className="space-y-4 text-gray-400">
-              <li>
-                <a href="#" className="transition hover:text-[#D9A441]">
-                  My Account
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="transition hover:text-[#D9A441]">
-                  Wishlist
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="transition hover:text-[#D9A441]">
-                  Order Tracking
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="transition hover:text-[#D9A441]">
-                  Privacy Policy
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="transition hover:text-[#D9A441]">
-                  Terms & Conditions
                 </a>
               </li>
             </ul>
@@ -91,11 +63,12 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="mb-6 text-xl font-semibold">
-              Contact Information
+            <h3 className="mb-5 text-xl font-semibold">
+              Contact
             </h3>
 
-            <div className="space-y-4 text-gray-400">
+            <div className="space-y-3 text-sm text-gray-400 lg:text-base">
+
               <p>
                 📍 Kumira, Sitakunda, Chittagong
               </p>
@@ -104,7 +77,7 @@ export default function Footer() {
                 📞{" "}
                 <a
                   href="tel:+8801616964247"
-                  className="transition hover:text-[#D9A441]"
+                  className="hover:text-[#D9A441]"
                 >
                   +880 1616-964247
                 </a>
@@ -114,7 +87,7 @@ export default function Footer() {
                 ✉️{" "}
                 <a
                   href="mailto:sutocraftbd@gmail.com"
-                  className="transition hover:text-[#D9A441]"
+                  className="hover:text-[#D9A441]"
                 >
                   sutocraftbd@gmail.com
                 </a>
@@ -126,15 +99,55 @@ export default function Footer() {
                   href="https://www.sutocraftbd.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-[#D9A441]"
+                  className="hover:text-[#D9A441]"
                 >
                   www.sutocraftbd.com
                 </a>
               </p>
+
+            </div>
+          </div>
+
+          {/* Social */}
+          <div>
+            <h3 className="mb-5 text-xl font-semibold">
+              Follow Us
+            </h3>
+
+            <div className="space-y-3 text-sm text-gray-400 lg:text-base">
+
+              <a
+                href="https://www.facebook.com/share/1KCQqtBzLU/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition hover:text-[#D9A441]"
+              >
+                Facebook
+              </a>
+
+              <a
+                href="https://youtube.com/@sutocraft?si=mIN7Bmmq-WeFOno1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition hover:text-[#D9A441]"
+              >
+                YouTube
+              </a>
+
+              <a
+                href="https://wa.me/8801616964247"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition hover:text-[#25D366]"
+              >
+                WhatsApp
+              </a>
+
             </div>
 
-            {/* Social */}
-            <div className="mt-8 flex gap-4">
+            {/* Social Buttons */}
+            <div className="mt-6 flex flex-wrap gap-3">
+
               <a
                 href="https://www.facebook.com/share/1KCQqtBzLU/"
                 target="_blank"
@@ -148,7 +161,7 @@ export default function Footer() {
                 href="https://youtube.com/@sutocraft?si=mIN7Bmmq-WeFOno1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-[#D9A441]"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-red-600"
               >
                 YT
               </a>
@@ -161,12 +174,27 @@ export default function Footer() {
               >
                 WA
               </a>
+
             </div>
           </div>
+
         </div>
 
-        <div className="border-t border-[#3A3A3A] py-6 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} SutoCraft. All Rights Reserved.
+        {/* Bottom */}
+        <div className="border-t border-[#3A3A3A] py-6">
+
+          <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-gray-400 lg:flex-row">
+
+            <p>
+              © {new Date().getFullYear()} SutoCraft. All Rights Reserved.
+            </p>
+
+            <p>
+              Made with ❤️ in Bangladesh
+            </p>
+
+          </div>
+
         </div>
       </Container>
     </footer>
