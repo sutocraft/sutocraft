@@ -58,8 +58,12 @@ export default function EditProductPage() {
   const [subCategoryId, setSubCategoryId] = useState("");
   const [brandId, setBrandId] = useState("");
   const [colorId, setColorId] = useState("");
-  const [sizeId, setSizeId] = useState("");
-  const [stockStatusId, setStockStatusId] = useState("");
+const [sizeId, setSizeId] = useState("");
+
+const [colorIds, setColorIds] = useState<string[]>([]);
+const [sizeIds, setSizeIds] = useState<string[]>([]);
+
+const [stockStatusId, setStockStatusId] = useState("");
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -216,6 +220,22 @@ async function loadStockStatuses() {
   setStockStatuses(data || []);
 }
 
+function toggleColor(id: string) {
+  setColorIds((prev) =>
+    prev.includes(id)
+      ? prev.filter((x) => x !== id)
+      : [...prev, id]
+  );
+}
+
+function toggleSize(id: string) {
+  setSizeIds((prev) =>
+    prev.includes(id)
+      ? prev.filter((x) => x !== id)
+      : [...prev, id]
+  );
+}
+
 async function loadProduct() {
   const { data, error } = await supabase
     .from("products")
@@ -232,7 +252,10 @@ async function loadProduct() {
   setSubCategoryId(data.sub_category_id ?? "");
   setBrandId(data.brand_id ?? "");
   setColorId(data.color_id ?? "");
-  setSizeId(data.size_id ?? "");
+setSizeId(data.size_id ?? "");
+
+setColorIds(data.color_ids ?? []);
+setSizeIds(data.size_ids ?? []);
   setStockStatusId(data.stock_status_id ?? "");
 
   setName(data.name ?? "");
