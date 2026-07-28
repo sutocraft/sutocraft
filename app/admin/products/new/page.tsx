@@ -57,6 +57,10 @@ const [stockStatuses, setStockStatuses] = useState<StockStatus[]>([]);
 const [brandId, setBrandId] = useState("");
 const [colorId, setColorId] = useState("");
 const [sizeId, setSizeId] = useState("");
+
+const [colorIds, setColorIds] = useState<string[]>([]);
+const [sizeIds, setSizeIds] = useState<string[]>([]);
+
 const [stockStatusId, setStockStatusId] = useState("");
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -172,7 +176,21 @@ async function loadStockStatuses() {
   setStockStatuses(data || []);
 }
 
+function toggleColor(id: string) {
+  setColorIds((prev) =>
+    prev.includes(id)
+      ? prev.filter((x) => x !== id)
+      : [...prev, id]
+  );
+}
 
+function toggleSize(id: string) {
+  setSizeIds((prev) =>
+    prev.includes(id)
+      ? prev.filter((x) => x !== id)
+      : [...prev, id]
+  );
+}
 
   // ==========================
   // UPLOAD IMAGE
