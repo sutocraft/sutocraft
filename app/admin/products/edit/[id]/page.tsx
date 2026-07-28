@@ -1,84 +1,111 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import GeneralSection from "./components/GeneralSection";
-import GallerySection from "./components/GallerySection";
 
+<style jsx global>{`
+  select option {
+    background: #111827;
+    color: white;
+  }
+
+  select {
+    color-scheme: dark;
+  }
+`}</style>
 
 type Category = {
   id: string;
   name: string;
 };
 
-type GalleryImage = {
+type SubCategory = {
   id: string;
-  image_url: string;
-  sort_order: number;
+  name: string;
 };
 
-export default function EditProductPage() {
-  const params = useParams();
-  const router = useRouter();
+type Brand = {
+  id: string;
+  name: string;
+};
 
-  const id = params.id as string;
+type Color = {
+  id: string;
+  name: string;
+};
 
+type Size = {
+  id: string;
+  name: string;
+};
+
+type StockStatus = {
+  id: string;
+  name: string;
+};
+
+export default function NewProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+const [brands, setBrands] = useState<Brand[]>([]);
+const [colors, setColors] = useState<Color[]>([]);
+const [sizes, setSizes] = useState<Size[]>([]);
+const [stockStatuses, setStockStatuses] = useState<StockStatus[]>([]);
 
   const [categoryId, setCategoryId] = useState("");
+  const [subCategoryId, setSubCategoryId] = useState("");
+const [brandId, setBrandId] = useState("");
+const [colorId, setColorId] = useState("");
+const [sizeId, setSizeId] = useState("");
+const [stockStatusId, setStockStatusId] = useState("");
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [sku, setSku] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [salePrice, setSalePrice] = useState("");
+  const [stock, setStock] = useState("0");
+  const [featured, setFeatured] = useState(false);
+  const [active, setActive] = useState(true);
 
-const [name, setName] = useState("");
-const [slug, setSlug] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false);
 
-const [sku, setSku] = useState("");
+  // ==========================
+  // IMAGE STATES
+  // ==========================
 
-const [shortDescription, setShortDescription] = useState("");
-
-const [description, setDescription] = useState("");
-
-const [price, setPrice] = useState("");
-
-const [salePrice, setSalePrice] = useState("");
-
-const [stock, setStock] = useState("");
-
-const [featured, setFeatured] = useState(false);
-
-const [active, setActive] = useState(true);
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
 const [imagePreview, setImagePreview] = useState("");
 
-const [imageFile, setImageFile] = useState<File | null>(null);
-
-const [gallery, setGallery] = useState<GalleryImage[]>([]);
-
 const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
-
 const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
 
-  const [slugEdited, setSlugEdited] = useState(true);
+const [uploading, setUploading] = useState(false);
+const [uploadStatus, setUploadStatus] = useState("");
 
   useEffect(() => {
-    if (!id) return;
-
-    loadCategories();
-loadProduct();
-loadGallery();
-  }, [id]);
+  loadCategories();
+  loadSubCategories();
+  loadBrands();
+  loadColors();
+  loadSizes();
+  loadStockStatuses();
+}, []);
 
   useEffect(() => {
     if (slugEdited) return;
 
     const generatedSlug = name
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
+  .toLowerCase()
+  .trim()
+  .replace(/[^a-z0-9\s-]/g, "")
+  .replace(/\s+/g, "-")
+  .replace(/-+/g, "-")
+  .replace(/^-+|-+$/g, "");
 
-    setSlug(generatedSlug);
+setSlug(generatedSlug);
   }, [name, slugEdited]);
 
   async function loadCategories() {
@@ -88,310 +115,667 @@ loadGallery();
       .order("name");
 
     if (error) {
-      alert(error.message);
-      return;
-    }
+
+  setUploading(false);
+
+  alert(error.message);
+
+  return;
+
+}
 
     setCategories(data || []);
   }
 
-  async function loadProduct() {
-    const { data, error } = await supabase
+async function loadSubCategories() {
+  const { data } = await supabase
+    .from("sub_categories")
+    .select("id,name")
+    .order("name");
+
+  setSubCategories(data || []);
+}
+
+async function loadBrands() {
+  const { data } = await supabase
+    .from("brands")
+    .select("id,name")
+    .order("name");
+
+  setBrands(data || []);
+}
+
+async function loadColors() {
+  const { data } = await supabase
+    .from("colors")
+    .select("id,name")
+    .order("name");
+
+  setColors(data || []);
+}
+
+async function loadSizes() {
+  const { data } = await supabase
+    .from("sizes")
+    .select("id,name")
+    .order("name");
+
+  setSizes(data || []);
+}
+
+async function loadStockStatuses() {
+  const { data } = await supabase
+    .from("stock_statuses")
+    .select("id,name")
+    .order("name");
+
+  setStockStatuses(data || []);
+}
+
+
+
+  // ==========================
+  // UPLOAD IMAGE
+  // ==========================
+
+  async function uploadImage() {
+
+  if (!imageFile) return "";
+
+  setUploadStatus("Uploading Main Image...");
+
+    const fileExt = imageFile.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${fileExt}`;
+
+    const { error } = await supabase.storage
       .from("products")
-      .select("*")
-      .eq("id", id)
-      .single();
+      .upload(fileName, imageFile);
 
     if (error) {
-      alert(error.message);
-      return;
-    }
+      throw error;
+}
 
-    setCategoryId(data.category_id);
+    const { data } = supabase.storage
+      .from("products")
+      .getPublicUrl(fileName);
 
-setName(data.name);
-
-setSlug(data.slug);
-
-setSku(data.sku || "");
-
-setShortDescription(data.short_description || "");
-
-setDescription(data.description || "");
-
-setPrice(String(data.price));
-
-setSalePrice(String(data.sale_price ?? ""));
-
-setStock(String(data.stock));
-
-setFeatured(data.featured);
-
-setActive(data.active);
-
-setImagePreview(data.image_url || "");
-
-    setSlugEdited(true);
+    return data.publicUrl;
   }
 
-async function moveGalleryUp(img: GalleryImage) {
+async function uploadSingleImage(file: File) {
+  const ext = file.name.split(".").pop();
 
-  const previous = gallery.find(
-    x => x.sort_order === img.sort_order - 1
-  );
+  const fileName =
+    `${Date.now()}-${crypto.randomUUID()}.${ext}`;
 
-  if (!previous) return;
-
-  await supabase
-    .from("product_images")
-    .update({
-      sort_order: img.sort_order
-    })
-    .eq("id", previous.id);
-
-  await supabase
-    .from("product_images")
-    .update({
-      sort_order: img.sort_order - 1
-    })
-    .eq("id", img.id);
-
-  loadGallery();
-
-}
-
-async function moveGalleryDown(img: GalleryImage) {
-
-  const next = gallery.find(
-    x => x.sort_order === img.sort_order + 1
-  );
-
-  if (!next) return;
-
-  await supabase
-    .from("product_images")
-    .update({
-      sort_order: img.sort_order
-    })
-    .eq("id", next.id);
-
-  await supabase
-    .from("product_images")
-    .update({
-      sort_order: img.sort_order + 1
-    })
-    .eq("id", img.id);
-
-  loadGallery();
-
-}
-
-async function deleteGalleryImage(imageId: string) {
-
-  if (!confirm("Delete this image?")) return;
-
-  const { error } = await supabase
-    .from("product_images")
-    .delete()
-    .eq("id", imageId);
+  const { error } =
+    await supabase.storage
+      .from("products")
+      .upload(fileName, file);
 
   if (error) {
-
-    alert(error.message);
-
-    return;
-
+    throw error;
   }
 
-  loadGallery();
+  const { data } =
+    supabase.storage
+      .from("products")
+      .getPublicUrl(fileName);
 
+  return data.publicUrl;
 }
 
-  async function loadGallery() {
+async function uploadGalleryImages(productId: string) {
 
-  const { data } = await supabase
-    .from("product_images")
-    .select("*")
-    .eq("product_id", id)
-    .order("sort_order");
+  if (galleryFiles.length === 0) return;
 
-  if (data) {
-
-    setGallery(data);
-
-  }
-
-}
-
-
-
-  async function updateProduct() {
-  if (!categoryId || !name || !slug) {
-    alert("Please fill all required fields.");
-    return;
-  }
-
-  let imageUrl = imagePreview;
-
-  // Upload new main image if selected
-  if (imageFile) {
-    const ext = imageFile.name.split(".").pop();
-
-    const fileName =
-      `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-
-    const { error: uploadError } =
-      await supabase.storage
-        .from("products")
-        .upload(fileName, imageFile);
-
-    if (uploadError) {
-      alert(uploadError.message);
-      return;
-    }
-
-    imageUrl =
-      supabase.storage
-        .from("products")
-        .getPublicUrl(fileName)
-        .data.publicUrl;
-  }
-
-  // Update product
-  const { error } = await supabase
-    .from("products")
-    .update({
-      category_id: categoryId,
-      name,
-      slug,
-      sku,
-      short_description: shortDescription,
-      description,
-      price: Number(price),
-      sale_price: Number(salePrice || 0),
-      stock: Number(stock),
-      featured,
-      active,
-      image_url: imageUrl,
-    })
-    .eq("id", id);
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  // Upload new gallery images
-
-if (galleryFiles.length > 0) {
+  const galleryData = [];
 
   for (let i = 0; i < galleryFiles.length; i++) {
 
-    const file = galleryFiles[i];
+    const url =
+      await uploadSingleImage(galleryFiles[i]);
 
-    const ext = file.name.split(".").pop();
+    galleryData.push({
 
-    const fileName =
-      `${Date.now()}-${crypto.randomUUID()}.${ext}`;
+      product_id: productId,
 
-    const { error: uploadError } =
-      await supabase.storage
-        .from("products")
-        .upload(fileName, file);
+      image_url: url,
 
-    if (uploadError) continue;
+      sort_order: i,
 
-    const imageUrl =
-      supabase.storage
-        .from("products")
-        .getPublicUrl(fileName)
-        .data.publicUrl;
+    });
 
+  }
+
+  const { error } =
     await supabase
       .from("product_images")
-      .insert({
-        product_id: id,
-        image_url: imageUrl,
-        sort_order: gallery.length + i,
-      });
+      .insert(galleryData);
+
+  if (error) {
+
+    throw error;
 
   }
 
 }
 
-alert("Product Updated Successfully");
+  async function addProduct() {
+  try {
+    if (
+  !categoryId ||
+  !subCategoryId ||
+  !brandId ||
+  !colorId ||
+  !sizeId ||
+  !stockStatusId ||
+  !name.trim() ||
+  !slug.trim() ||
+  !price
+) {
+      alert("Please fill all required fields.");
+      return;
+    }
 
-router.push("/admin/products");
+    let imageUrl = "";
+
+setUploading(true);
+setUploadStatus("Saving Product...");
+
+    if (imageFile) {
+  setUploadStatus("Uploading Main Image...");
+imageUrl = await uploadImage();
+
+  if (!imageUrl) {
+    setUploading(false);
+    return;
+  }
 }
+
+    const { data: slugExists, error: slugError } = await supabase
+  .from("products")
+  .select("id")
+  .eq("slug", slug)
+  .maybeSingle();
+
+if (slugError) {
+  setUploading(false);
+  alert(slugError.message);
+  return;
+}
+
+if (slugExists) {
+  alert("Slug already exists.");
+  setUploading(false);
+  return;
+}
+
+const { data: skuExists, error: skuError } = await supabase
+  .from("products")
+  .select("id")
+  .eq("sku", sku)
+  .maybeSingle();
+
+if (skuError) {
+  setUploading(false);
+  alert(skuError.message);
+  return;
+}
+
+if (sku && skuExists) {
+  alert("SKU already exists.");
+  setUploading(false);
+  return;
+}
+
+const { data, error } = await supabase
+  .from("products")
+  .insert({
+    category_id: categoryId,
+    sub_category_id: subCategoryId || null,
+    brand_id: brandId || null,
+    color_id: colorId || null,
+    size_id: sizeId || null,
+    stock_status_id: stockStatusId || null,
+
+    name,
+    slug,
+    sku,
+
+    short_description: shortDescription,
+    description,
+
+    price: Number(price),
+    sale_price: salePrice ? Number(salePrice) : null,
+    stock: Number(stock || 0),
+
+    featured,
+    active,
+
+    image_url: imageUrl,
+  })
+  .select()
+  .single();
+    if (error) {
+  setUploading(false);
+  alert(error.message);
+  return;
+}
+
+setUploadStatus(`Uploading ${galleryFiles.length} Gallery Image(s)...`);
+await uploadGalleryImages(data.id);
+
+setUploadStatus("Completed");
+alert("Product Added Successfully");
+
+    setCategoryId("");
+    setSubCategoryId("");
+    setBrandId("");
+    setColorId("");
+    setSizeId("");
+    setStockStatusId("");
+    setName("");
+    setSlug("");
+    setSku("");
+    setShortDescription("");
+    setDescription("");
+    setPrice("");
+    setSalePrice("");
+    setStock("0");
+    setFeatured(false);
+    setActive(true);
+    setSlugEdited(false);
+
+    if (imagePreview) {
+  URL.revokeObjectURL(imagePreview);
+}
+
+galleryPreviews.forEach((url) => URL.revokeObjectURL(url));
+
+setImageFile(null);
+setImagePreview("");
+
+setGalleryFiles([]);
+setGalleryPreviews([]);
+
+setUploading(false);
+
+} catch (error: any) {
+
+  setUploading(false);
+
+  alert(error.message || "Something went wrong.");
+
+}
+} 
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
+      <h1 className="text-2xl font-bold mb-6">
+        Add Product
+      </h1>
 
       <div className="space-y-4 max-w-xl">
 
-        <GeneralSection
-  categories={categories}
-  categoryId={categoryId}
-  setCategoryId={setCategoryId}
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+        >
+          <option value="">
+            Select Category
+          </option>
 
-  name={name}
-  setName={setName}
+          {categories.map((cat) => (
+            <option
+              key={cat.id}
+              value={cat.id}
+            >
+              {cat.name}
+            </option>
+          ))}
+        </select>
 
-  slug={slug}
-  setSlug={setSlug}
+        <select
+  value={subCategoryId}
+  onChange={(e) => setSubCategoryId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Sub Category
+  </option>
 
-  slugEdited={slugEdited}
-  setSlugEdited={setSlugEdited}
+  {subCategories.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
-  sku={sku}
-  setSku={setSku}
+<select
+  value={brandId}
+  onChange={(e) => setBrandId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Brand
+  </option>
 
-  shortDescription={shortDescription}
-  setShortDescription={setShortDescription}
+  {brands.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
-  description={description}
-  setDescription={setDescription}
+<select
+  value={colorId}
+  onChange={(e) => setColorId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Color
+  </option>
 
-  price={price}
-  setPrice={setPrice}
+  {colors.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
-  salePrice={salePrice}
-  setSalePrice={setSalePrice}
+<select
+  value={sizeId}
+  onChange={(e) => setSizeId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Size
+  </option>
 
-  stock={stock}
-  setStock={setStock}
+  {sizes.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
-  featured={featured}
-  setFeatured={setFeatured}
+<select
+  value={stockStatusId}
+  onChange={(e) => setStockStatusId(e.target.value)}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+>
+  <option value="">
+    Select Stock Status
+  </option>
 
-  active={active}
-  setActive={setActive}
-/>
-<GallerySection
-  imagePreview={imagePreview}
-  imageFile={imageFile}
-  setImageFile={setImageFile}
-  setImagePreview={setImagePreview}
+  {stockStatuses.map((item) => (
+    <option
+      key={item.id}
+      value={item.id}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
-  gallery={gallery}
+        <input
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Product Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-  moveGalleryUp={moveGalleryUp}
-  moveGalleryDown={moveGalleryDown}
-  deleteGalleryImage={deleteGalleryImage}
+        <input
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Slug"
+          value={slug}
+          onChange={(e) => {
+            setSlugEdited(true);
+            setSlug(e.target.value);
+          }}
+        />
 
-  galleryFiles={galleryFiles}
-  setGalleryFiles={setGalleryFiles}
+        <input
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="SKU"
+          value={sku}
+          onChange={(e) => setSku(e.target.value)}
+        />
 
-  galleryPreviews={galleryPreviews}
-  setGalleryPreviews={setGalleryPreviews}
-/>
+        <textarea
+          rows={2}
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Short Description"
+          value={shortDescription}
+          onChange={(e) =>
+            setShortDescription(e.target.value)
+          }
+        />
+
+        <textarea
+          rows={5}
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Description"
+          value={description}
+          onChange={(e) =>
+            setDescription(e.target.value)
+          }
+        />
+
+        <input
+          type="number"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Regular Price"
+          value={price}
+          onChange={(e) =>
+            setPrice(e.target.value)
+          }
+        />
+
+        <input
+          type="number"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Sale Price"
+          value={salePrice}
+          onChange={(e) =>
+            setSalePrice(e.target.value)
+          }
+        />
+
+        <input
+          type="number"
+          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+          placeholder="Stock"
+          value={stock}
+          onChange={(e) =>
+            setStock(e.target.value)
+          }
+        />
+
+        <div>
+
+  <label className="font-medium">
+    Main Product Image
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded mt-2"
+    onChange={(e) => {
+
+      const file = e.target.files?.[0];
+
+      if (!file) return;
+
+      setImageFile(file);
+
+      setImagePreview(
+        URL.createObjectURL(file)
+      );
+
+    }}
+  />
 
 </div>
 
+<div>
+
+  <label className="font-medium">
+    Product Gallery
+  </label>
+
+  <input
+    type="file"
+    multiple
+    accept="image/*"
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded mt-2"
+    onChange={(e) => {
+
+      const files = Array.from(
+        e.target.files || []
+      );
+
+      setGalleryFiles(files);
+
+      setGalleryPreviews(
+        files.map((file) =>
+          URL.createObjectURL(file)
+        )
+      );
+
+    }}
+  />
+
+</div>
+
+        {imagePreview && (
+
+  <img
+    src={imagePreview}
+    alt="Preview"
+    className="w-48 h-48 object-cover rounded border"
+  />
+
+)}
+
+{galleryPreviews.length > 0 && (
+
+  <div className="mt-4">
+
+    <p className="mb-3 font-medium">
+
+      Gallery Preview ({galleryPreviews.length})
+
+    </p>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+      {galleryPreviews.map((preview, index) => (
+
+        <div
+          key={index}
+          className="relative border rounded-lg overflow-hidden"
+        >
+
+          <img
+            src={preview}
+            alt=""
+            className="w-full h-32 object-cover"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+
+              const newFiles =
+                [...galleryFiles];
+
+              const newPreview =
+                [...galleryPreviews];
+
+              newFiles.splice(index, 1);
+
+              URL.revokeObjectURL(newPreview[index]);
+
+newPreview.splice(index, 1);
+
+setGalleryFiles(newFiles);
+
+setGalleryPreviews(newPreview);
+
+            }}
+            className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white w-7 h-7 rounded-full"
+          >
+
+            ✕
+
+          </button>
+
+        </div>
+
+      ))}
 
     </div>
 
-  );
+  </div>
 
+)}
+
+        <label className="flex items-center gap-2">
+
+          <input
+            type="checkbox"
+            checked={featured}
+            onChange={(e) =>
+              setFeatured(e.target.checked)
+            }
+          />
+
+          Featured Product
+
+        </label>
+
+        <label className="flex items-center gap-2">
+
+          <input
+            type="checkbox"
+            checked={active}
+            onChange={(e) =>
+              setActive(e.target.checked)
+            }
+          />
+
+          Active Product
+
+        </label>
+
+        <button
+  disabled={uploading}
+  onClick={addProduct}
+  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-5 py-2 rounded-lg"
+>
+          {uploading ? uploadStatus : "Save Product"}
+        </button>
+
+      </div>
+
+    </div>
+  );
 }
