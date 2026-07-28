@@ -83,13 +83,9 @@ const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
 useEffect(() => {
   return () => {
-    if (imagePreview) {
-      URL.revokeObjectURL(imagePreview);
-    }
-
-    galleryPreviews.forEach((url) => URL.revokeObjectURL(url));
+    // cleanup only
   };
-}, [imagePreview, galleryPreviews]);
+}, []);
 
 const [uploading, setUploading] = useState(false);
 const [uploadStatus, setUploadStatus] = useState("");
