@@ -75,16 +75,13 @@ const { data: existingCategory } = await query.maybeSingle();
 
   const result = await supabase
   .from("categories")
-  .update(
-    {
-      name: categoryName,
-      slug,
-    },
-    {
-      returning: "representation",
-    }
-  )
-  .eq("id", editingId);
+  .update({
+    name: categoryName,
+    slug,
+  })
+  .eq("id", editingId)
+  .select()
+  .single();
 
 console.log("Update Result:", result);
 
