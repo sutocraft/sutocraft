@@ -264,7 +264,17 @@ async function uploadGalleryImages(productId: string) {
 }
 
   async function addProduct() {
-    if (!categoryId || !name || !slug) {
+    if (
+  !categoryId ||
+  !subCategoryId ||
+  !brandId ||
+  !colorId ||
+  !sizeId ||
+  !stockStatusId ||
+  !name.trim() ||
+  !slug.trim() ||
+  !price
+) {
       alert("Please fill all required fields.");
       return;
     }
@@ -285,16 +295,26 @@ setUploading(true);
   .from("products")
   .insert({
     category_id: categoryId,
+    sub_category_id: subCategoryId || null,
+    brand_id: brandId || null,
+    color_id: colorId || null,
+    size_id: sizeId || null,
+    stock_status_id: stockStatusId || null,
+
     name,
     slug,
     sku,
+
     short_description: shortDescription,
     description,
+
     price: Number(price),
     sale_price: Number(salePrice || 0),
     stock: Number(stock),
+
     featured,
     active,
+
     image_url: imageUrl,
   })
   .select()
