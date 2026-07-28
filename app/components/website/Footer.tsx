@@ -2,7 +2,7 @@ import Container from "./Container";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1F1F1F] text-white">
+    <footer className="bg-[#1F1F1F] pb-20 text-white lg:pb-0">
       <Container>
         {/* Top */}
         <div className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:py-20">
