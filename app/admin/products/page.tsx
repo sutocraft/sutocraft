@@ -14,6 +14,7 @@ type Product = {
   stock: number;
   image_url: string;
   featured: boolean;
+  new_arrival: boolean;
   active: boolean;
 
   categories: {
@@ -292,6 +293,10 @@ async function duplicateProduct(productId: string) {
       </th>
 
       <th className="border p-2">
+  New Arrival
+</th>
+
+      <th className="border p-2">
         Action
       </th>
 
@@ -314,7 +319,7 @@ async function duplicateProduct(productId: string) {
 
     <tr>
 
-      <td colSpan={15} className="text-center p-8 text-gray-500">
+      <td colSpan={16} className="text-center p-8 text-gray-500">
 
         No Products Found
 
@@ -442,6 +447,16 @@ async function duplicateProduct(productId: string) {
         )}
 
       </td>
+
+      <td className="border p-2">
+
+  {product.new_arrival ? (
+    "🆕"
+  ) : (
+    "-"
+  )}
+
+</td>
 
       <td className="border p-2">
 
