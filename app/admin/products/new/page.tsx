@@ -287,8 +287,8 @@ async function uploadGalleryImages(productId: string) {
   !categoryId ||
   !subCategoryId ||
   !brandId ||
-  !colorId ||
-  !sizeId ||
+  colorIds.length === 0 ||
+  sizeIds.length === 0 ||
   !stockStatusId ||
   !name.trim() ||
   !slug.trim() ||
@@ -355,8 +355,11 @@ const { data, error } = await supabase
     category_id: categoryId,
     sub_category_id: subCategoryId || null,
     brand_id: brandId || null,
-    color_id: colorId || null,
-    size_id: sizeId || null,
+    color_id: colorIds[0] || null,
+size_id: sizeIds[0] || null,
+
+color_ids: colorIds,
+size_ids: sizeIds,
     stock_status_id: stockStatusId || null,
 
     name,
@@ -393,7 +396,10 @@ alert("Product Added Successfully");
     setSubCategoryId("");
     setBrandId("");
     setColorId("");
-    setSizeId("");
+setSizeId("");
+
+setColorIds([]);
+setSizeIds([]);
     setStockStatusId("");
     setName("");
     setSlug("");
