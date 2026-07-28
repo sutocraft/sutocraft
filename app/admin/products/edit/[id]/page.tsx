@@ -486,16 +486,16 @@ async function updateProduct() {
   try {
 
     if (
-      !categoryId ||
-      !subCategoryId ||
-      !brandId ||
-      !colorId ||
-      !sizeId ||
-      !stockStatusId ||
-      !name.trim() ||
-      !slug.trim() ||
-      !price
-    ) {
+  !categoryId ||
+  !subCategoryId ||
+  !brandId ||
+  colorIds.length === 0 ||
+  sizeIds.length === 0 ||
+  !stockStatusId ||
+  !name.trim() ||
+  !slug.trim() ||
+  !price
+) {
 
       alert("Please fill all required fields.");
 
@@ -608,10 +608,16 @@ async function updateProduct() {
           brandId || null,
 
         color_id:
-          colorId || null,
+  colorIds[0] || null,
 
-        size_id:
-          sizeId || null,
+size_id:
+  sizeIds[0] || null,
+
+color_ids:
+  colorIds,
+
+size_ids:
+  sizeIds,
 
         stock_status_id:
           stockStatusId || null,
