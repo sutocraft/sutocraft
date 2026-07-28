@@ -97,13 +97,14 @@ const [uploadStatus, setUploadStatus] = useState("");
     if (slugEdited) return;
 
     const generatedSlug = name
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
+  .toLowerCase()
+  .trim()
+  .replace(/[^a-z0-9\s-]/g, "")
+  .replace(/\s+/g, "-")
+  .replace(/-+/g, "-")
+  .replace(/^-+|-+$/g, "");
 
-    setSlug(generatedSlug);
+setSlug(generatedSlug);
   }, [name, slugEdited]);
 
   async function loadCategories() {
@@ -296,11 +297,17 @@ imageUrl = await uploadImage();
   }
 }
 
-    const { data: slugExists } = await supabase
+    const { data: slugExists, error: slugError } = await supabase
   .from("products")
   .select("id")
   .eq("slug", slug)
   .maybeSingle();
+
+if (slugError) {
+  setUploading(false);
+  alert(slugError.message);
+  return;
+}
 
 if (slugExists) {
   alert("Slug already exists.");
@@ -308,11 +315,17 @@ if (slugExists) {
   return;
 }
 
-const { data: skuExists } = await supabase
+const { data: skuExists, error: skuError } = await supabase
   .from("products")
   .select("id")
   .eq("sku", sku)
   .maybeSingle();
+
+if (skuError) {
+  setUploading(false);
+  alert(skuError.message);
+  return;
+}
 
 if (sku && skuExists) {
   alert("SKU already exists.");
@@ -338,8 +351,8 @@ const { data, error } = await supabase
     description,
 
     price: Number(price),
-    sale_price: Number(salePrice || 0),
-    stock: Number(stock),
+    sale_price: salePrice ? Number(salePrice) : null,
+    stock: Number(stock || 0),
 
     featured,
     active,
