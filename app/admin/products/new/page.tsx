@@ -82,6 +82,7 @@ const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
 const [uploading, setUploading] = useState(false);
+const [uploadStatus, setUploadStatus] = useState("");
 
   useEffect(() => {
   loadCategories();
@@ -264,6 +265,7 @@ async function uploadGalleryImages(productId: string) {
 }
 
   async function addProduct() {
+  try {
     if (
   !categoryId ||
   !subCategoryId ||
@@ -282,16 +284,43 @@ async function uploadGalleryImages(productId: string) {
     let imageUrl = "";
 
 setUploading(true);
+setUploadStatus("Saving Product...");
 
     if (imageFile) {
-      imageUrl = await uploadImage();
+  setUploadStatus("Uploading Main Image...");
+imageUrl = await uploadImage();
 
-      if (imageFile && !imageUrl) {
-        return;
-      }
-    }
+  if (!imageUrl) {
+    setUploading(false);
+    return;
+  }
+}
 
-    const { data, error } = await supabase
+    const { data: slugExists } = await supabase
+  .from("products")
+  .select("id")
+  .eq("slug", slug)
+  .maybeSingle();
+
+if (slugExists) {
+  alert("Slug already exists.");
+  setUploading(false);
+  return;
+}
+
+const { data: skuExists } = await supabase
+  .from("products")
+  .select("id")
+  .eq("sku", sku)
+  .maybeSingle();
+
+if (sku && skuExists) {
+  alert("SKU already exists.");
+  setUploading(false);
+  return;
+}
+
+const { data, error } = await supabase
   .from("products")
   .insert({
     category_id: categoryId,
@@ -320,10 +349,12 @@ setUploading(true);
   .select()
   .single();
     if (error) {
+  setUploading(false);
   alert(error.message);
   return;
 }
 
+setUploadStatus(`Uploading ${galleryFiles.length} Gallery Image(s)...`);
 await uploadGalleryImages(data.id);
 
 setUploading(false);
@@ -331,6 +362,11 @@ setUploading(false);
 alert("Product Added Successfully");
 
     setCategoryId("");
+    setSubCategoryId("");
+    setBrandId("");
+    setColorId("");
+    setSizeId("");
+    setStockStatusId("");
     setName("");
     setSlug("");
     setSku("");
@@ -348,7 +384,17 @@ setImagePreview("");
 
 setGalleryFiles([]);
 setGalleryPreviews([]);
-  }
+
+setUploading(false);
+
+} catch (error: any) {
+
+  setUploading(false);
+
+  alert(error.message || "Something went wrong.");
+
+}
+} 
 
   return (
     <div className="p-8">
@@ -707,9 +753,7 @@ setGalleryPreviews([]);
   onClick={addProduct}
   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-5 py-2 rounded-lg"
 >
-          {uploading
-  ? `Uploading ${galleryFiles.length} Gallery Image(s)...`
-  : "Save Product"}
+          {uploading ? uploadStatus : "Save Product"}
         </button>
 
       </div>
