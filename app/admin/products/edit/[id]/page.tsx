@@ -781,57 +781,69 @@ return (
 
       {/* Color */}
 
-      <select
-        value={colorId}
-        onChange={(e) =>
-          setColorId(e.target.value)
-        }
-        className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+      <div className="border border-gray-600 rounded p-3">
+
+  <p className="font-medium mb-2">
+    Available Colors
+  </p>
+
+  <div className="grid grid-cols-2 gap-2">
+
+    {colors.map((item) => (
+
+      <label
+        key={item.id}
+        className="flex items-center gap-2 cursor-pointer"
       >
 
-        <option value="">
-          Select Color
-        </option>
+        <input
+          type="checkbox"
+          checked={colorIds.includes(item.id)}
+          onChange={() => toggleColor(item.id)}
+        />
 
-        {colors.map((item) => (
+        {item.name}
 
-          <option
-            key={item.id}
-            value={item.id}
-          >
-            {item.name}
-          </option>
+      </label>
 
-        ))}
+    ))}
 
-      </select>
+  </div>
+
+</div>
 
       {/* Size */}
 
-      <select
-        value={sizeId}
-        onChange={(e) =>
-          setSizeId(e.target.value)
-        }
-        className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+      <div className="border border-gray-600 rounded p-3">
+
+  <p className="font-medium mb-2">
+    Available Sizes
+  </p>
+
+  <div className="grid grid-cols-2 gap-2">
+
+    {sizes.map((item) => (
+
+      <label
+        key={item.id}
+        className="flex items-center gap-2 cursor-pointer"
       >
 
-        <option value="">
-          Select Size
-        </option>
+        <input
+          type="checkbox"
+          checked={sizeIds.includes(item.id)}
+          onChange={() => toggleSize(item.id)}
+        />
 
-        {sizes.map((item) => (
+        {item.name}
 
-          <option
-            key={item.id}
-            value={item.id}
-          >
-            {item.name}
-          </option>
+      </label>
 
-        ))}
+    ))}
 
-      </select>
+  </div>
+
+</div>
 
       {/* Stock Status */}
 
