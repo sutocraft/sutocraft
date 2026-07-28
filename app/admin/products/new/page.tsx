@@ -178,9 +178,11 @@ async function loadStockStatuses() {
   // ==========================
 
   async function uploadImage() {
-    if (!imageFile) return "";
 
-    setUploading(true);
+  if (!imageFile) return "";
+
+  setUploadStatus("Uploading Main Image...");
+    if (!imageFile) return "";
 
     const fileExt = imageFile.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random()
@@ -192,16 +194,12 @@ async function loadStockStatuses() {
       .upload(fileName, imageFile);
 
     if (error) {
-      setUploading(false);
-      alert(error.message);
-      return "";
-    }
+      throw error;
+}
 
     const { data } = supabase.storage
       .from("products")
       .getPublicUrl(fileName);
-
-    setUploading(false);
 
     return data.publicUrl;
   }
@@ -370,6 +368,7 @@ const { data, error } = await supabase
 setUploadStatus(`Uploading ${galleryFiles.length} Gallery Image(s)...`);
 await uploadGalleryImages(data.id);
 
+setUploadStatus("Completed");
 setUploading(false);
 
 alert("Product Added Successfully");
