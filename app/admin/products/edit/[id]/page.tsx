@@ -240,8 +240,8 @@ async function loadProduct() {
     .order("sort_order");
 
   if (data) {
-    // Next step এ use হবে
-  }
+  setGallery(data);
+}
 
 }
 
