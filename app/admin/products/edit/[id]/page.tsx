@@ -77,6 +77,7 @@ const [stockStatusId, setStockStatusId] = useState("");
   const [stock, setStock] = useState("0");
 
   const [featured, setFeatured] = useState(false);
+  const [newArrival, setNewArrival] = useState(false);
   const [active, setActive] = useState(true);
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -273,7 +274,8 @@ setSizeIds(data.size_ids ?? []);
   setStock(String(data.stock ?? 0));
 
   setFeatured(data.featured ?? false);
-  setActive(data.active ?? true);
+setNewArrival(data.new_arrival ?? false);
+setActive(data.active ?? true);
 
   setImagePreview(data.image_url ?? "");
 
@@ -644,8 +646,8 @@ size_ids:
           Number(stock || 0),
 
         featured,
-
-        active,
+new_arrival: newArrival,
+active,
 
         image_url: imageUrl,
 
@@ -1187,6 +1189,20 @@ return (
         Featured Product
 
       </label>
+
+      <label className="flex items-center gap-2">
+
+  <input
+    type="checkbox"
+    checked={newArrival}
+    onChange={(e) =>
+      setNewArrival(e.target.checked)
+    }
+  />
+
+  New Arrival Product
+
+</label>
 
       <label className="flex items-center gap-2">
 
