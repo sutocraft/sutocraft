@@ -21,6 +21,26 @@ type Product = {
   } | null;
 };
 
+sub_categories: {
+  name: string;
+} | null;
+
+brands: {
+  name: string;
+} | null;
+
+colors: {
+  name: string;
+} | null;
+
+sizes: {
+  name: string;
+} | null;
+
+stock_statuses: {
+  name: string;
+} | null;
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
 const [search, setSearch] = useState("");
@@ -33,9 +53,14 @@ const [search, setSearch] = useState("");
     const { data, error } = await supabase
       .from("products")
       .select(`
-        *,
-        categories(name)
-      `)
+  *,
+  categories(name),
+  sub_categories(name),
+  brands(name),
+  colors(name),
+  sizes(name),
+  stock_statuses(name)
+`)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -181,6 +206,26 @@ async function duplicateProduct(productId: string) {
         Category
       </th>
 
+<th className="border p-2">
+  Sub Category
+</th>
+
+<th className="border p-2">
+  Brand
+</th>
+
+<th className="border p-2">
+  Color
+</th>
+
+<th className="border p-2">
+  Size
+</th>
+
+<th className="border p-2">
+  Stock Status
+</th>
+
       <th className="border p-2">
         Price
       </th>
@@ -278,6 +323,26 @@ async function duplicateProduct(productId: string) {
       <td className="border p-2">
         {product.categories?.name}
       </td>
+
+<td className="border p-2">
+  {product.sub_categories?.name || "-"}
+</td>
+
+<td className="border p-2">
+  {product.brands?.name || "-"}
+</td>
+
+<td className="border p-2">
+  {product.colors?.name || "-"}
+</td>
+
+<td className="border p-2">
+  {product.sizes?.name || "-"}
+</td>
+
+<td className="border p-2">
+  {product.stock_statuses?.name || "-"}
+</td>
 
       <td className="border p-2">
         ৳ {product.price}
