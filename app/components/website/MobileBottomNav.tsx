@@ -43,7 +43,7 @@ export default function MobileBottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[999] lg:hidden">
-      <div className="mx-3 mb-3 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
+      <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
 
         <div className="grid grid-cols-5">
 
