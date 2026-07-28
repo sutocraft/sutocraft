@@ -183,7 +183,6 @@ async function loadStockStatuses() {
   if (!imageFile) return "";
 
   setUploadStatus("Uploading Main Image...");
-    if (!imageFile) return "";
 
     const fileExt = imageFile.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random()
@@ -370,8 +369,6 @@ setUploadStatus(`Uploading ${galleryFiles.length} Gallery Image(s)...`);
 await uploadGalleryImages(data.id);
 
 setUploadStatus("Completed");
-setUploading(false);
-
 alert("Product Added Successfully");
 
     setCategoryId("");
