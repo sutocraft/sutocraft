@@ -434,40 +434,14 @@ const { data, error } = await supabase
 }
 
 setUploadStatus(`Uploading ${galleryFiles.length} Gallery Image(s)...`);
-await uploadGalleryImages(data.id);
+await uploadGalleryImages(id);
 
 setUploadStatus("Completed");
-alert("Product Added Successfully");
+alert("Product Updated Successfully");
 
-    setCategoryId("");
-    setSubCategoryId("");
-    setBrandId("");
-    setColorId("");
-    setSizeId("");
-    setStockStatusId("");
-    setName("");
-    setSlug("");
-    setSku("");
-    setShortDescription("");
-    setDescription("");
-    setPrice("");
-    setSalePrice("");
-    setStock("0");
-    setFeatured(false);
-    setActive(true);
-    setSlugEdited(false);
+router.push("/admin/products");
 
-    if (imagePreview) {
-  URL.revokeObjectURL(imagePreview);
-}
-
-galleryPreviews.forEach((url) => URL.revokeObjectURL(url));
-
-setImageFile(null);
-setImagePreview("");
-
-setGalleryFiles([]);
-setGalleryPreviews([]);
+    // No reset required for Edit page
 
 setUploading(false);
 
@@ -836,10 +810,10 @@ setGalleryPreviews(newPreview);
 
         <button
   disabled={uploading}
-  onClick={addProduct}
+  onClick={updateProduct}
   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-5 py-2 rounded-lg"
 >
-          {uploading ? uploadStatus : "Save Product"}
+          {uploading ? uploadStatus : "Update Product"}
         </button>
 
       </div>
