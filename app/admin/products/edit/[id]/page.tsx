@@ -356,7 +356,7 @@ async function uploadGalleryImages(productId: string) {
       return;
     }
 
-    let imageUrl = "";
+    let imageUrl = imagePreview;
 
 setUploading(true);
 setUploadStatus("Saving Product...");
