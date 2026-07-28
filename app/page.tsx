@@ -6,6 +6,7 @@ import FeaturedProducts from "./components/website/FeaturedProducts";
 import WhyChooseUs from "./components/website/WhyChooseUs";
 import Newsletter from "./components/website/Newsletter";
 import Footer from "./components/website/Footer";
+import MobileBottomNav from "./components/website/MobileBottomNav";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,7 @@ export default function HomePage() {
       <WhyChooseUs />
       <Newsletter />
       <Footer />
+      <MobileBottomNav />
     </>
   );
 }
