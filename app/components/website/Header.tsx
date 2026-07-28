@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E8E1CE] bg-white/95 backdrop-blur">
       <Container>
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <a
             href="/"
@@ -14,7 +14,7 @@ export default function Header() {
           </a>
 
           {/* Navigation */}
-          <nav className="flex flex-1 items-center justify-center gap-8 px-8">
+          <nav className="flex flex-1 items-center justify-center gap-10 px-8">
             <a
               href="/"
               className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
