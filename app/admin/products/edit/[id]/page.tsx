@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 <style jsx global>{`
@@ -44,7 +45,12 @@ type StockStatus = {
   name: string;
 };
 
-export default function NewProductPage() {
+export default function EditProductPage() {
+
+  const params = useParams();
+  const router = useRouter();
+
+  const id = params.id as string;
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 const [brands, setBrands] = useState<Brand[]>([]);
@@ -86,13 +92,20 @@ const [uploading, setUploading] = useState(false);
 const [uploadStatus, setUploadStatus] = useState("");
 
   useEffect(() => {
+
+  if (!id) return;
+
   loadCategories();
   loadSubCategories();
   loadBrands();
   loadColors();
   loadSizes();
   loadStockStatuses();
-}, []);
+
+  loadProduct();
+  loadGallery();
+
+}, [id]);
 
   useEffect(() => {
     if (slugEdited) return;
@@ -172,13 +185,67 @@ async function loadStockStatuses() {
   setStockStatuses(data || []);
 }
 
+async function loadProduct() {
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  setCategoryId(data.category_id ?? "");
+  setSubCategoryId(data.sub_category_id ?? "");
+  setBrandId(data.brand_id ?? "");
+  setColorId(data.color_id ?? "");
+  setSizeId(data.size_id ?? "");
+  setStockStatusId(data.stock_status_id ?? "");
+
+  setName(data.name ?? "");
+  setSlug(data.slug ?? "");
+  setSku(data.sku ?? "");
+
+  setShortDescription(data.short_description ?? "");
+  setDescription(data.description ?? "");
+
+  setPrice(String(data.price ?? ""));
+  setSalePrice(data.sale_price ? String(data.sale_price) : "");
+
+  setStock(String(data.stock ?? 0));
+
+  setFeatured(data.featured);
+  setActive(data.active);
+
+  setImagePreview(data.image_url ?? "");
+
+  setSlugEdited(true);
+}
+
 
 
   // ==========================
   // UPLOAD IMAGE
   // ==========================
 
-  async function uploadImage() {
+  async function loadGallery() {
+
+  const { data } = await supabase
+    .from("product_images")
+    .select("*")
+    .eq("product_id", id)
+    .order("sort_order");
+
+  if (data) {
+    // Next step এ use হবে
+  }
+
+}
+
+async function uploadImage() {
 
   if (!imageFile) return "";
 
@@ -263,7 +330,7 @@ async function uploadGalleryImages(productId: string) {
 
 }
 
-  async function addProduct() {
+  async function updateProduct() {
   try {
     if (
   !categoryId ||
@@ -299,6 +366,7 @@ imageUrl = await uploadImage();
   .from("products")
   .select("id")
   .eq("slug", slug)
+  .neq("id", id)
   .maybeSingle();
 
 if (slugError) {
@@ -317,6 +385,7 @@ const { data: skuExists, error: skuError } = await supabase
   .from("products")
   .select("id")
   .eq("sku", sku)
+  .neq("id", id)
   .maybeSingle();
 
 if (skuError) {
@@ -333,7 +402,7 @@ if (sku && skuExists) {
 
 const { data, error } = await supabase
   .from("products")
-  .insert({
+.update({
     category_id: categoryId,
     sub_category_id: subCategoryId || null,
     brand_id: brandId || null,
@@ -357,8 +426,7 @@ const { data, error } = await supabase
 
     image_url: imageUrl,
   })
-  .select()
-  .single();
+  .eq("id", id);
     if (error) {
   setUploading(false);
   alert(error.message);
