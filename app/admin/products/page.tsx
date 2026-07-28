@@ -28,6 +28,9 @@ brands: {
   name: string;
 } | null;
 
+color_ids: string[];
+size_ids: string[];
+
 colors: {
   name: string;
 } | null;
@@ -97,6 +100,20 @@ async function loadSizes() {
     .order("name");
 
   setAllSizes(data || []);
+}
+
+function getColorNames(ids: string[]) {
+  return allColors
+    .filter((x) => ids?.includes(x.id))
+    .map((x) => x.name)
+    .join(", ");
+}
+
+function getSizeNames(ids: string[]) {
+  return allSizes
+    .filter((x) => ids?.includes(x.id))
+    .map((x) => x.name)
+    .join(", ");
 }
 
 async function duplicateProduct(productId: string) {
@@ -361,11 +378,11 @@ async function duplicateProduct(productId: string) {
 </td>
 
 <td className="border p-2">
-  {product.colors?.name || "-"}
+  {getColorNames(product.color_ids) || "-"}
 </td>
 
 <td className="border p-2">
-  {product.sizes?.name || "-"}
+  {getSizeNames(product.size_ids) || "-"}
 </td>
 
 <td className="border p-2">
