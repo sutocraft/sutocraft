@@ -45,9 +45,19 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
 const [search, setSearch] = useState("");
 
+const [allColors, setAllColors] = useState<
+  { id: string; name: string }[]
+>([]);
+
+const [allSizes, setAllSizes] = useState<
+  { id: string; name: string }[]
+>([]);
+
   useEffect(() => {
-    loadProducts();
-  }, []);
+  loadProducts();
+  loadColors();
+  loadSizes();
+}, []);
 
   async function loadProducts() {
     const { data, error } = await supabase
@@ -70,6 +80,24 @@ const [search, setSearch] = useState("");
 
     setProducts((data as Product[]) || []);
   }
+
+async function loadColors() {
+  const { data } = await supabase
+    .from("colors")
+    .select("id,name")
+    .order("name");
+
+  setAllColors(data || []);
+}
+
+async function loadSizes() {
+  const { data } = await supabase
+    .from("sizes")
+    .select("id,name")
+    .order("name");
+
+  setAllSizes(data || []);
+}
 
 async function duplicateProduct(productId: string) {
 
