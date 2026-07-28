@@ -269,7 +269,7 @@ async function duplicateProduct(productId: string) {
 
     <tr>
 
-      <td colSpan={10} className="text-center p-8 text-gray-500">
+      <td colSpan={15} className="text-center p-8 text-gray-500">
 
         No Products Found
 
