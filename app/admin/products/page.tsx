@@ -19,7 +19,6 @@ type Product = {
   categories: {
     name: string;
   } | null;
-};
 
 sub_categories: {
   name: string;
