@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Container from "./Container";
+import ProductCard from "./ProductCard";
 import {
   getFeaturedProducts,
   WebsiteProduct,
@@ -50,11 +51,21 @@ console.log(products);
               {/* Image */}
               <div className="relative overflow-hidden bg-[#F8F5EE]">
 
-                {product.new_arrival && (
-  <span className="absolute left-3 top-3 rounded-full bg-[#98691D] px-3 py-1 text-xs font-semibold text-white">
-    NEW
-  </span>
-)}
+                <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+
+  {product.new_arrival && (
+    <span className="rounded-full bg-[#98691D] px-3 py-1 text-xs font-semibold text-white">
+      NEW
+    </span>
+  )}
+
+  {product.discount_percentage > 0 && (
+    <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white">
+      -{product.discount_percentage}%
+    </span>
+  )}
+
+</div>
 
                 <button className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow transition hover:bg-[#98691D] hover:text-white">
                   ♡
