@@ -68,13 +68,28 @@ const [stockStatusId, setStockStatusId] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [salePrice, setSalePrice] = useState("");
+const [discountPercentage, setDiscountPercentage] = useState("0");
+const [salePrice, setSalePrice] = useState("");
   const [stock, setStock] = useState("0");
   const [featured, setFeatured] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
   const [active, setActive] = useState(true);
 
   const [slugEdited, setSlugEdited] = useState(false);
+  useEffect(() => {
+  const regularPrice = Number(price);
+  const discount = Number(discountPercentage);
+
+  if (!regularPrice || discount <= 0) {
+    setSalePrice("");
+    return;
+  }
+
+  const sale =
+    regularPrice - (regularPrice * discount) / 100;
+
+  setSalePrice(sale.toFixed(2));
+}, [price, discountPercentage]);
 
   // ==========================
   // IMAGE STATES
@@ -371,7 +386,12 @@ size_ids: sizeIds,
     description,
 
     price: Number(price),
-    sale_price: salePrice ? Number(salePrice) : null,
+
+discount_percentage: Number(discountPercentage),
+
+sale_price: salePrice
+  ? Number(salePrice)
+  : null,
     stock: Number(stock || 0),
 
     featured,
@@ -409,7 +429,8 @@ setSizeIds([]);
     setShortDescription("");
     setDescription("");
     setPrice("");
-    setSalePrice("");
+setDiscountPercentage("0");
+setSalePrice("");
     setStock("0");
     setFeatured(false);
 setNewArrival(false);
@@ -640,14 +661,24 @@ setUploading(false);
         />
 
         <input
-          type="number"
-          className="border border-gray-600 bg-black text-white p-2 w-full rounded"
-          placeholder="Sale Price"
-          value={salePrice}
-          onChange={(e) =>
-            setSalePrice(e.target.value)
-          }
-        />
+  type="number"
+  min="0"
+  max="100"
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  placeholder="Discount (%)"
+  value={discountPercentage}
+  onChange={(e) =>
+    setDiscountPercentage(e.target.value)
+  }
+/>
+
+        <input
+  type="number"
+  readOnly
+  className="border border-gray-600 bg-gray-800 text-green-400 p-2 w-full rounded"
+  placeholder="Sale Price (Auto)"
+  value={salePrice}
+/>
 
         <input
           type="number"
