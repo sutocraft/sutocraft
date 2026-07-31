@@ -7,6 +7,7 @@ export type WebsiteProduct = {
   image_url: string | null;
   price: number;
   sale_price: number | null;
+discount_percentage: number;
   featured: boolean;
   new_arrival: boolean;
   active: boolean;
