@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
 export type WebsiteProduct = {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   image_url: string | null;
@@ -12,6 +12,16 @@ discount_percentage: number;
   new_arrival: boolean;
   active: boolean;
   stock: number;
+  short_description: string | null;
+description: string | null;
+sku: string | null;
+
+brand_id: string | null;
+category_id: string | null;
+sub_category_id: string | null;
+
+color_ids: string[] | null;
+size_ids: string[] | null;
 };
 
 export async function getFeaturedProducts(): Promise<WebsiteProduct[]> {
@@ -59,4 +69,37 @@ export async function getAllProducts(): Promise<WebsiteProduct[]> {
   }
 
   return (data ?? []) as WebsiteProduct[];
+}
+
+export async function getProductBySlug(
+  slug: string
+): Promise<WebsiteProduct | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+.eq("slug", decodeURIComponent(slug))
+.maybeSingle();
+
+  if (error) {
+  console.log("Slug =", slug);
+  console.log(error);
+  return null;
+}
+
+  return data as WebsiteProduct;
+}
+
+export async function getProductGallery(productId: string) {
+  const { data, error } = await supabase
+    .from("product_images")
+    .select("*")
+    .eq("product_id", productId)
+    .order("sort_order");
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
 }
