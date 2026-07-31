@@ -11,7 +11,8 @@ type Product = {
   sku: string;
   price: number;
   sale_price: number;
-  stock: number;
+discount_percentage: number;
+stock: number;
   image_url: string;
   featured: boolean;
   new_arrival: boolean;
@@ -277,12 +278,16 @@ async function duplicateProduct(productId: string) {
       </th>
 
       <th className="border p-2">
-        Sale
-      </th>
+  Sale
+</th>
 
-      <th className="border p-2">
-        Stock
-      </th>
+<th className="border p-2">
+  Discount
+</th>
+
+<th className="border p-2">
+  Stock
+</th>
 
       <th className="border p-2">
         Status
@@ -319,7 +324,7 @@ async function duplicateProduct(productId: string) {
 
     <tr>
 
-      <td colSpan={16} className="text-center p-8 text-gray-500">
+      <td colSpan={17} className="text-center p-8 text-gray-500">
 
         No Products Found
 
@@ -399,10 +404,16 @@ async function duplicateProduct(productId: string) {
       </td>
 
       <td className="border p-2 text-green-400">
-        ৳ {product.sale_price}
-      </td>
+  ৳ {product.sale_price}
+</td>
 
-      <td className="border p-2">
+<td className="border p-2 text-yellow-400 font-semibold">
+  {product.discount_percentage > 0
+    ? `${product.discount_percentage}%`
+    : "-"}
+</td>
+
+<td className="border p-2">
 
         {product.stock > 10 ? (
 
