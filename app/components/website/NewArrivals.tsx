@@ -49,9 +49,19 @@ export default function NewArrivals() {
               {/* Image */}
 <div className="relative h-[260px] sm:h-[320px] lg:h-[420px] w-full overflow-hidden bg-[#F8F5EE]">
 
-  <span className="absolute left-3 top-3 z-10 rounded-full bg-[#98691D] px-2 py-1 text-[10px] font-semibold text-white sm:left-4 sm:top-4 sm:px-3 sm:text-xs">
+  <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+
+  <span className="rounded-full bg-[#98691D] px-2 py-1 text-[10px] font-semibold text-white sm:px-3 sm:text-xs">
     NEW
   </span>
+
+  {product.discount_percentage > 0 && (
+    <span className="rounded-full bg-red-600 px-2 py-1 text-[10px] font-bold text-white sm:px-3 sm:text-xs">
+      -{product.discount_percentage}%
+    </span>
+  )}
+
+</div>
 
   {product.image_url ? (
     <img
