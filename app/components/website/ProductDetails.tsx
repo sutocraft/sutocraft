@@ -123,13 +123,21 @@ function resetZoom() {
     )}
 
     <img
-      ref={imageRef}
-      src={selectedImage || product.image_url || ""}
-      alt={product.name}
-      onMouseMove={handleZoom}
-      onMouseLeave={resetZoom}
-      className="mx-auto h-[650px] w-full cursor-zoom-in object-contain transition-transform duration-200"
-    />
+  ref={imageRef}
+  src={selectedImage || product.image_url || ""}
+  alt={product.name}
+  onMouseMove={(e) => {
+    if (window.innerWidth >= 1024) {
+      handleZoom(e);
+    }
+  }}
+  onMouseLeave={() => {
+    if (window.innerWidth >= 1024) {
+      resetZoom();
+    }
+  }}
+  className="mx-auto h-[650px] w-full cursor-zoom-in object-contain transition-transform duration-200"
+/>
 
   </div>
 
