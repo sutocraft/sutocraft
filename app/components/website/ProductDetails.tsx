@@ -468,6 +468,76 @@ function resetZoom() {
 
 </div>
 
+{/* Tab Content */}
+
+<div className="rounded-b-2xl border border-t-0 border-gray-200 bg-white p-6">
+
+  {activeTab === "description" && (
+
+    product.description ? (
+
+      <div
+  style={{
+    color: "#4B5563",
+    lineHeight: "1.8",
+  }}
+  dangerouslySetInnerHTML={{
+    __html: product.description,
+  }}
+/>
+
+    ) : (
+
+      <p className="text-[#2B2B2B]">
+  No description available.
+</p>
+
+    )
+
+  )}
+
+  {activeTab === "specification" && (
+
+    product.specification ? (
+
+      <div
+  style={{
+    color: "#4B5563",
+    lineHeight: "1.8",
+  }}
+  dangerouslySetInnerHTML={{
+    __html: product.specification,
+  }}
+/>
+
+    ) : (
+
+      <p className="text-[#2B2B2B]">
+  No specification available.
+</p>
+
+    )
+
+  )}
+
+  {activeTab === "reviews" && (
+
+    <div>
+
+      <h3 className="mb-2 text-lg font-semibold text-[#2B2B2B]">
+  Customer Reviews
+</h3>
+
+      <p className="text-[#2B2B2B]">
+  No reviews yet.
+</p>
+
+    </div>
+
+  )}
+
+</div>
+
 {/* Features */}
 
 <div className="mt-10 grid grid-cols-2 gap-4">
