@@ -100,7 +100,7 @@ function resetZoom() {
     <section className="bg-[#F8F5EE] py-12">
       <div className="mx-auto max-w-7xl px-4">
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2">
 
           {/* LEFT */}
 
@@ -108,7 +108,7 @@ function resetZoom() {
 
   {/* Main Image */}
 
-  <div className="relative overflow-hidden rounded-3xl bg-white p-6">
+  <div className="relative overflow-hidden rounded-3xl bg-white p-3 sm:p-4 lg:p-6">
 
     {product.new_arrival && (
       <span className="absolute left-5 top-5 rounded-full bg-[#98691D] px-3 py-1 text-xs font-bold text-white">
@@ -136,7 +136,7 @@ function resetZoom() {
       resetZoom();
     }
   }}
-  className="mx-auto h-[650px] w-full cursor-zoom-in object-contain transition-transform duration-200"
+ className="mx-auto h-[320px] sm:h-[420px] lg:h-[650px] w-full cursor-zoom-in object-contain transition-transform duration-200"
 />
 
   </div>
@@ -193,7 +193,7 @@ function resetZoom() {
 
 <div className="space-y-6">
 
-  <h1 className="text-4xl font-bold text-[#2B2B2B]">
+  <h1 className="text-3xl sm:text-4xl font-bold leading-tight text-[#2B2B2B]">
     {product.name}
   </h1>
 
@@ -215,12 +215,12 @@ function resetZoom() {
 
   <div className="flex items-center gap-4">
 
-    <span className="text-5xl font-bold text-[#98691D]">
+    <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#98691D]">
       ৳{product.sale_price ?? product.price}
     </span>
 
     {product.sale_price && (
-      <span className="text-2xl text-gray-400 line-through">
+      <span className="text-lg sm:text-xl lg:text-2xl text-gray-400 line-through">
         ৳{product.price}
       </span>
     )}
