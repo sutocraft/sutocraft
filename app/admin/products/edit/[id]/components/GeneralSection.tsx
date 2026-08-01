@@ -27,7 +27,10 @@ type Props = {
   setShortDescription: (v: string) => void;
 
   description: string;
-  setDescription: (v: string) => void;
+setDescription: (v: string) => void;
+
+specification: string;
+setSpecification: (v: string) => void;
 
   price: string;
   setPrice: (v: string) => void;
@@ -147,47 +150,28 @@ export default function GeneralSection(props: Props) {
 
       </div>
 
-            {/* Short Description */}
+            {/* Specification */}
 
-      <div>
+<div>
 
-        <label className="block mb-2 font-medium">
-          Short Description
-        </label>
+  <label className="block mb-2 font-medium">
+    Specification
+  </label>
 
-        <textarea
-          rows={3}
-          value={props.shortDescription}
-          onChange={(e) =>
-            props.setShortDescription(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-2"
-        />
+  <textarea
+    rows={8}
+    value={props.specification}
+    onChange={(e) =>
+      props.setSpecification(
+        e.target.value
+      )
+    }
+    className="w-full rounded border p-2"
+  />
 
-      </div>
+</div>
 
-      {/* Description */}
-
-      <div>
-
-        <label className="block mb-2 font-medium">
-          Description
-        </label>
-
-        <textarea
-          rows={8}
-          value={props.description}
-          onChange={(e) =>
-            props.setDescription(
-              e.target.value
-            )
-          }
-          className="w-full rounded border p-2"
-        />
-
-      </div>
+{/* Price */} 
 
       {/* Price */}
 
