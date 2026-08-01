@@ -161,9 +161,117 @@ console.log({
 
   </div>
 
-  <p className="text-lg text-gray-700">
-    {product.short_description}
-  </p>
+  {/* Rating */}
+
+<div className="mt-4 flex items-center gap-2">
+
+  <div className="text-yellow-500 text-lg">
+    ★★★★★
+  </div>
+
+  <span className="text-sm text-gray-500">
+    (24 Reviews)
+  </span>
+
+</div>
+
+{/* Price */}
+
+<div className="mt-4 flex items-center gap-3">
+
+  <span className="text-5xl font-bold text-[#98691D]">
+    ৳{product.sale_price ?? product.price}
+  </span>
+
+  {product.sale_price && (
+    <span className="text-3xl text-gray-400 line-through">
+      ৳{product.price}
+    </span>
+  )}
+
+</div>
+
+{/* Discount */}
+
+{product.discount_percentage > 0 && (
+
+  <div className="mt-2">
+
+    <span className="rounded bg-red-600 px-3 py-1 text-sm font-semibold text-white">
+      {product.discount_percentage}% OFF
+    </span>
+
+  </div>
+
+)}
+
+{/* Stock */}
+
+<div className="mt-5">
+
+  <span
+    className={`rounded-full px-3 py-1 text-sm font-semibold ${
+      product.stock > 0
+        ? "bg-green-100 text-green-700"
+        : "bg-red-100 text-red-700"
+    }`}
+  >
+    {product.stock > 0 ? "In Stock" : "Out of Stock"}
+  </span>
+
+</div>
+
+{/* Description */}
+
+<p className="mt-6 text-gray-700 leading-7">
+  {product.short_description}
+</p>
+
+{/* Product Info */}
+
+<div className="mt-8 space-y-3 text-sm">
+
+  <div className="flex">
+
+    <span className="w-32 font-semibold">
+      SKU
+    </span>
+
+    <span>{product.sku}</span>
+
+  </div>
+
+  <div className="flex">
+
+    <span className="w-32 font-semibold">
+      Brand
+    </span>
+
+    <span>{product.brand_name}</span>
+
+  </div>
+
+  <div className="flex">
+
+    <span className="w-32 font-semibold">
+      Category
+    </span>
+
+    <span>{product.category_name}</span>
+
+  </div>
+
+  <div className="flex">
+
+    <span className="w-32 font-semibold">
+      Sub Category
+    </span>
+
+    <span>{product.sub_category_name}</span>
+
+  </div>
+
+</div>
 
 </div>
 
