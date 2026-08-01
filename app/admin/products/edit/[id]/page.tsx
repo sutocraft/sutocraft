@@ -72,6 +72,9 @@ const [stockStatusId, setStockStatusId] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
 
+const [specification, setSpecification] =
+  useState("");
+
   const [price, setPrice] = useState("");
 const [discountPercentage, setDiscountPercentage] = useState("");
 const [salePrice, setSalePrice] = useState("");
@@ -281,9 +284,10 @@ setSizeIds(data.size_ids ?? []);
   setSku(data.sku ?? "");
 
   setShortDescription(data.short_description ?? "");
-  setDescription(data.description ?? "");
+setDescription(data.description ?? "");
+setSpecification(data.specification ?? "");
 
-  setPrice(String(data.price ?? ""));
+setPrice(String(data.price ?? ""));
 
 setDiscountPercentage(
   String(data.discount_percentage ?? 0)
@@ -653,11 +657,13 @@ size_ids:
         sku,
 
         short_description:
-          shortDescription,
+  shortDescription,
 
-        description,
+description,
 
-        price: Number(price),
+specification,
+
+price: Number(price),
 
 discount_percentage: Number(discountPercentage),
 
@@ -947,16 +953,28 @@ return (
       />
 
       <textarea
-        rows={5}
-        className="border border-gray-600 bg-black text-white p-2 w-full rounded"
-        placeholder="Description"
-        value={description}
-        onChange={(e) =>
-          setDescription(
-            e.target.value
-          )
-        }
-      />
+  rows={5}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  placeholder="Description"
+  value={description}
+  onChange={(e) =>
+    setDescription(
+      e.target.value
+    )
+  }
+/>
+
+<textarea
+  rows={5}
+  className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  placeholder="Specification"
+  value={specification}
+  onChange={(e) =>
+    setSpecification(
+      e.target.value
+    )
+  }
+/>
 
       <input
         type="number"
