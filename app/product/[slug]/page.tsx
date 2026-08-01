@@ -1,4 +1,4 @@
-import ProductDetails from "../../components/website/ProductDetails";
+import ProductDetails from "@/app/components/website/ProductDetails";
 
 type Props = {
   params: Promise<{
