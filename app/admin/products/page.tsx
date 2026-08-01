@@ -13,7 +13,12 @@ type Product = {
   sale_price: number;
 discount_percentage: number;
 stock: number;
-  image_url: string;
+
+short_description: string | null;
+description: string | null;
+specification: string | null;
+
+image_url: string;
   featured: boolean;
   new_arrival: boolean;
   active: boolean;
@@ -148,7 +153,9 @@ async function duplicateProduct(productId: string) {
 
         description: product.description,
 
-        price: product.price,
+specification: product.specification,
+
+price: product.price,
 
         sale_price: product.sale_price,
 
@@ -262,6 +269,18 @@ async function duplicateProduct(productId: string) {
 </th>
 
 <th className="border p-2">
+  Short Description
+</th>
+
+<th className="border p-2">
+  Description
+</th>
+
+<th className="border p-2">
+  Specification
+</th>
+
+<th className="border p-2">
   Color
 </th>
 
@@ -324,7 +343,7 @@ async function duplicateProduct(productId: string) {
 
     <tr>
 
-      <td colSpan={17} className="text-center p-8 text-gray-500">
+      <td colSpan={20} className="text-center p-8 text-gray-500">
 
         No Products Found
 
@@ -385,6 +404,28 @@ async function duplicateProduct(productId: string) {
 
 <td className="border p-2">
   {product.brands?.name || "-"}
+</td>
+
+<td className="border p-2 max-w-[220px]">
+  <div className="line-clamp-2">
+    {product.short_description || "-"}
+  </div>
+</td>
+
+<td className="border p-2 max-w-[250px]">
+  <div className="line-clamp-2">
+    {product.description
+      ? product.description.replace(/<[^>]+>/g, "")
+      : "-"}
+  </div>
+</td>
+
+<td className="border p-2 max-w-[250px]">
+  <div className="line-clamp-2">
+    {product.specification
+      ? product.specification.replace(/<[^>]+>/g, "")
+      : "-"}
+  </div>
 </td>
 
 <td className="border p-2">
