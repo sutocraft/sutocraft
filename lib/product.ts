@@ -33,6 +33,16 @@ category?: {
 sub_category?: {
   name: string;
 };
+sizes?: {
+  id: string;
+  name: string;
+}[];
+
+colors?: {
+  id: string;
+  name: string;
+  code: string;
+}[];
 };
 
 
@@ -88,7 +98,12 @@ export async function getProductBySlug(
 ): Promise<WebsiteProduct | null> {
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+  *,
+  brand:brands(name),
+  category:categories(name),
+  sub_category:sub_categories(name)
+`)
 .eq("slug", decodeURIComponent(slug))
 .maybeSingle();
 
