@@ -14,6 +14,8 @@ discount_percentage: number;
   stock: number;
   short_description: string | null;
 description: string | null;
+specification: string | null;
+
 sku: string | null;
 
 brand_id: string | null;
