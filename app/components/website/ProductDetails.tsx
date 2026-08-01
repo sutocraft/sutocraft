@@ -37,7 +37,12 @@ const imageRef =
   useRef<HTMLImageElement>(null);
 
   const [quantity, setQuantity] =
-    useState(1);
+  useState(1);
+
+const [activeTab, setActiveTab] =
+  useState<"description" | "specification" | "reviews">(
+    "description"
+  );
 
   useEffect(() => {
     loadProduct();
@@ -415,6 +420,51 @@ function resetZoom() {
   <button className="rounded-2xl border border-gray-300 bg-white py-4 text-lg font-semibold text-[#2B2B2B] transition hover:bg-gray-100">
     ♡ Add To Wishlist
   </button>
+
+</div>
+
+{/* Product Tabs */}
+
+<div className="mt-10">
+
+  {/* Tab Buttons */}
+
+  <div className="flex border-b">
+
+    <button
+      className={`px-6 py-3 font-semibold border-b-2 ${
+        activeTab === "description"
+          ? "border-[#98691D] text-[#98691D]"
+          : "border-transparent text-gray-500 hover:text-[#98691D]"
+      }`}
+      onClick={() => setActiveTab("description")}
+    >
+      Description
+    </button>
+
+    <button
+      className={`px-6 py-3 font-semibold border-b-2 ${
+        activeTab === "specification"
+          ? "border-[#98691D] text-[#98691D]"
+          : "border-transparent text-gray-500 hover:text-[#98691D]"
+      }`}
+      onClick={() => setActiveTab("specification")}
+    >
+      Specification
+    </button>
+
+    <button
+      className={`px-6 py-3 font-semibold border-b-2 ${
+        activeTab === "reviews"
+          ? "border-[#98691D] text-[#98691D]"
+          : "border-transparent text-gray-500 hover:text-[#98691D]"
+      }`}
+      onClick={() => setActiveTab("reviews")}
+    >
+      Reviews
+    </button>
+
+  </div>
 
 </div>
 
