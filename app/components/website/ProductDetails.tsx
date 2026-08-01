@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   getProductBySlug,
   getProductGallery,
@@ -27,7 +31,10 @@ export default function ProductDetails({
     useState<GalleryImage[]>([]);
 
   const [selectedImage, setSelectedImage] =
-    useState("");
+  useState("");
+
+const imageRef =
+  useRef<HTMLImageElement>(null);
 
   const [quantity, setQuantity] =
     useState(1);
@@ -55,6 +62,31 @@ export default function ProductDetails({
 
     setGallery(images);
   }
+
+function handleZoom(
+  e: React.MouseEvent<HTMLImageElement>
+) {
+  if (!imageRef.current) return;
+
+  const { left, top, width, height } =
+    imageRef.current.getBoundingClientRect();
+
+  const x = ((e.clientX - left) / width) * 100;
+  const y = ((e.clientY - top) / height) * 100;
+
+  imageRef.current.style.transformOrigin =
+    `${x}% ${y}%`;
+
+  imageRef.current.style.transform =
+    "scale(2)";
+}
+
+function resetZoom() {
+  if (!imageRef.current) return;
+
+  imageRef.current.style.transform =
+    "scale(1)";
+}
 
   if (!product) {
     return (
@@ -89,11 +121,18 @@ export default function ProductDetails({
                     : "border-gray-200"
                 }`}
               >
-                <img
-                  src={product.image_url || ""}
-                  alt=""
-                  className="h-24 w-24 object-cover"
-                />
+                <div className="overflow-hidden rounded-2xl">
+
+  <img
+    ref={imageRef}
+    src={selectedImage || product.image_url || ""}
+    alt={product.name}
+    onMouseMove={handleZoom}
+    onMouseLeave={resetZoom}
+    className="h-[600px] w-full cursor-zoom-in object-contain transition-transform duration-200"
+  />
+
+</div>
               </button>
 
               {gallery.map((img) => (
