@@ -104,90 +104,81 @@ function resetZoom() {
 
           {/* LEFT */}
 
-          <div className="flex gap-4">
+<div>
 
-            <div className="flex flex-col gap-3">
+  {/* Main Image */}
 
-              <button
-                onClick={() =>
-                  setSelectedImage(
-                    product.image_url || ""
-                  )
-                }
-                className={`overflow-hidden rounded-xl border-2 ${
-                  selectedImage ===
-                  product.image_url
-                    ? "border-[#98691D]"
-                    : "border-gray-200"
-                }`}
-              >
-                <img
-                  src={product.image_url || ""}
-                  alt=""
-                  className="h-24 w-24 object-cover"
-                />
-              </button>
+  <div className="relative overflow-hidden rounded-3xl bg-white p-6">
 
-              {gallery.map((img) => (
-                <button
-                  key={img.id}
-                  onClick={() =>
-                    setSelectedImage(
-                      img.image_url
-                    )
-                  }
-                  className={`overflow-hidden rounded-xl border-2 ${
-                    selectedImage ===
-                    img.image_url
-                      ? "border-[#98691D]"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <img
-                    src={img.image_url}
-                    alt=""
-                    className="h-24 w-24 object-cover"
-                  />
-                </button>
-              ))}
+    {product.new_arrival && (
+      <span className="absolute left-5 top-5 rounded-full bg-[#98691D] px-3 py-1 text-xs font-bold text-white">
+        NEW
+      </span>
+    )}
 
-            </div>
+    {product.discount_percentage > 0 && (
+      <span className="absolute left-5 top-16 rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white">
+        -{product.discount_percentage}%
+      </span>
+    )}
 
-            <div className="relative flex-1 rounded-3xl bg-white p-5">
+    <img
+      ref={imageRef}
+      src={selectedImage || product.image_url || ""}
+      alt={product.name}
+      onMouseMove={handleZoom}
+      onMouseLeave={resetZoom}
+      className="mx-auto h-[650px] w-full cursor-zoom-in object-contain transition-transform duration-200"
+    />
 
-              {product.new_arrival && (
-                <span className="absolute left-5 top-5 rounded-full bg-[#98691D] px-3 py-1 text-xs font-bold text-white">
-                  NEW
-                </span>
-              )}
+  </div>
 
-              {product.discount_percentage >
-                0 && (
-                <span className="absolute left-5 top-16 rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white">
-                  -
-                  {
-                    product.discount_percentage
-                  }
-                  %
-                </span>
-              )}
+  {/* Gallery */}
 
-              <img
-  ref={imageRef}
-  src={
-    selectedImage ||
-    product.image_url ||
-    ""
-  }
-  alt={product.name}
-  onMouseMove={handleZoom}
-  onMouseLeave={resetZoom}
-  className="h-[600px] w-full cursor-zoom-in object-contain transition-transform duration-200"
-/>
+  <div className="mt-5 flex flex-wrap gap-4">
 
-            </div>
+    <button
+      onClick={() =>
+        setSelectedImage(product.image_url || "")
+      }
+      className={`overflow-hidden rounded-xl border-2 ${
+        selectedImage === product.image_url
+          ? "border-[#98691D]"
+          : "border-gray-200"
+      }`}
+    >
+      <img
+        src={product.image_url || ""}
+        alt=""
+        className="h-24 w-24 object-cover"
+      />
+    </button>
 
-          </div>
+    {gallery.map((img) => (
+      <button
+        key={img.id}
+        onClick={() =>
+          setSelectedImage(img.image_url)
+        }
+        className={`overflow-hidden rounded-xl border-2 ${
+          selectedImage === img.image_url
+            ? "border-[#98691D]"
+            : "border-gray-200"
+        }`}
+      >
+        <img
+          src={img.image_url}
+          alt=""
+          className="h-24 w-24 object-cover"
+        />
+      </button>
+    ))}
+
+  </div>
+
+</div>
+
+        
           {/* RIGHT */}
 
           {/* RIGHT */}
