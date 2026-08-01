@@ -22,7 +22,19 @@ sub_category_id: string | null;
 
 color_ids: string[] | null;
 size_ids: string[] | null;
+brand?: {
+  name: string;
 };
+
+category?: {
+  name: string;
+};
+
+sub_category?: {
+  name: string;
+};
+};
+
 
 export async function getFeaturedProducts(): Promise<WebsiteProduct[]> {
   const { data, error } = await supabase
@@ -86,7 +98,9 @@ export async function getProductBySlug(
   return null;
 }
 
-  return data as WebsiteProduct;
+  console.log("Product =", data);
+
+return data as WebsiteProduct;
 }
 
 export async function getProductGallery(productId: string) {
