@@ -43,7 +43,6 @@ sizes?: {
 colors?: {
   id: string;
   name: string;
-  code: string;
 }[];
 };
 
@@ -116,6 +115,32 @@ export async function getProductBySlug(
 }
 
   console.log("Product =", data);
+
+if (!data) return null;
+
+// Load Sizes
+if (data.size_ids?.length) {
+  const { data: sizes } = await supabase
+    .from("sizes")
+    .select("id,name")
+    .in("id", data.size_ids);
+
+  data.sizes = sizes || [];
+} else {
+  data.sizes = [];
+}
+
+// Load Colors
+if (data.color_ids?.length) {
+  const { data: colors } = await supabase
+    .from("colors")
+    .select("id,name")
+    .in("id", data.color_ids);
+
+  data.colors = colors || [];
+} else {
+  data.colors = [];
+}
 
 return data as WebsiteProduct;
 }
