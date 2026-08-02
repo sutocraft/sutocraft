@@ -11,6 +11,8 @@ import {
   WebsiteProduct,
 } from "@/lib/product";
 
+import { addToCart } from "@/lib/cart";
+
 type Props = {
   slug: string;
 };
