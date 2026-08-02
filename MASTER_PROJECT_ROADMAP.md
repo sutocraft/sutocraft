@@ -126,159 +126,21 @@ Reports
 
 [x] Colors
 
-[x] Stock Status
-
-[x] Products
-
-[x] Product Gallery
-
-[x] Cart
-
---------------------------------------------------
-
-## CUSTOMER TABLES
-
-[ ] Customers
-
-[ ] Customer Address
-
-[ ] Customer Wishlist
-
-[ ] Customer Reviews
-
-[ ] Customer Notifications
-
---------------------------------------------------
-
-## ORDER TABLES
-
-[ ] Orders
-
-[ ] Order Items
-
-[ ] Order Status History
-
-[ ] Order Notes
-
---------------------------------------------------
-
-## PAYMENT TABLES
-
-[ ] Payments
-
-[ ] Payment Methods
-
-[ ] Transactions
-
---------------------------------------------------
-
-## SHIPPING TABLES
-
-[ ] Shipping Zones
-
-[ ] Shipping Methods
-
-[ ] Delivery Charges
-
---------------------------------------------------
-
-## CMS TABLES
-
-[ ] Website Settings
-
-[ ] Hero Slider
-
-[ ] Contact Information
-
-[ ] Social Links
-
-[ ] Footer
-
-[ ] About
-
-[ ] FAQ
-
-[ ] Policies
-
---------------------------------------------------
-
-## MARKETING TABLES
-
-[ ] Coupons
-
-[ ] Popup Banner
-
-[ ] Offer Banner
-
-[ ] Newsletter
-
---------------------------------------------------
-
-## REPORT TABLES
-
-[ ] Sales Report
-
-[ ] Customer Report
-
-[ ] Inventory Report
-
---------------------------------------------------
-
-## SYSTEM TABLES
-
-[ ] Activity Logs
-
-[ ] Media Library
-
-[ ] Settings
-
-[ ] Backup Logs
-
-# ================================================================================
-
-# ADMIN PANEL
-
-## Dashboard
-
-[ ] Total Sales
-
-[ ] Monthly Sales
-
-[ ] Daily Sales
-
-[ ] Total Products
-
-[ ] Total Customers
-
-[ ] Pending Orders
-
-[ ] Low Stock
-
-[ ] Recent Orders
-
-[ ] Recent Customers
-
---------------------------------------------------
-
-## Product Management
-
-[x] Add Product
-
-[x] Edit Product
-
-[x] Delete Product
-
-[x] Gallery
-
-[x] Description
-
-[x] Specification
-
-[x] Size
-
-[x] Color
-
 [x] Stock
+
+--------------------------------------------------
+
+## Product Variants
+
+[ ] Variant SKU
+
+[ ] Variant Price
+
+[ ] Variant Stock
+
+[ ] Variant Image
+
+--------------------------------------------------
 
 [ ] Product SEO
 
@@ -403,6 +265,24 @@ Reports
 [ ] Background Color
 
 [ ] Text Color
+
+--------------------------------------------------
+
+## Home Page Management
+
+[ ] Featured Products Count
+
+[ ] New Arrival Count
+
+[ ] Best Selling Count
+
+[ ] Category Section
+
+[ ] Banner Section
+
+[ ] Offer Section
+
+[ ] Enable / Disable Sections
 
 --------------------------------------------------
 
@@ -544,6 +424,18 @@ Future
 
 --------------------------------------------------
 
+## Notification Center
+
+[ ] Order Notification
+
+[ ] Stock Notification
+
+[ ] Coupon Notification
+
+[ ] Newsletter Notification
+
+--------------------------------------------------
+
 ## Media Library
 
 [ ] Upload Image
@@ -559,6 +451,18 @@ Future
 [ ] Folder Support
 
 [ ] Reuse Existing Media
+
+--------------------------------------------------
+
+## File Manager
+
+[ ] Image Compression
+
+[ ] Rename File
+
+[ ] Move File
+
+[ ] Delete Unused Media
 
 --------------------------------------------------
 
@@ -890,6 +794,22 @@ After Complete
 
 [ ] Account Status
 
+--------------------------------------------------
+
+## Customer Support
+
+[ ] Support Ticket
+
+[ ] Ticket Reply
+
+[ ] Contact Messages
+
+Future
+
+[ ] Live Chat
+
+[ ] WhatsApp Support
+
 # ================================================================================
 
 # SHOPPING
@@ -1008,6 +928,16 @@ Future
 
 --------------------------------------------------
 
+## Delivery Tracking
+
+[ ] Courier
+
+[ ] Tracking Number
+
+[ ] Tracking URL
+
+--------------------------------------------------
+
 ## Invoice
 
 [ ] Generate Invoice
@@ -1015,6 +945,34 @@ Future
 [ ] Print Invoice
 
 [ ] Download Invoice
+
+--------------------------------------------------
+
+## Returns & Refunds
+
+### Customer
+
+[ ] Return Request
+
+[ ] Return Reason
+
+[ ] Upload Return Images
+
+[ ] Return Status
+
+--------------------------------------------------
+
+### Admin
+
+[ ] Approve Return
+
+[ ] Reject Return
+
+[ ] Refund Amount
+
+[ ] Refund Status
+
+[ ] Refund History
 
 # ================================================================================
 
@@ -1055,6 +1013,16 @@ NEXT
 [ ] Stock History
 
 [ ] Stock Ledger
+
+--------------------------------------------------
+
+## Supplier Management
+
+[ ] Supplier Profile
+
+[ ] Supplier Contact
+
+[ ] Supplier Products
 
 --------------------------------------------------
 
@@ -1194,6 +1162,22 @@ NEXT
 
 ================================================================================
 
+# ANALYTICS
+
+## Visitors
+
+[ ] Total Visitors
+
+[ ] Product Views
+
+[ ] Page Views
+
+[ ] Conversion Rate
+
+[ ] Top Products
+
+================================================================================
+
 # MARKETING
 
 ## Coupon
@@ -1306,9 +1290,19 @@ NEXT
 
 --------------------------------------------------
 
-## Localization
+## Business Information
 
-[ ] Language
+[ ] Company BIN
+
+[ ] Trade License
+
+[ ] VAT Number
+
+[ ] TIN
+
+[ ] Invoice Prefix
+
+--------------------------------------------------
 
 [ ] Time Zone
 
@@ -1340,9 +1334,17 @@ NEXT
 
 --------------------------------------------------
 
-## Logs
+## System Logs
 
 [ ] Error Logs
+
+[ ] Login Logs
+
+[ ] Product Logs
+
+[ ] Order Logs
+
+[ ] Payment Logs
 
 [ ] Activity Logs
 
@@ -1407,6 +1409,18 @@ NEXT
 [ ] Login History
 
 [ ] Admin Activity
+
+================================================================================
+
+# SYSTEM HEALTH
+
+[ ] System Status
+
+[ ] Database Status
+
+[ ] Queue Status
+
+[ ] Scheduled Jobs
 
 ================================================================================
 
