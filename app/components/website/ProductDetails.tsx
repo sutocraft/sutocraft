@@ -39,6 +39,12 @@ const imageRef =
   const [quantity, setQuantity] =
   useState(1);
 
+const [selectedSize, setSelectedSize] =
+  useState("");
+
+const [selectedColor, setSelectedColor] =
+  useState("");
+
 const [activeTab, setActiveTab] =
   useState<"description" | "specification" | "reviews">(
     "description"
@@ -66,6 +72,14 @@ const [activeTab, setActiveTab] =
       );
 
     setGallery(images);
+
+if (data.sizes?.length) {
+  setSelectedSize(data.sizes[0].id);
+}
+
+if (data.colors?.length) {
+  setSelectedColor(data.colors[0].id);
+}
   }
 
 function handleZoom(
@@ -330,16 +344,23 @@ function resetZoom() {
 
   <div className="flex flex-wrap gap-3">
 
-    {["S", "M", "L", "XL", "XXL"].map((size) => (
+    {product.sizes?.map((size) => (
 
-      <button
-        key={size}
-        className="flex h-12 min-w-[52px] items-center justify-center rounded-xl border border-gray-300 bg-white px-5 font-semibold text-[#2B2B2B] transition-all duration-200 hover:border-[#98691D] hover:bg-[#98691D] hover:text-white"
-      >
-        {size}
-      </button>
+  <button
+    key={size.id}
+    onClick={() =>
+      setSelectedSize(size.id)
+    }
+    className={`flex h-12 min-w-[52px] items-center justify-center rounded-xl border px-5 font-semibold transition-all duration-200 ${
+      selectedSize === size.id
+        ? "border-[#98691D] bg-[#98691D] text-white"
+        : "border-gray-300 bg-white text-[#2B2B2B] hover:border-[#98691D]"
+    }`}
+  >
+    {size.name}
+  </button>
 
-    ))}
+))}
 
   </div>
 
@@ -353,17 +374,25 @@ function resetZoom() {
     Color
   </h3>
 
-  <div className="flex gap-4">
+  <div className="flex flex-wrap gap-3"></div>
 
-    <button className="h-11 w-11 rounded-full border-4 border-white bg-black shadow ring-2 ring-gray-300 transition hover:scale-110"></button>
+{product.colors?.map((color) => (
 
-    <button className="h-11 w-11 rounded-full border-4 border-white bg-red-600 shadow ring-2 ring-gray-300 transition hover:scale-110"></button>
+  <button
+    key={color.id}
+    onClick={() =>
+      setSelectedColor(color.id)
+    }
+    className={`rounded-xl border px-5 py-3 font-semibold transition-all duration-200 ${
+      selectedColor === color.id
+        ? "border-[#98691D] bg-[#98691D] text-white"
+        : "border-gray-300 bg-white text-[#2B2B2B] hover:border-[#98691D]"
+    }`}
+  >
+    {color.name}
+  </button>
 
-    <button className="h-11 w-11 rounded-full border-4 border-white bg-blue-600 shadow ring-2 ring-gray-300 transition hover:scale-110"></button>
-
-    <button className="h-11 w-11 rounded-full border-4 border-white bg-green-600 shadow ring-2 ring-gray-300 transition hover:scale-110"></button>
-
-  </div>
+))}
 
 </div>
 
