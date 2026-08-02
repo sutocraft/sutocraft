@@ -108,14 +108,35 @@ function resetZoom() {
   imageRef.current.style.transform =
     "scale(1)";
 }
-  
-  if (!product) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-xl">
-        Loading...
-      </div>
-    );
-  }
+
+// 👇 এখানেই add করো
+async function handleAddToCart() {
+  if (!product) return;
+
+  const result = await addToCart({
+  productId: product.id,
+  sizeId: selectedSize,
+  colorId: selectedColor,
+  quantity,
+});
+
+console.log(result);
+
+if (result.error) {
+  console.error(result.error);
+  alert(result.error.message);
+} else {
+  alert("Product added to cart.");
+}
+}
+
+if (!product) {
+  return (
+    <div className="flex min-h-screen items-center justify-center text-xl">
+      Loading...
+    </div>
+  );
+}
 
   return (
     <section className="bg-[#F8F5EE] py-12">
@@ -440,9 +461,12 @@ function resetZoom() {
 
 <div className="mt-10 flex flex-col gap-4">
 
-  <button className="rounded-2xl bg-[#98691D] py-4 text-lg font-semibold text-white transition hover:bg-[#7E5619]">
-    🛒 Add To Cart
-  </button>
+  <button
+  onClick={handleAddToCart}
+  className="rounded-2xl bg-[#98691D] py-4 text-lg font-semibold text-white transition hover:bg-[#7E5619]"
+>
+  🛒 Add To Cart
+</button>
 
   <button className="rounded-2xl border-2 border-[#98691D] bg-white py-4 text-lg font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white">
     ⚡ Buy Now
