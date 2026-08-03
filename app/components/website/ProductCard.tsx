@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { WebsiteProduct } from "@/lib/product";
+import { WebsiteProduct } from "@/lib/products";
 
 type Props = {
   product: WebsiteProduct;
