@@ -77,6 +77,9 @@ const [salePrice, setSalePrice] = useState("");
   const [stock, setStock] = useState("0");
   const [featured, setFeatured] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
+  const [showHero, setShowHero] = useState(false);
+
+const [heroOrder, setHeroOrder] = useState("0");
   const [active, setActive] = useState(true);
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -400,10 +403,15 @@ sale_price: salePrice
   ? Number(salePrice)
   : null,
     stock: Number(stock || 0),
+    
+show_hero: showHero,
+
+hero_order: Number(heroOrder),
 
     featured,
 new_arrival: newArrival,
 active,
+
 
     image_url: imageUrl,
   })
@@ -442,6 +450,9 @@ setSalePrice("");
     setStock("0");
     setFeatured(false);
 setNewArrival(false);
+setShowHero(false);
+
+setHeroOrder("0");
 setActive(true);
     setSlugEdited(false);
 
@@ -840,19 +851,19 @@ setGalleryPreviews(newPreview);
 
         <label className="flex items-center gap-2">
 
-          <input
-            type="checkbox"
-            checked={featured}
-            onChange={(e) =>
-              setFeatured(e.target.checked)
-            }
-          />
+  <input
+    type="checkbox"
+    checked={featured}
+    onChange={(e) =>
+      setFeatured(e.target.checked)
+    }
+  />
 
-          Featured Product
+  Featured Product
 
-        </label>
+</label>
 
-        <label className="flex items-center gap-2">
+<label className="flex items-center gap-2">
 
   <input
     type="checkbox"
@@ -866,19 +877,79 @@ setGalleryPreviews(newPreview);
 
 </label>
 
+<label className="flex items-center gap-2">
+
+  <input
+    type="checkbox"
+    checked={showHero}
+    onChange={(e) =>
+      setShowHero(e.target.checked)
+    }
+  />
+
+  Show On Hero
+
+</label>
+
+{showHero && (
+
+  <input
+    type="number"
+    min="0"
+    placeholder="Hero Order"
+    value={heroOrder}
+    onChange={(e) =>
+      setHeroOrder(e.target.value)
+    }
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  />
+
+)}
+
+<label className="flex items-center gap-2">
+
+  <input
+    type="checkbox"
+    checked={active}
+    onChange={(e) =>
+      setActive(e.target.checked)
+    }
+  />
+
+  Active Product
+
+</label>
+
         <label className="flex items-center gap-2">
 
-          <input
-            type="checkbox"
-            checked={active}
-            onChange={(e) =>
-              setActive(e.target.checked)
-            }
-          />
+  <input
+    type="checkbox"
+    checked={showHero}
+    onChange={(e) =>
+      setShowHero(e.target.checked)
+    }
+  />
 
-          Active Product
+  Show On Hero
 
-        </label>
+</label>
+
+
+
+{showHero && (
+
+  <input
+    type="number"
+    min="0"
+    placeholder="Hero Order"
+    value={heroOrder}
+    onChange={(e) =>
+      setHeroOrder(e.target.value)
+    }
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  />
+
+)}
 
         <button
   disabled={uploading}
