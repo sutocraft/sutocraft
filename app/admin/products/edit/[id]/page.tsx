@@ -82,6 +82,9 @@ const [salePrice, setSalePrice] = useState("");
 
   const [featured, setFeatured] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
+  const [showHero, setShowHero] = useState(false);
+
+const [heroOrder, setHeroOrder] = useState("0");
   const [active, setActive] = useState(true);
 
   const [slugEdited, setSlugEdited] = useState(false);
@@ -300,7 +303,15 @@ setSalePrice(
   setStock(String(data.stock ?? 0));
 
   setFeatured(data.featured ?? false);
+
 setNewArrival(data.new_arrival ?? false);
+
+setShowHero(data.show_hero ?? false);
+
+setHeroOrder(
+  String(data.hero_order ?? 0)
+);
+
 setActive(data.active ?? true);
 
   setImagePreview(data.image_url ?? "");
@@ -675,10 +686,16 @@ sale_price: salePrice
           Number(stock || 0),
 
         featured,
+
 new_arrival: newArrival,
+
+show_hero: showHero,
+
+hero_order: Number(heroOrder),
+
 active,
 
-        image_url: imageUrl,
+image_url: imageUrl,
 
       })
       .eq("id", id);
@@ -1280,6 +1297,35 @@ return (
         Active Product
 
       </label>
+
+      <label className="flex items-center gap-2">
+
+  <input
+    type="checkbox"
+    checked={showHero}
+    onChange={(e) =>
+      setShowHero(e.target.checked)
+    }
+  />
+
+  Show On Hero
+
+</label>
+
+{showHero && (
+
+  <input
+    type="number"
+    min="0"
+    placeholder="Hero Order"
+    value={heroOrder}
+    onChange={(e) =>
+      setHeroOrder(e.target.value)
+    }
+    className="border border-gray-600 bg-black text-white p-2 w-full rounded"
+  />
+
+)}
 
       <button
         type="button"
