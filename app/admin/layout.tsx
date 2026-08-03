@@ -48,11 +48,18 @@ export default function AdminLayout({
           </Link>
 
           <Link
-            href="/admin/orders"
-            style={{ color: "#fff", textDecoration: "none" }}
-          >
-            Orders
-          </Link>
+  href="/admin/orders"
+  style={{ color: "#fff", textDecoration: "none" }}
+>
+  Orders
+</Link>
+
+<Link
+  href="/admin/settings"
+  style={{ color: "#fff", textDecoration: "none" }}
+>
+  Website Settings
+</Link>
         </nav>
       </aside>
 
