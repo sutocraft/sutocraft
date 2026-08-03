@@ -1,8 +1,61 @@
 "use client";
 
+import { loginCustomer } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
+
+  const router = useRouter();
+
+  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  async function handleLogin(e: React.FormEvent) {
+  e.preventDefault();
+
+  setError("");
+
+  if (!emailOrPhone.trim()) {
+    setError("Enter your email or phone number");
+    return;
+  }
+
+  if (!password.trim()) {
+    setError("Enter your password");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await loginCustomer(emailOrPhone, password);
+
+alert("Login Success");
+
+console.log("Before push");
+
+router.push("/account");
+
+console.log("After push");
+return;
+
+} catch (err) {
+  if (err instanceof Error) {
+    setError(err.message || "Login failed");
+  } else {
+    setError("Login failed");
+  }
+} finally {
+    setLoading(false);
+  }
+}
   return (
     <main className="min-h-screen bg-[#F8F4EC] flex items-center justify-center px-5 py-16">
       <div className="w-full max-w-md bg-white rounded-2xl border border-[#E5D6BC] shadow-lg p-8">
@@ -21,18 +74,22 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
 
           <div>
             <label className="block mb-2 text-sm font-medium text-[#1F2937]">
-              Email Address
+              Email Address / Phone Number
             </label>
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full rounded-xl border border-[#E5D6BC] px-4 py-3 outline-none focus:border-[#A8741A]"
-            />
+         <input
+type="text"
+required  
+autoComplete="username"
+  value={emailOrPhone}
+  onChange={(e) => setEmailOrPhone(e.target.value)}
+  placeholder="Email or Phone Number"
+  className="w-full rounded-xl border border-[#E5D6BC] bg-white px-4 h-14 text-[#1F2937] placeholder:text-gray-400 outline-none transition focus:border-[#A8741A] focus:ring-2 focus:ring-[#A8741A]/20"
+/>
           </div>
 
           <div>
@@ -40,11 +97,26 @@ export default function LoginPage() {
               Password
             </label>
 
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-full rounded-xl border border-[#E5D6BC] px-4 py-3 outline-none focus:border-[#A8741A]"
-            />
+            <div className="relative">
+              <input
+  type={showPassword ? "text" : "password"}
+  required
+  autoComplete="current-password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  placeholder="Enter your password"
+  className="w-full rounded-xl border border-[#E5D6BC] bg-white px-4 h-14 text-[#1F2937] placeholder:text-gray-400 outline-none transition focus:border-[#A8741A] focus:ring-2 focus:ring-[#A8741A]/20"
+/>
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+  >
+    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+  </button>
+</div>
+
           </div>
 
           <div className="flex justify-end">
@@ -55,13 +127,24 @@ export default function LoginPage() {
               Forgot Password?
             </Link>
           </div>
+          
+          {error && (
+  <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+    {error}
+  </div>
+)}
 
           <button
-            type="submit"
-            className="w-full rounded-xl bg-[#A8741A] py-3 font-semibold text-white transition hover:bg-[#8C6416]"
-          >
-            Login
-          </button>
+type="submit"
+disabled={loading}
+className={`w-full rounded-xl py-3 font-semibold text-white transition ${
+  loading
+    ? "bg-gray-400 cursor-not-allowed"
+    : "bg-[#A8741A] hover:bg-[#8C6416]"
+}`}
+>
+{loading ? "Logging in..." : "Login"}
+</button>
         </form>
 
         <div className="mt-8 border-t border-[#E5D6BC] pt-6 text-center">
