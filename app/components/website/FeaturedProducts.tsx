@@ -6,7 +6,7 @@ import ProductCard from "./ProductCard";
 import {
   getFeaturedProducts,
   WebsiteProduct,
-} from "@/lib/product";
+} from "@/lib/products";
 
 
 export default function FeaturedProducts() {
