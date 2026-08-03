@@ -639,6 +639,257 @@ export default function SettingsPage() {
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
 
+        {/* Hero Information */}
+
+<div className="rounded-xl border border-slate-700 bg-slate-900 p-6">
+
+  <h2 className="mb-6 text-2xl font-bold">
+    Hero Information
+  </h2>
+
+  <div className="space-y-5">
+
+    <div>
+      <label className="mb-2 block">
+        Hero Subtitle
+      </label>
+
+      <input
+        name="hero_subtitle"
+        value={settings.hero_subtitle}
+        onChange={handleInput}
+        className="w-full rounded border p-3"
+      />
+    </div>
+
+    <div>
+      <label className="mb-2 block">
+        Hero Title
+      </label>
+
+      <input
+        name="hero_title"
+        value={settings.hero_title}
+        onChange={handleInput}
+        className="w-full rounded border p-3"
+      />
+    </div>
+
+    <div>
+      <label className="mb-2 block">
+        Hero Description
+      </label>
+
+      <textarea
+        name="hero_description"
+        value={settings.hero_description}
+        onChange={handleInput}
+        rows={4}
+        className="w-full rounded border p-3"
+      />
+    </div>
+
+  </div>
+
+</div>  
+
+<div className="grid gap-4 md:grid-cols-2">
+
+  <div>
+    <label className="mb-2 block">
+      Button 1 Text
+    </label>
+
+    <input
+      name="hero_button_1_text"
+      value={settings.hero_button_1_text}
+      onChange={handleInput}
+      className="w-full rounded border p-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block">
+      Button 1 Link
+    </label>
+
+    <input
+      name="hero_button_1_link"
+      value={settings.hero_button_1_link}
+      onChange={handleInput}
+      className="w-full rounded border p-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block">
+      Button 2 Text
+    </label>
+
+    <input
+      name="hero_button_2_text"
+      value={settings.hero_button_2_text}
+      onChange={handleInput}
+      className="w-full rounded border p-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block">
+      Button 2 Link
+    </label>
+
+    <input
+      name="hero_button_2_link"
+      value={settings.hero_button_2_link}
+      onChange={handleInput}
+      className="w-full rounded border p-3"
+    />
+  </div>
+
+</div>
+
+<div className="mt-6">
+
+  <ImageUploader
+    label="Hero Image"
+    folder="website/hero"
+    value={settings.hero_image}
+    onChange={(url) =>
+      setSettings((prev) => ({
+        ...prev,
+        hero_image: url,
+      }))
+    }
+  />
+
+</div>
+
+<div className="mt-6">
+
+  <label className="flex items-center gap-3">
+
+    <input
+      type="checkbox"
+      checked={settings.show_hero}
+      onChange={(e) =>
+        setSettings((prev) => ({
+          ...prev,
+          show_hero: e.target.checked,
+        }))
+      }
+    />
+
+    Show Hero Section
+
+  </label>
+
+</div>
+
+<div className="mt-8 rounded-xl border border-slate-700 p-6">
+
+  <h3 className="mb-5 text-xl font-semibold">
+
+    Hero Slider Settings
+
+  </h3>
+
+  <div className="space-y-5">
+
+    <label className="flex items-center gap-3">
+
+      <input
+        type="checkbox"
+        checked={settings.hero_auto_slide}
+        onChange={(e)=>
+          setSettings(prev=>({
+            ...prev,
+            hero_auto_slide:e.target.checked,
+          }))
+        }
+      />
+
+      Enable Auto Slide
+
+    </label>
+
+    <div>
+
+      <label className="mb-2 block">
+
+        Slide Interval (Seconds)
+
+      </label>
+
+      <input
+        type="number"
+        min={1}
+        max={30}
+        value={settings.hero_slide_interval}
+        onChange={(e)=>
+          setSettings(prev=>({
+            ...prev,
+            hero_slide_interval:Number(e.target.value),
+          }))
+        }
+        className="w-full rounded border p-3"
+      />
+
+    </div>
+
+    <div>
+
+      <label className="mb-2 block">
+
+        Transition Speed (ms)
+
+      </label>
+
+      <input
+        type="number"
+        min={100}
+        max={3000}
+        value={settings.hero_transition_speed}
+        onChange={(e)=>
+          setSettings(prev=>({
+            ...prev,
+            hero_transition_speed:Number(e.target.value),
+          }))
+        }
+        className="w-full rounded border p-3"
+      />
+
+    </div>
+
+    <div>
+
+      <label className="mb-2 block">
+
+        Maximum Hero Products
+
+      </label>
+
+      <input
+        type="number"
+        min={1}
+        max={20}
+        value={settings.hero_max_products}
+        onChange={(e)=>
+          setSettings(prev=>({
+            ...prev,
+            hero_max_products:Number(e.target.value),
+          }))
+        }
+        className="w-full rounded border p-3"
+      />
+
+    </div>
+
+  </div>
+
+</div>
+
+
         {/* Business Information */}
 
         <div className="rounded-xl border border-gray-700 bg-gray-900 p-6">
