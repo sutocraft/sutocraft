@@ -5,13 +5,7 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Customer Account Protection
-  if (pathname.startsWith("/account")) {
-    const token = request.cookies.get("sb-access-token");
-
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-  }
+  // Customer account middleware disabled for now
 
   // Admin Protection
   if (pathname.startsWith("/admin")) {
