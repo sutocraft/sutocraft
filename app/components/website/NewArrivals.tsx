@@ -6,7 +6,7 @@ import ProductCard from "./ProductCard";
 import {
   getNewArrivalProducts,
   WebsiteProduct,
-} from "@/lib/product";
+} from "@/lib/products";
 
 
 export default function NewArrivals() {
