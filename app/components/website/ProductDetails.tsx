@@ -9,7 +9,7 @@ import {
   getProductBySlug,
   getProductGallery,
   WebsiteProduct,
-} from "@/lib/product";
+} from "@/lib/products";
 
 import { addToCart } from "@/lib/cart";
 
