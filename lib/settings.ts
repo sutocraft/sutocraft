@@ -47,6 +47,29 @@ export interface WebsiteSettings {
 
   created_at?: string;
   updated_at?: string;
+
+    // Hero Section
+  hero_subtitle: string;
+  hero_title: string;
+  hero_description: string;
+
+  hero_button_1_text: string;
+  hero_button_1_link: string;
+
+  hero_button_2_text: string;
+  hero_button_2_link: string;
+
+  hero_image: string;
+
+show_hero: boolean;
+
+hero_auto_slide: boolean;
+
+hero_slide_interval: number;
+
+hero_transition_speed: number;
+
+hero_max_products: number;
 }
 
 export const defaultSettings: WebsiteSettings = {
@@ -91,6 +114,28 @@ export const defaultSettings: WebsiteSettings = {
   meta_description: "",
   meta_keywords: "",
   og_image: "",
+
+    hero_subtitle: "",
+  hero_title: "",
+  hero_description: "",
+
+  hero_button_1_text: "",
+  hero_button_1_link: "",
+
+  hero_button_2_text: "",
+  hero_button_2_link: "",
+
+  hero_image: "",
+
+show_hero: true,
+
+hero_auto_slide: true,
+
+hero_slide_interval: 5,
+
+hero_transition_speed: 600,
+
+hero_max_products: 5,
 };
 
 export async function getWebsiteSettings() {
