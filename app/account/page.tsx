@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -55,26 +56,52 @@ export default function AccountPage() {
 
         <div className="flex items-center justify-between mb-10">
 
-          <div>
+  <div className="flex items-center gap-6">
 
-            <h1 className="text-4xl font-bold text-[#183153]">
-              Welcome,
-            </h1>
+    {profile.avatar ? (
 
-            <p className="mt-2 text-2xl text-gray-700">
-              {profile.full_name}
-            </p>
+      <Image
+        src={profile.avatar}
+        alt={profile.full_name}
+        width={90}
+        height={90}
+        className="w-20 h-20 rounded-full object-cover border-2 border-[#E7D8BC]"
+      />
 
-          </div>
+    ) : (
 
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold"
-          >
-            Logout
-          </button>
+      <div className="w-20 h-20 rounded-full bg-[#EEF2F7] border-2 border-[#E7D8BC] flex items-center justify-center text-3xl font-bold text-[#183153]">
+        {profile.full_name?.charAt(0)}
+      </div>
 
-        </div>
+    )}
+
+    <div>
+
+      <h1 className="text-4xl font-bold text-[#183153]">
+        Welcome,
+      </h1>
+
+      <p className="mt-2 text-2xl font-semibold text-[#183153]">
+        {profile.full_name}
+      </p>
+
+      <p className="text-gray-500">
+        {profile.email}
+      </p>
+
+    </div>
+
+  </div>
+
+  <button
+    onClick={handleLogout}
+    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold"
+  >
+    Logout
+  </button>
+
+</div>
 
         {/* Cards */}
 
