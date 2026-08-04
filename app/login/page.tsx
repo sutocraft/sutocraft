@@ -41,7 +41,7 @@ alert("Login Success");
 
 console.log("Before push");
 
-router.push("/account");
+router.push("/deshboard");
 
 console.log("After push");
 return;
