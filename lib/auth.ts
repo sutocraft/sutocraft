@@ -80,6 +80,55 @@ export async function getCurrentUser() {
   return data.user;
 }
 
+export async function getCurrentProfile() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function updateCurrentProfile(data: {
+  division: string;
+  district: string;
+  upazila: string;
+  address: string;
+  postal_code: string;
+  avatar?: string;
+}) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("User not found");
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      division: data.division,
+      district: data.district,
+      upazila: data.upazila,
+      address: data.address,
+      postal_code: data.postal_code,
+      avatar: data.avatar,
+    })
+    .eq("id", user.id);
+
+  if (error) throw error;
+
+  return true;
+}
+
 export async function loginAdmin(
   email: string,
   password: string
@@ -136,4 +185,63 @@ export async function loginAdmin(
   console.log("ADMIN STEP 5 SUCCESS");
 
   return authData.user;
+}
+
+export async function uploadAvatar(file: File) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const ext = file.name.split(".").pop();
+  const fileName = `${user.id}.${ext}`;
+  const filePath = `customers/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("products")
+    .upload(filePath, file, {
+      upsert: true,
+    });
+
+  if (uploadError) {
+    throw uploadError;
+  }
+
+  const { data } = supabase.storage
+    .from("products")
+    .getPublicUrl(filePath);
+
+  const avatarUrl = data.publicUrl;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      avatar: avatarUrl,
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    throw error;
+  }
+
+  return avatarUrl;
+}
+
+export async function getCurrentUserProfile() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  return data;
 }
