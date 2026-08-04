@@ -1,8 +1,16 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  getCurrentUser,
+  getCurrentUserProfile,
+  logoutCustomer,
+} from "@/lib/auth";
+
+import UserMenu from "./UserMenu";
+
+import Image from "next/image";
 import Container from "./Container";
 import { getHeaderSettings } from "@/lib/header";
 
@@ -13,6 +21,31 @@ type HeaderSettings = {
 };
 
 export default function Header() {
+
+  const [user, setUser] = useState<any>(null);
+const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+  checkLogin();
+
+  const interval = setInterval(checkLogin, 1000);
+
+  return () => clearInterval(interval);
+}, []);
+
+  async function checkLogin() {
+  const currentUser = await getCurrentUser();
+
+  setUser(currentUser);
+
+  if (currentUser) {
+    const p = await getCurrentUserProfile();
+    setProfile(p);
+  } else {
+    setProfile(null);
+  }
+}
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [settings, setSettings] =
@@ -31,6 +64,15 @@ export default function Header() {
     loadSettings();
   }, []);
 
+  async function handleLogout() {
+  await logoutCustomer();
+
+  setUser(null);
+  setProfile(null);
+
+  window.location.href = "/";
+}
+  
   return (
     <header className="sticky top-0 z-50 border-b border-[#E8E1CE] bg-white">
 
@@ -111,23 +153,35 @@ export default function Header() {
 
           <div className="hidden items-center gap-3 lg:flex">
 
-            <button
-              className="rounded-xl border px-6 py-3 font-semibold transition hover:text-white"
-              style={{
-                borderColor: settings.theme_color,
-                color: settings.theme_color,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  settings.theme_color;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "transparent";
-              }}
-            >
-              Login
-            </button>
+            {user ? (
+
+  <UserMenu
+    profile={profile}
+    onLogout={handleLogout}
+  />
+
+) : (
+
+  <Link
+    href="/login"
+    className="rounded-xl border px-6 py-3 font-semibold transition hover:text-white"
+    style={{
+      borderColor: settings.theme_color,
+      color: settings.theme_color,
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.backgroundColor =
+        settings.theme_color;
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.backgroundColor =
+        "transparent";
+    }}
+  >
+    Login
+  </Link>
+
+)}
 
             <button
               className="rounded-xl px-6 py-3 font-semibold text-white transition hover:opacity-90"
@@ -208,25 +262,13 @@ export default function Header() {
                 Contact
               </Link>
 
-              <button
-                className="mt-2 rounded-xl border py-3 text-lg font-semibold transition hover:text-white"
-                style={{
-                  borderColor:
-                    settings.theme_color,
-                  color:
-                    settings.theme_color,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    settings.theme_color;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "transparent";
-                }}
-              >
-                Login
-              </button>
+              <Link
+  href={user ? "/account" : "/login"}
+>
+    <button className="rounded-lg bg-amber-600 px-5 py-2 text-white hover:bg-amber-700">
+        {user ? "My Account" : "Login"}
+    </button>
+</Link>
 
               <button
                 className="rounded-xl py-3 text-lg font-semibold text-white transition hover:opacity-90"
