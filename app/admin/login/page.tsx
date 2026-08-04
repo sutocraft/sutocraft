@@ -45,11 +45,18 @@ export default function AdminLoginPage() {
 
   await loginAdmin(email, password);
 
-  console.log("STEP 3 Login Success");
+console.log("STEP 3 Login Success");
 
-  router.replace("/admin");
+// Create admin cookie for middleware
+document.cookie = `admin-token=true; path=/; max-age=${rememberMe ? 60 * 60 * 24 * 30 : 60 * 60}`;
 
-  console.log("STEP 4 Router Replace Called");
+console.log("STEP 4 Cookie Created");
+
+router.replace("/admin");
+
+router.refresh();
+
+console.log("STEP 5 Router Replace Called");
 } catch (err) {
   console.error("ADMIN LOGIN ERROR:", err);
 
