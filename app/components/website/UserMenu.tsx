@@ -57,39 +57,39 @@ export default function UserMenu({
 
       {open && (
 
-        <div className="absolute right-0 mt-3 w-64 rounded-xl border border-[#E7D8BC] bg-white shadow-xl overflow-hidden z-50">
+        <div className="absolute right-0 mt-3 w-64 rounded-xl border border-[#E7D8BC] bg-white text-[#183153] shadow-xl overflow-hidden z-50">
 
           <Link
             href="/account"
-            className="block px-5 py-3 hover:bg-[#F8F4EC]"
+            className="block px-5 py-3 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
           >
             My Account
           </Link>
 
           <Link
             href="/account/orders"
-            className="block px-5 py-3 hover:bg-[#F8F4EC]"
+            className="block px-5 py-3 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
           >
             My Orders
           </Link>
 
           <Link
             href="/account/wishlist"
-            className="block px-5 py-3 hover:bg-[#F8F4EC]"
+            className="block px-5 py-3 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
           >
             Wishlist
           </Link>
 
           <Link
             href="/account/addresses"
-            className="block px-5 py-3 hover:bg-[#F8F4EC]"
+            className="block px-5 py-3 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
           >
             Addresses
           </Link>
 
           <Link
             href="/change-password"
-            className="block px-5 py-3 hover:bg-[#F8F4EC]"
+            className="block px-5 py-3 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
           >
             Change Password
           </Link>
