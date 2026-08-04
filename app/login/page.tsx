@@ -37,22 +37,23 @@ export default function LoginPage() {
 
     await loginCustomer(emailOrPhone, password);
 
-alert("Login Success");
+    alert("Login Success");
 
-console.log("Before push");
+    console.log("Before router.push");
+    alert("Before router.push");
 
-router.push("/deshboard");
+    router.push("/account");
 
-console.log("After push");
-return;
+    console.log("After router.push");
+    alert("After router.push");
 
-} catch (err) {
-  if (err instanceof Error) {
-    setError(err.message || "Login failed");
-  } else {
-    setError("Login failed");
-  }
-} finally {
+  } catch (err) {
+    if (err instanceof Error) {
+      setError(err.message || "Login failed");
+    } else {
+      setError("Login failed");
+    }
+  } finally {
     setLoading(false);
   }
 }
