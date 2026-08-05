@@ -8,12 +8,15 @@ async function getCurrentUserId() {
   return user?.id ?? null;
 }
 
+console.count("addToCart()");
+
 export async function addToCart({
   productId,
   sizeId,
   colorId,
   quantity,
 }: {
+  
   productId: string;
   sizeId?: string | null;
   colorId?: string |null;
