@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { WebsiteProduct } from "@/lib/products";
+import WishlistButton from "@/app/components/website/WishlistButton";
+import { addToCart } from "@/lib/cart";
+import { useRouter } from "next/navigation";
 
 type Props = {
   product: WebsiteProduct;
@@ -10,6 +13,7 @@ type Props = {
 export default function ProductCard({
   product,
 }: Props) {
+  const router = useRouter();
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E1CE] bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
 
@@ -32,9 +36,9 @@ export default function ProductCard({
 
         </div>
 
-        <button className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow transition hover:bg-[#98691D] hover:text-white">
-          ♡
-        </button>
+        <div className="absolute right-3 top-3 z-10">
+  <WishlistButton productId={product.id} />
+</div>
 
         <Link href={`/product/${product.slug}`}>
 
@@ -96,10 +100,21 @@ export default function ProductCard({
 
         </div>
 
-        <button className="mt-auto w-full rounded-xl bg-[#98691D] py-3 text-sm font-semibold text-white transition hover:bg-[#B48630]">
-          Add To Cart
-        </button>
+        <button
+  onClick={async () => {
+    await addToCart({
+      productId: product.id,
+      sizeId: "",
+      colorId: "",
+      quantity: 1,
+    });
 
+    router.refresh();
+  }}
+  className="mt-auto w-full rounded-xl bg-[#98691D] py-3 text-sm font-semibold text-white transition hover:bg-[#B48630]"
+>
+  Add To Cart
+</button>
       </div>
 
     </div>
