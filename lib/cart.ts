@@ -1,16 +1,11 @@
 import { supabase } from "./supabase";
 
-function getSessionId() {
-  if (typeof window === "undefined") return "";
+async function getCurrentUserId() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  let sessionId = localStorage.getItem("sutocraft_session");
-
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    localStorage.setItem("sutocraft_session", sessionId);
-  }
-
-  return sessionId;
+  return user?.id ?? null;
 }
 
 export async function addToCart({
@@ -24,45 +19,112 @@ export async function addToCart({
   colorId: string;
   quantity: number;
 }) {
-  const sessionId = getSessionId();
+  const userId = await getCurrentUserId();
 
-  const { data: existing } = await supabase
+  if (!userId) {
+    throw new Error("Please login first.");
+  }
+
+  let query = supabase
     .from("cart_items")
     .select("*")
-    .eq("session_id", sessionId)
-    .eq("product_id", productId)
-    .eq("size_id", sizeId)
-    .eq("color_id", colorId)
-    .maybeSingle();
+    .eq("user_id", userId)
+    .eq("product_id", productId);
+
+  if (sizeId) {
+    query = query.eq("size_id", sizeId);
+  } else {
+    query = query.is("size_id", null);
+  }
+
+  if (colorId) {
+    query = query.eq("color_id", colorId);
+  } else {
+    query = query.is("color_id", null);
+  }
+
+  const { data: existing, error: existingError } =
+    await query.maybeSingle();
+
+  if (existingError) {
+    throw existingError;
+  }
 
   if (existing) {
-    return await supabase
+    const { data, error } = await supabase
       .from("cart_items")
       .update({
         quantity: existing.quantity + quantity,
       })
-      .eq("id", existing.id);
+      .eq("id", existing.id)
+      .select();
+
+    if (error) throw error;
+
+    return { data, error: null };
   }
 
-  return await supabase.from("cart_items").insert({
-    session_id: sessionId,
-    product_id: productId,
-    size_id: sizeId,
-    color_id: colorId,
-    quantity,
-  });
+  const { data, error } = await supabase
+    .from("cart_items")
+    .insert({
+      user_id: userId,
+      session_id: null,
+      product_id: productId,
+      size_id: sizeId || null,
+      color_id: colorId || null,
+      quantity,
+    })
+    .select();
+
+  if (error) {
+    throw error;
+  }
+
+  return { data, error: null };
 }
 
-export async function getCartCount() {
-  const sessionId = getSessionId();
-
-  const { count } = await supabase
+export async function getCartCount(userId: string) {
+  const { count, error } = await supabase
     .from("cart_items")
     .select("*", {
       count: "exact",
       head: true,
     })
-    .eq("session_id", sessionId);
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error(error);
+    return 0;
+  }
 
   return count ?? 0;
+}
+
+export async function clearCart(userId: string) {
+  const { error } = await supabase
+    .from("cart_items")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function getCartItems(userId: string) {
+  const { data, error } = await supabase
+    .from("cart_items")
+    .select(
+      `
+      *,
+      products (*)
+    `
+    )
+    .eq("user_id", userId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
 }
