@@ -15,6 +15,7 @@ import Container from "./Container";
 import { getHeaderSettings } from "@/lib/header";
 import { getCartCount } from "@/lib/cart";
 import { useCart } from "@/lib/cart-context";
+import { useTheme } from "@/app/components/website/settings.theme_color";
 
 type HeaderSettings = {
   website_name: string;
@@ -26,8 +27,17 @@ export default function Header() {
 
   const [user, setUser] = useState<any>(null);
 const [profile, setProfile] = useState<any>(null);
-const [cartCount, setCartCount] = useState(0);
-const { openCart } = useCart();
+const {
+  openCart,
+  cartCount,
+  setCartCount,
+} = useCart();
+
+const {
+  themeColor,
+  websiteName,
+  logoUrl,
+} = useTheme();
 
   useEffect(() => {
   checkLogin();
@@ -59,21 +69,8 @@ const { openCart } = useCart();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [settings, setSettings] =
-    useState<HeaderSettings>({
-      website_name: "SutoCraft",
-      logo_url: "",
-      theme_color: "#98691D",
-    });
-
-  useEffect(() => {
-    async function loadSettings() {
-      const data = await getHeaderSettings();
-      setSettings(data);
-    }
-
-    loadSettings();
-  }, []);
+  // ThemeProvider handles website settings.
+// No local header settings state needed.
 
   async function handleLogout() {
   await logoutCustomer();
@@ -100,11 +97,11 @@ const { openCart } = useCart();
             className="flex items-center gap-3"
           >
 
-            {settings.logo_url ? (
+            {logoUrl ? (
 
               <Image
-                src={settings.logo_url}
-                alt={settings.website_name}
+                src={logoUrl}
+                alt={websiteName}
                 width={180}
                 height={60}
                 className="h-12 w-auto object-contain"
@@ -116,10 +113,10 @@ const { openCart } = useCart();
               <span
                 className="text-3xl font-bold tracking-tight lg:text-5xl"
                 style={{
-                  color: settings.theme_color,
+                  color: themeColor,
                 }}
               >
-                {settings.website_name}
+                {websiteName}
               </span>
 
             )}
@@ -177,13 +174,13 @@ const { openCart } = useCart();
     href="/login"
     className="rounded-xl border px-6 py-3 font-semibold transition hover:text-white"
     style={{
-      borderColor: settings.theme_color,
-      color: settings.theme_color,
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.backgroundColor =
-        settings.theme_color;
-    }}
+  borderColor: themeColor,
+  color: themeColor,
+}}
+onMouseEnter={(e) => {
+  e.currentTarget.style.backgroundColor =
+    themeColor;
+}}
     onMouseLeave={(e) => {
       e.currentTarget.style.backgroundColor =
         "transparent";
@@ -195,8 +192,12 @@ const { openCart } = useCart();
 )}
 
          <button
+  id="header-cart"
   onClick={openCart}
-  className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
+  className="px-5 py-3 rounded-lg text-white transition-all duration-200 hover:scale-105"
+style={{
+  backgroundColor: themeColor,
+}}
 >
   Cart ({cartCount})
 </button>   
@@ -211,11 +212,9 @@ const { openCart } = useCart();
             }
             className="flex h-11 w-11 items-center justify-center rounded-xl border-2 text-2xl font-bold lg:hidden"
             style={{
-              borderColor:
-                settings.theme_color,
-              color:
-                settings.theme_color,
-            }}
+  borderColor: themeColor,
+  color: themeColor,
+}}
           >
             {menuOpen ? "✕" : "☰"}
           </button>
@@ -279,6 +278,7 @@ const { openCart } = useCart();
 </Link>
 
               <button
+  id="header-cart"
   onClick={openCart}
   className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
 >
