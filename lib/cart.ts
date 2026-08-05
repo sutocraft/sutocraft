@@ -15,8 +15,8 @@ export async function addToCart({
   quantity,
 }: {
   productId: string;
-  sizeId: string;
-  colorId: string;
+  sizeId?: string | null;
+  colorId?: string | null;
   quantity: number;
 }) {
   const userId = await getCurrentUserId();
@@ -46,85 +46,132 @@ export async function addToCart({
   const { data: existing, error: existingError } =
     await query.maybeSingle();
 
-  if (existingError) {
-    throw existingError;
-  }
+  if (existingError) throw existingError;
 
   if (existing) {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("cart_items")
       .update({
         quantity: existing.quantity + quantity,
       })
-      .eq("id", existing.id)
-      .select();
+      .eq("id", existing.id);
 
     if (error) throw error;
 
-    return { data, error: null };
+    return true;
   }
+
+  const { error } = await supabase.from("cart_items").insert({
+    user_id: userId,
+    session_id: null,
+    product_id: productId,
+    size_id: sizeId ?? null,
+    color_id: colorId ?? null,
+    quantity,
+  });
+
+  if (error) throw error;
+
+  return true;
+}
+
+export async function getCartItems() {
+  const userId = await getCurrentUserId();
+
+  if (!userId) return [];
 
   const { data, error } = await supabase
     .from("cart_items")
-    .insert({
-      user_id: userId,
-      session_id: null,
-      product_id: productId,
-      size_id: sizeId || null,
-      color_id: colorId || null,
+    .select(
+      `
+      id,
       quantity,
-    })
-    .select();
+      product_id,
+      size_id,
+      color_id,
 
-  if (error) {
-    throw error;
-  }
+      products(
+        id,
+        name,
+        price,
+        discount_price,
+        slug,
 
-  return { data, error: null };
+        product_images(
+          image_url,
+          is_primary
+        )
+      ),
+
+      sizes(
+        id,
+        name
+      ),
+
+      colors(
+        id,
+        name,
+        code
+      )
+    `
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data ?? [];
 }
 
-export async function getCartCount(userId: string) {
-  const { count, error } = await supabase
+export async function getCartCount() {
+  const userId = await getCurrentUserId();
+
+  if (!userId) return 0;
+
+  const { data, error } = await supabase
     .from("cart_items")
-    .select("*", {
-      count: "exact",
-      head: true,
-    })
+    .select("quantity")
     .eq("user_id", userId);
 
-  if (error) {
-    console.error(error);
-    return 0;
-  }
+  if (error) return 0;
 
-  return count ?? 0;
+  return data.reduce((sum, item) => sum + item.quantity, 0);
 }
 
-export async function clearCart(userId: string) {
+export async function updateCartQuantity(
+  id: string,
+  quantity: number
+) {
+  if (quantity <= 0) {
+    return removeCartItem(id);
+  }
+
+  const { error } = await supabase
+    .from("cart_items")
+    .update({ quantity })
+    .eq("id", id);
+
+  if (error) throw error;
+}
+
+export async function removeCartItem(id: string) {
+  const { error } = await supabase
+    .from("cart_items")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+}
+
+export async function clearCart() {
+  const userId = await getCurrentUserId();
+
+  if (!userId) return;
+
   const { error } = await supabase
     .from("cart_items")
     .delete()
     .eq("user_id", userId);
 
-  if (error) {
-    throw error;
-  }
-}
-
-export async function getCartItems(userId: string) {
-  const { data, error } = await supabase
-    .from("cart_items")
-    .select(
-      `
-      *,
-      products (*)
-    `
-    )
-    .eq("user_id", userId);
-
-  if (error) {
-    throw error;
-  }
-
-  return data ?? [];
+  if (error) throw error;
 }
