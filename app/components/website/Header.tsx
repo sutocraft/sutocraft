@@ -56,7 +56,7 @@ const {
     const p = await getCurrentUserProfile();
     setProfile(p);
 
-    const count = await getCartCount(currentUser.id);
+    const count = await getCartCount();
     setCartCount(count);
 
   } else {
