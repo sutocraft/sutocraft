@@ -18,20 +18,25 @@ export default function Hero({
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    if (
-  products.length <= 1 ||
-  !settings?.hero_auto_slide
-)
-  return;
+  if (
+    products.length <= 1 ||
+    !settings?.hero_auto_slide
+  ) {
+    return;
+  }
 
-    const interval = setInterval(() => {
-      setCurrent((prev) =>
-        prev === products.length - 1 ? 0 : prev + 1
-      );
-    }, (settings?.hero_slide_interval || 5) * 1000);
+  const interval = setInterval(() => {
+    setCurrent((prev) =>
+      (prev + 1) % products.length
+    );
+  }, (settings?.hero_slide_interval || 5) * 1000);
 
-    return () => clearInterval(interval);
-  }, [products]);
+  return () => clearInterval(interval);
+}, [
+  products.length,
+  settings?.hero_auto_slide,
+  settings?.hero_slide_interval,
+]);
 
   if (!products.length) {
     return null;
@@ -92,10 +97,11 @@ export default function Hero({
     className="group relative block h-[280px] w-full max-w-[320px] overflow-hidden rounded-[30px] bg-white shadow-sm transition hover:shadow-xl sm:h-[360px] sm:max-w-[420px] lg:h-[460px] lg:max-w-[520px]"
   >
     <Image
-      src={product.image_url || "/images/hero/hero.webp"}
-      alt={product.name}
-      fill
-      priority
+  key={product.id}
+  src={product.image_url || "/images/hero/hero.webp"}
+  alt={product.name}
+  fill
+  unoptimized
       style={{
   transitionDuration: `${settings?.hero_transition_speed || 600}ms`,
 }}
