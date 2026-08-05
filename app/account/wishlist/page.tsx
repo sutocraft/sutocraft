@@ -1,36 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import { getWishlist, removeFromWishlist } from "@/lib/wishlist";
+
 export default function WishlistPage() {
-  const wishlist = [
-    {
-      id: 1,
-      name: "Premium Three Piece Bold",
-      sku: "TPB-001",
-      price: 1850,
-      image: "https://placehold.co/120x140",
-      stock: "In Stock",
-    },
+  const [wishlist, setWishlist] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
 
-    {
-      id: 2,
-      name: "Luxury Punjabi",
-      sku: "PNJ-205",
-      price: 2350,
-      image: "https://placehold.co/120x140",
-      stock: "Only 2 Left",
-    },
+useEffect(() => {
+  loadWishlist();
+}, []);
 
-    {
-      id: 3,
-      name: "Casual Polo Shirt",
-      sku: "POL-110",
-      price: 990,
-      image: "https://placehold.co/120x140",
-      stock: "In Stock",
-    },
-  ];
+async function loadWishlist() {
+  const data = await getWishlist();
+
+console.log(data);
+
+  setWishlist(data);
+  setLoading(false);
+}
+
+async function handleRemove(id: string) {
+  await removeFromWishlist(id);
+
+  console.log(wishlist);
+
+  setWishlist((prev) => prev.filter((item) => item.id !== id));
+}
 
   return (
     <main className="min-h-screen bg-[#F8F4EC] py-10">
@@ -91,69 +89,64 @@ export default function WishlistPage() {
             <tbody>
 
               {wishlist.map((item) => (
+  <tr
+    key={item.id}
+    className="border-b last:border-b-0 border-[#E7D8BC]"
+  >
+    <td className="px-6 py-6">
+      <div className="flex items-center gap-5">
 
-                <tr
-                  key={item.id}
-                  className="border-b last:border-b-0 border-[#E7D8BC]"
-                >
+        <img
+          src={
+            item.products?.image_url ||
+            item.products?.thumbnail ||
+            "https://placehold.co/120x140"
+          }
+          alt={item.products?.name ?? "Product"}
+          className="w-24 h-28 object-cover rounded-xl border border-[#E7D8BC]"
+        />
 
-                  <td className="px-6 py-6">
+        <div>
+          <h3 className="font-bold text-xl text-[#183153]">
+            {item.products?.name}
+          </h3>
 
-                    <div className="flex items-center gap-5">
+          <p className="text-[#4B5563] mt-1">
+            SKU : {item.products?.sku}
+          </p>
+        </div>
 
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-24 h-28 object-cover rounded-xl border border-[#E7D8BC]"
-                      />
+      </div>
+    </td>
 
-                      <div>
+    <td className="text-center font-bold text-xl text-[#183153]">
+      ৳ {Number(item.products?.sale_price ?? item.products?.price ?? 0).toLocaleString()}
+    </td>
 
-                        <h3 className="font-bold text-xl text-[#183153]">
-                          {item.name}
-                        </h3>
+    <td className="text-center">
+      <span className="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold">
+        In Stock
+      </span>
+    </td>
 
-                        <p className="text-[#4B5563] mt-1">
-                          SKU : {item.sku}
-                        </p>
+    <td className="px-6">
+      <div className="flex justify-end gap-3">
 
-                      </div>
+        <button className="px-5 py-3 rounded-xl bg-[#A8741A] text-white font-semibold hover:opacity-90 transition">
+          Add to Cart
+        </button>
 
-                    </div>
+        <button
+  onClick={() => handleRemove(item.product_id)}
+  className="px-5 py-3 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 transition"
+>
+  Remove
+</button>
 
-                  </td>
-
-                  <td className="text-center font-bold text-xl text-[#183153]">
-                    ৳ {item.price.toLocaleString()}
-                  </td>
-
-                  <td className="text-center">
-
-                    <span className="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold">
-                      {item.stock}
-                    </span>
-
-                  </td>
-
-                  <td className="px-6">
-
-                    <div className="flex justify-end gap-3">
-
-                      <button className="px-5 py-3 rounded-xl bg-[#A8741A] text-white font-semibold hover:opacity-90 transition">
-                        Add to Cart
-                      </button>
-
-                      <button className="px-5 py-3 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 transition">
-                        Remove
-                      </button>
-
-                    </div>
-
-                  </td>
-
-                </tr>
-
-              ))}
+      </div>
+    </td>
+  </tr>
+))}
 
             </tbody>
 
