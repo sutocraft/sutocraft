@@ -5,6 +5,7 @@ import { WebsiteProduct } from "@/lib/products";
 import WishlistButton from "@/app/components/website/WishlistButton";
 import { addToCart } from "@/lib/cart";
 import { useRouter } from "next/navigation";
+import { useCartFly } from "@/app/context/cart-fly-context";
 
 type Props = {
   product: WebsiteProduct;
@@ -14,8 +15,10 @@ export default function ProductCard({
   product,
 }: Props) {
   const router = useRouter();
+
+const { startFly } = useCartFly();
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E1CE] bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <div className="product-card group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E1CE] bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
 
       {/* Image */}
       <div className="relative overflow-hidden bg-[#F8F5EE]">
@@ -101,17 +104,39 @@ export default function ProductCard({
         </div>
 
         <button
-  onClick={async () => {
+  onClick={async (e) => {
+    const card =
+      e.currentTarget.closest(".product-card");
+
+    const image =
+      card?.querySelector("img");
+
+    if (image) {
+      const rect =
+        image.getBoundingClientRect();
+
+      startFly({
+        image: product.image_url ?? "",
+        startX:
+          rect.left + rect.width / 2,
+        startY:
+          rect.top + rect.height / 2,
+      });
+    }
+
     await addToCart({
-      productId: product.id,
-      sizeId: "",
-      colorId: "",
-      quantity: 1,
-    });
+  productId: product.id,
+  sizeId: null,
+  colorId: null,
+  quantity: 1,
+});
 
     router.refresh();
   }}
-  className="mt-auto w-full rounded-xl bg-[#98691D] py-3 text-sm font-semibold text-white transition hover:bg-[#B48630]"
+  className="mt-auto w-full rounded-xl py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02]"
+  style={{
+    backgroundColor: "#98691D",
+  }}
 >
   Add To Cart
 </button>
