@@ -44,6 +44,15 @@ export default function Hero({
 
   const product = products[current];
 
+  console.log(
+  "Current Index:",
+  current,
+  "Total:",
+  products.length,
+  "Product:",
+  product?.name
+);
+
   return (
     <section className="bg-[#F8F5EE]">
       <Container>
