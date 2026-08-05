@@ -9,14 +9,26 @@ import {
   logoutCustomer,
 } from "@/lib/auth";
 
+import {
+  getWishlistCount,
+} from "@/lib/wishlist";
+
+import {
+  getOrdersCount,
+} from "@/lib/orders";
+
 export default function AccountPage() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<any>(null);
 
+const [wishlistCount, setWishlistCount] = useState(0);
+
+const [ordersCount, setOrdersCount] = useState(0);
+
   useEffect(() => {
-    loadProfile();
-  }, []);
+  loadData();
+}, []);
 
   async function loadProfile() {
     try {
@@ -32,6 +44,23 @@ export default function AccountPage() {
       router.replace("/login");
     }
   }
+
+  async function loadData() {
+  await Promise.all([
+    loadProfile(),
+    loadCounts(),
+  ]);
+}
+
+async function loadCounts() {
+  const [wishlist, orders] = await Promise.all([
+    getWishlistCount(),
+    getOrdersCount(),
+  ]);
+
+  setWishlistCount(wishlist);
+  setOrdersCount(orders);
+}
 
   async function handleLogout() {
     await logoutCustomer();
