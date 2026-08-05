@@ -113,20 +113,22 @@ function resetZoom() {
 async function handleAddToCart() {
   if (!product) return;
 
-  const result = await addToCart({
-  productId: product.id,
-  sizeId: selectedSize,
-  colorId: selectedColor,
-  quantity,
-});
+  async function handleAddToCart() {
+  if (!product) return;
 
-console.log(result);
+  try {
+    await addToCart({
+      productId: product.id,
+      sizeId: selectedSize || null,
+      colorId: selectedColor || null,
+      quantity,
+    });
 
-if (result.error) {
-  console.error(result.error);
-  alert(result.error.message);
-} else {
-  alert("Product added to cart.");
+    alert("Product added to cart.");
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message ?? "Failed to add product.");
+  }
 }
 }
 
