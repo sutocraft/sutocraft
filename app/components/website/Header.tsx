@@ -13,6 +13,8 @@ import UserMenu from "./UserMenu";
 import Image from "next/image";
 import Container from "./Container";
 import { getHeaderSettings } from "@/lib/header";
+import { getCartCount } from "@/lib/cart";
+import { useCart } from "@/lib/cart-context";
 
 type HeaderSettings = {
   website_name: string;
@@ -24,6 +26,8 @@ export default function Header() {
 
   const [user, setUser] = useState<any>(null);
 const [profile, setProfile] = useState<any>(null);
+const [cartCount, setCartCount] = useState(0);
+const { openCart } = useCart();
 
   useEffect(() => {
   checkLogin();
@@ -41,8 +45,15 @@ const [profile, setProfile] = useState<any>(null);
   if (currentUser) {
     const p = await getCurrentUserProfile();
     setProfile(p);
+
+    const count = await getCartCount(currentUser.id);
+    setCartCount(count);
+
   } else {
+
     setProfile(null);
+    setCartCount(0);
+
   }
 }
 
@@ -183,15 +194,12 @@ const [profile, setProfile] = useState<any>(null);
 
 )}
 
-            <button
-              className="rounded-xl px-6 py-3 font-semibold text-white transition hover:opacity-90"
-              style={{
-                backgroundColor:
-                  settings.theme_color,
-              }}
-            >
-              Cart (0)
-            </button>
+         <button
+  onClick={openCart}
+  className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
+>
+  Cart ({cartCount})
+</button>   
 
           </div>
 
@@ -271,14 +279,11 @@ const [profile, setProfile] = useState<any>(null);
 </Link>
 
               <button
-                className="rounded-xl py-3 text-lg font-semibold text-white transition hover:opacity-90"
-                style={{
-                  backgroundColor:
-                    settings.theme_color,
-                }}
-              >
-                Cart (0)
-              </button>
+  onClick={openCart}
+  className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
+>
+  Cart ({cartCount})
+</button>   
 
             </nav>
 
