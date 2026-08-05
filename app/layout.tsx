@@ -8,6 +8,8 @@ import {
   ThemeProvider,
 } from "@/app/components/website/settings.theme_color";
 
+import CartFlyProvider from "@/app/components/website/CartFlyProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,13 +43,17 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
 
-  <CartProvider>
+  <CartFlyProvider>
 
-    {children}
+    <CartProvider>
 
-    <CartDrawer />
+      {children}
 
-  </CartProvider>
+      <CartDrawer />
+
+    </CartProvider>
+
+  </CartFlyProvider>
 
 </ThemeProvider>
       </body>
