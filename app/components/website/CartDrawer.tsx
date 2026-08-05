@@ -1,85 +1,198 @@
 "use client";
 
-import { useCart } from "@/lib/cart-context";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
-import CartBackdrop from "./CartBackdrop";
+import { useCart } from "@/lib/cart-context";
+import {
+  getCurrentUser,
+} from "@/lib/auth";
+
+import {
+  getCartItems,
+} from "@/lib/cart";
+
 import CartDrawerItem from "./CartDrawerItem";
+import { getHeaderSettings } from "@/lib/header";
+
+type CartItem = {
+  id: string;
+  quantity: number;
+
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+  };
+
+  size: {
+    id: string;
+    name: string;
+  } | null;
+
+  color: {
+    id: string;
+    name: string;
+    code: string;
+  } | null;
+};
 
 export default function CartDrawer() {
-
   const {
     isOpen,
     closeCart,
+    setCartCount,
   } = useCart();
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [items, setItems] =
+    useState<CartItem[]>([]);
+
+  const [themeColor, setThemeColor] =
+    useState("#98691D");
+
+  useEffect(() => {
+    loadTheme();
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadCart();
+    }
+  }, [isOpen]);
+
+  async function loadTheme() {
+    const setting =
+      await getHeaderSettings();
+
+    setThemeColor(
+      setting.theme_color || "#98691D"
+    );
+  }
+
+  async function loadCart() {
+    setLoading(true);
+
+    const user =
+      await getCurrentUser();
+
+    if (!user) {
+      setItems([]);
+      setCartCount(0);
+      setLoading(false);
+      return;
+    }
+
+    const data =
+      await getCartItems(user.id);
+
+    setItems(data);
+
+    setCartCount(data.length);
+
+    setLoading(false);
+  }
+
+  const total =
+    items.reduce(
+      (sum, item) =>
+        sum +
+        item.product.price *
+          item.quantity,
+      0
+    );
 
   return (
     <>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
 
-      <CartBackdrop
-        open={isOpen}
-        onClose={closeCart}
-      />
-
-      <aside
-        className={`
-          fixed
-          top-0
-          right-0
-          h-screen
-          w-[400px]
-          bg-white
-          shadow-2xl
-          z-50
-          transition-transform
-          duration-300
-          ${
-            isOpen
-              ? "translate-x-0"
-              : "translate-x-full"
-          }
-        `}
-      >
-
-        <div className="flex justify-between items-center p-6 border-b">
-
-          <h2 className="text-xl font-bold">
-            Shopping Cart
-          </h2>
-
-          <button
+          <div
             onClick={closeCart}
-            className="text-2xl"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <div className="p-6">
-
-          <CartDrawerItem
-            item={{
-              name: "Demo Product",
-              quantity: 1,
-              price: 1120,
-            }}
+            className="fixed inset-0 z-[100] bg-black/40"
           />
 
-        </div>
+          {/* Drawer */}
 
-        <div className="absolute bottom-0 left-0 right-0 border-t p-6">
+          <div className="fixed right-0 top-0 z-[101] flex h-screen w-[420px] max-w-full flex-col border-l bg-white shadow-2xl">
 
-          <button
-            className="w-full rounded-lg bg-[#A9781F] text-white py-3"
-          >
-            Checkout
-          </button>
+            {/* Header */}
 
-        </div>
+            <div className="flex items-center justify-between border-b p-5">
 
-      </aside>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Shopping Cart
+              </h2>
 
+              <button
+                onClick={closeCart}
+                className="text-2xl text-gray-500"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Body */}
+
+            <div className="flex-1 overflow-y-auto p-4">
+
+              {loading && (
+                <div className="py-10 text-center">
+                  Loading...
+                </div>
+              )}
+
+              {!loading &&
+                items.length === 0 && (
+                  <div className="py-20 text-center text-gray-500">
+                    Cart is empty.
+                  </div>
+                )}
+
+              {!loading &&
+                items.map((item) => (
+                  <CartDrawerItem
+                    key={item.id}
+                    item={item}
+                    reload={loadCart}
+                  />
+                ))}
+            </div>
+
+            {/* Footer */}
+
+            <div className="border-t p-5">
+
+              <div className="mb-4 flex justify-between text-lg font-bold">
+
+                <span>Total</span>
+
+                <span
+                  style={{
+                    color: themeColor,
+                  }}
+                >
+                  ৳ {total}
+                </span>
+              </div>
+
+              <button
+                className="w-full rounded-xl py-4 text-lg font-semibold text-white"
+                style={{
+                  backgroundColor:
+                    themeColor,
+                }}
+              >
+                Checkout
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
-
 }
