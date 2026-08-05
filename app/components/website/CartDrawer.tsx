@@ -1,62 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import {
+  X,
+  ShoppingBag,
+} from "lucide-react";
 
 import { useCart } from "@/lib/cart-context";
-import {
-  getCurrentUser,
-} from "@/lib/auth";
 
 import {
   getCartItems,
+  updateCartQuantity,
+  removeCartItem,
 } from "@/lib/cart";
 
 import CartDrawerItem from "./CartDrawerItem";
-import { getHeaderSettings } from "@/lib/header";
 
-type CartItem = {
-  id: string;
-  quantity: number;
-
-  product: {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-  };
-
-  size: {
-    id: string;
-    name: string;
-  } | null;
-
-  color: {
-    id: string;
-    name: string;
-    code: string;
-  } | null;
-};
+type CartItem = any;
 
 export default function CartDrawer() {
-  const {
-    isOpen,
-    closeCart,
-    setCartCount,
-  } = useCart();
+  const { isOpen, closeCart, cartCount, setCartCount } = useCart();
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<CartItem[]>([]);
 
-  const [items, setItems] =
-    useState<CartItem[]>([]);
+  async function loadCart() {
+    try {
+      setLoading(true);
 
-  const [themeColor, setThemeColor] =
-    useState("#98691D");
+      const data = await getCartItems();
 
-  useEffect(() => {
-    loadTheme();
-  }, []);
+      setItems(data);
+
+      const qty = data.reduce(
+        (sum: number, item: any) => sum + item.quantity,
+        0
+      );
+
+      setCartCount(qty);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -64,135 +49,146 @@ export default function CartDrawer() {
     }
   }, [isOpen]);
 
-  async function loadTheme() {
-    const setting =
-      await getHeaderSettings();
+  const subtotal = useMemo(() => {
+    return items.reduce((sum: number, item: any) => {
+      const product = item.products;
 
-    setThemeColor(
-      setting.theme_color || "#98691D"
+      const price =
+        product?.discount_price ??
+        product?.price ??
+        0;
+
+      return sum + price * item.quantity;
+    }, 0);
+  }, [items]);
+
+  async function increase(item: CartItem) {
+    await updateCartQuantity(
+      item.id,
+      item.quantity + 1
     );
+
+    loadCart();
   }
 
-  async function loadCart() {
-    setLoading(true);
+  async function decrease(item: CartItem) {
+    await updateCartQuantity(
+      item.id,
+      item.quantity - 1
+    );
 
-    const user =
-      await getCurrentUser();
-
-    if (!user) {
-      setItems([]);
-      setCartCount(0);
-      setLoading(false);
-      return;
-    }
-
-    const data =
-      await getCartItems(user.id);
-
-    setItems(data);
-
-    setCartCount(data.length);
-
-    setLoading(false);
+    loadCart();
   }
 
-  const total =
-    items.reduce(
-      (sum, item) =>
-        sum +
-        item.product.price *
-          item.quantity,
-      0
-    );
+  async function remove(id: string) {
+    await removeCartItem(id);
+
+    loadCart();
+  }
 
   return (
     <>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
+      {/* Backdrop */}
 
-          <div
+      <div
+        onClick={closeCart}
+        className={`fixed inset-0 z-[998] bg-black/40 transition-all duration-300 ${
+          isOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible"
+        }`}
+      />
+
+      {/* Drawer */}
+
+      <aside
+        className={`fixed right-0 top-0 z-[999] h-screen w-full max-w-md bg-white shadow-2xl transition-transform duration-300 flex flex-col ${
+          isOpen
+            ? "translate-x-0"
+            : "translate-x-full"
+        }`}
+      >
+        {/* Header */}
+
+        <div className="flex items-center justify-between border-b px-6 py-5">
+
+          <h2 className="text-xl font-bold text-[#1F2937]">
+            Shopping Cart
+          </h2>
+
+          <button
             onClick={closeCart}
-            className="fixed inset-0 z-[100] bg-black/40"
-          />
+            className="rounded-full p-2 hover:bg-[#F8F4EC]"
+          >
+            <X size={20} />
+          </button>
+        </div>
 
-          {/* Drawer */}
+        {/* Body */}
 
-          <div className="fixed right-0 top-0 z-[101] flex h-screen w-[420px] max-w-full flex-col border-l bg-white shadow-2xl">
+        <div className="flex-1 overflow-y-auto">
 
-            {/* Header */}
-
-            <div className="flex items-center justify-between border-b p-5">
-
-              <h2 className="text-2xl font-bold text-gray-800">
-                Shopping Cart
-              </h2>
-
-              <button
-                onClick={closeCart}
-                className="text-2xl text-gray-500"
-              >
-                ×
-              </button>
+          {loading && (
+            <div className="p-8 text-center text-gray-500">
+              Loading...
             </div>
+          )}
 
-            {/* Body */}
+          {!loading && items.length === 0 && (
+            <div className="flex h-full flex-col items-center justify-center p-8">
 
-            <div className="flex-1 overflow-y-auto p-4">
+              <ShoppingBag
+                size={70}
+                className="text-[#B6862C]"
+              />
 
-              {loading && (
-                <div className="py-10 text-center">
-                  Loading...
-                </div>
-              )}
+              <h3 className="mt-4 text-[#B6862C] text-xl font-semibold">
+                Your cart is empty
+              </h3>
 
-              {!loading &&
-                items.length === 0 && (
-                  <div className="py-20 text-center text-gray-500">
-                    Cart is empty.
-                  </div>
-                )}
+              <p className="mt-2 text-gray-500 text-center">
+                Add your favourite products.
+              </p>
 
-              {!loading &&
-                items.map((item) => (
-                  <CartDrawerItem
-                    key={item.id}
-                    item={item}
-                    reload={loadCart}
-                  />
-                ))}
             </div>
+          )}
 
-            {/* Footer */}
+          {!loading &&
+            items.map((item) => (
+              <CartDrawerItem
+                key={item.id}
+                item={item}
+                onIncrease={() => increase(item)}
+                onDecrease={() => decrease(item)}
+                onRemove={() => remove(item.id)}
+              />
+            ))}
+        </div>
 
-            <div className="border-t p-5">
+        {/* Footer */}
 
-              <div className="mb-4 flex justify-between text-lg font-bold">
+        <div className="border-t bg-white p-6">
 
-                <span>Total</span>
+          <div className="mb-5 flex justify-between text-lg font-semibold">
 
-                <span
-                  style={{
-                    color: themeColor,
-                  }}
-                >
-                  ৳ {total}
-                </span>
-              </div>
+            <span className="text-[#B6862C]">
+              Total
+              </span>
 
-              <button
-                className="w-full rounded-xl py-4 text-lg font-semibold text-white"
-                style={{
-                  backgroundColor:
-                    themeColor,
-                }}
-              >
-                Checkout
-              </button>
-            </div>
+            <span className="text-[#B6862C]">
+              ৳{subtotal.toLocaleString()}
+            </span>
+
           </div>
-        </>
-      )}
+
+          <button
+            className="w-full rounded-xl bg-[#B6862C] py-3 font-semibold text-white transition hover:bg-[#9A741E]"
+          >
+            Checkout ({cartCount})
+          </button>
+
+        </div>
+      </aside>
     </>
   );
 }
