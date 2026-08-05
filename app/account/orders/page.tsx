@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { getOrders } from "@/lib/orders";
+import { useEffect, useMemo, useState } from "react";
+
+
 
 type Order = {
   id: string;
@@ -16,26 +19,7 @@ type Order = {
     | "Cancelled";
 };
 
-const orders: Order[] = [
-  {
-    id: "#SC100001",
-    date: "04 Aug 2026",
-    total: 3250,
-    status: "Pending",
-  },
-  {
-    id: "#SC100002",
-    date: "28 Jul 2026",
-    total: 1850,
-    status: "Delivered",
-  },
-  {
-    id: "#SC100003",
-    date: "20 Jul 2026",
-    total: 5700,
-    status: "Processing",
-  },
-];
+
 
 function badge(status: Order["status"]) {
   switch (status) {
@@ -64,6 +48,16 @@ function badge(status: Order["status"]) {
 
 export default function OrdersPage() {
   const [search, setSearch] = useState("");
+  const [orders, setOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+  loadOrders();
+}, []);
+
+async function loadOrders() {
+  const data = await getOrders();
+  setOrders(data);
+}
 
   const filteredOrders = useMemo(() => {
     return orders.filter((order) =>
