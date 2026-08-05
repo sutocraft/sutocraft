@@ -1,33 +1,46 @@
 "use client";
 
-import React, {
+import {
   createContext,
   useContext,
   useState,
+  ReactNode,
 } from "react";
 
 type CartContextType = {
   isOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  toggleCart: () => void;
+
+  cartCount: number;
+  setCartCount: (count: number) => void;
 };
 
-const CartContext = createContext<CartContextType | null>(null);
+const CartContext = createContext<CartContextType | undefined>(
+  undefined
+);
 
 export function CartProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  function openCart() {
-    setIsOpen(true);
-  }
+  const [cartCount, setCartCount] = useState(0);
 
-  function closeCart() {
+  const openCart = () => {
+    setIsOpen(true);
+  };
+
+  const closeCart = () => {
     setIsOpen(false);
-  }
+  };
+
+  const toggleCart = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <CartContext.Provider
@@ -35,6 +48,10 @@ export function CartProvider({
         isOpen,
         openCart,
         closeCart,
+        toggleCart,
+
+        cartCount,
+        setCartCount,
       }}
     >
       {children}
@@ -46,7 +63,9 @@ export function useCart() {
   const context = useContext(CartContext);
 
   if (!context) {
-    throw new Error("useCart must be used inside CartProvider");
+    throw new Error(
+      "useCart must be used inside CartProvider"
+    );
   }
 
   return context;
