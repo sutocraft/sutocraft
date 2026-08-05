@@ -16,7 +16,7 @@ export async function addToCart({
 }: {
   productId: string;
   sizeId?: string | null;
-  colorId?: string | null;
+  colorId?: string |null;
   quantity: number;
 }) {
   const userId = await getCurrentUserId();
@@ -61,14 +61,16 @@ export async function addToCart({
     return true;
   }
 
-  const { error } = await supabase.from("cart_items").insert({
-    user_id: userId,
-    session_id: null,
-    product_id: productId,
-    size_id: sizeId ?? null,
-    color_id: colorId ?? null,
-    quantity,
-  });
+  const { error } = await supabase
+    .from("cart_items")
+    .insert({
+      user_id: userId,
+      session_id: null,
+      product_id: productId,
+      size_id: sizeId ?? null,
+      color_id: colorId ?? null,
+      quantity,
+    });
 
   if (error) throw error;
 
@@ -82,41 +84,16 @@ export async function getCartItems() {
 
   const { data, error } = await supabase
     .from("cart_items")
-    .select(
-      `
-      id,
-      quantity,
-      product_id,
-      size_id,
-      color_id,
-
-      products(
-        id,
-        name,
-        price,
-        discount_price,
-        slug,
-
-        product_images(
-          image_url,
-          is_primary
-        )
-      ),
-
-      sizes(
-        id,
-        name
-      ),
-
-      colors(
-        id,
-        name,
-        code
+    .select(`
+      *,
+      products (
+        *
       )
-    `
-    )
+    `)
     .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", {
+      ascending: false,
+    });
 
   if (error) throw error;
 
@@ -133,9 +110,15 @@ export async function getCartCount() {
     .select("quantity")
     .eq("user_id", userId);
 
-  if (error) return 0;
+  if (error) {
+    console.error(error);
+    return 0;
+  }
 
-  return data.reduce((sum, item) => sum + item.quantity, 0);
+  return (data ?? []).reduce(
+    (sum: number, item: any) => sum + (item.quantity ?? 0),
+    0
+  );
 }
 
 export async function updateCartQuantity(
@@ -148,10 +131,14 @@ export async function updateCartQuantity(
 
   const { error } = await supabase
     .from("cart_items")
-    .update({ quantity })
+    .update({
+      quantity,
+    })
     .eq("id", id);
 
   if (error) throw error;
+
+  return true;
 }
 
 export async function removeCartItem(id: string) {
@@ -161,6 +148,8 @@ export async function removeCartItem(id: string) {
     .eq("id", id);
 
   if (error) throw error;
+
+  return true;
 }
 
 export async function clearCart() {
@@ -174,4 +163,7 @@ export async function clearCart() {
     .eq("user_id", userId);
 
   if (error) throw error;
+
+  return true;
 }
+
