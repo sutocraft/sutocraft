@@ -4,6 +4,9 @@ import "./globals.css";
 
 import { CartProvider } from "@/lib/cart-context";
 import CartDrawer from "@/app/components/website/CartDrawer";
+import {
+  ThemeProvider,
+} from "@/app/components/website/settings.theme_color";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,11 +39,17 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>
-          {children}
+        <ThemeProvider>
 
-          <CartDrawer />
-        </CartProvider>
+  <CartProvider>
+
+    {children}
+
+    <CartDrawer />
+
+  </CartProvider>
+
+</ThemeProvider>
       </body>
     </html>
   );
