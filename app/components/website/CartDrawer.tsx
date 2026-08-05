@@ -60,6 +60,9 @@ export default function CartDrawer() {
 
   const [loading, setLoading] = useState(false);
 
+const [updatingId, setUpdatingId] =
+  useState<string | null>(null);
+
   const [items, setItems] = useState<CartItem[]>([]);
 
     async function loadCart() {
@@ -101,28 +104,86 @@ export default function CartDrawer() {
   }, [items]);
 
   async function handleIncrease(item: CartItem) {
+  setUpdatingId(item.id);
+
+  const oldItems = items;
+
+  const newItems = items.map((i) =>
+    i.id === item.id
+      ? {
+          ...i,
+          quantity: i.quantity + 1,
+        }
+      : i
+  );
+
+  setItems(newItems);
+
+  setCartCount(cartCount + 1);
+
+  try {
     await updateCartQuantity(
       item.id,
       item.quantity + 1
     );
+  } catch (error) {
+    console.error(error);
 
-    await loadCart();
+    setItems(oldItems);
+    setCartCount(cartCount);
+  } finally {
+    setUpdatingId(null);
   }
+}
 
   async function handleDecrease(item: CartItem) {
+  if (item.quantity <= 1) {
+    return handleRemove(item);
+  }
+
+  setUpdatingId(item.id);
+
+  const oldItems = items;
+
+  const newItems = items.map((i) =>
+    i.id === item.id
+      ? {
+          ...i,
+          quantity: i.quantity - 1,
+        }
+      : i
+  );
+
+  setItems(newItems);
+
+  setCartCount(cartCount - 1);
+
+  try {
     await updateCartQuantity(
       item.id,
       item.quantity - 1
     );
+  } catch (error) {
+    console.error(error);
 
-    await loadCart();
+    setItems(oldItems);
+    setCartCount(cartCount);
+  } finally {
+    setUpdatingId(null);
   }
+}
 
   async function handleRemove(item: CartItem) {
+  setUpdatingId(item.id);
+
+  try {
     await removeCartItem(item.id);
 
     await loadCart();
+  } finally {
+    setUpdatingId(null);
   }
+}
 
   async function handleClearCart() {
     await clearCart();
@@ -222,19 +283,14 @@ export default function CartDrawer() {
             items.length > 0 &&
             items.map((item) => (
               <CartDrawerItem
-                key={item.id}
-                item={item}
-                themeColor={themeColor}
-                onIncrease={() =>
-                  handleIncrease(item)
-                }
-                onDecrease={() =>
-                  handleDecrease(item)
-                }
-                onRemove={() =>
-                  handleRemove(item)
-                }
-              />
+  key={item.id}
+  item={item}
+  themeColor={themeColor}
+  loading={updatingId === item.id}
+  onIncrease={() => handleIncrease(item)}
+  onDecrease={() => handleDecrease(item)}
+  onRemove={() => handleRemove(item)}
+/>
             ))}
 
         </div>
