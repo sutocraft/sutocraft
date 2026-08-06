@@ -252,7 +252,13 @@ const [updatingId, setUpdatingId] =
 
         {/* Body */}
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div
+  className="flex-1 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5"
+  style={{
+    overscrollBehavior: "contain",
+    WebkitOverflowScrolling: "touch",
+  }}
+>
 
                     {loading && (
             <div className="flex items-center justify-center py-16">
@@ -302,7 +308,7 @@ const [updatingId, setUpdatingId] =
                {/* Footer */}
 
 <div
-  className="border-t bg-white p-5"
+  className="sticky bottom-0 border-t bg-white px-4 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] sm:px-5 sm:py-5"
   style={{
     borderColor: `${themeColor}25`,
   }}
