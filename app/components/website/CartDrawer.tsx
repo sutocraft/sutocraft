@@ -56,10 +56,6 @@ export default function CartDrawer() {
 
 function handleCloseDrawer() {
   closeCart();
-
-  if (window.history.state?.cartDrawer) {
-    window.history.back();
-  }
 }
 
   const {
@@ -99,14 +95,18 @@ const [updatingId, setUpdatingId] =
 
   loadCart();
 
+  if (!window.history.state?.cartDrawer) {
   window.history.pushState(
     { cartDrawer: true },
     ""
   );
+}
 
-  const handlePopState = () => {
+  const handlePopState = (e: PopStateEvent) => {
+  if (e.state?.cartDrawer) {
     closeCart();
-  };
+  }
+};
 
   window.addEventListener(
     "popstate",
