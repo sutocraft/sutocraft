@@ -73,39 +73,37 @@ export default function ProductCard({
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
 
-        <div className="mb-3 text-[11px] text-yellow-500 sm:text-xs">
-          ★★★★★
-          <span className="ml-2 text-gray-500">
-            (24 Reviews)
-          </span>
-        </div>
+        <div className="mb-2 flex items-center gap-2 text-[11px] sm:text-xs">
+  <span className="text-yellow-500">★★★★★</span>
+  <span className="font-medium text-gray-500">4.9</span>
+</div>
 
         
 
-          <h3 className="line-clamp-2 min-h-[48px] text-base font-semibold leading-6 text-[#2B2B2B] transition sm:text-lg">
+          <h3 className="line-clamp-2 min-h-[42px] text-[15px] font-semibold leading-5 text-[#2B2B2B] transition sm:text-lg">
             {product.name}
           </h3>
 
        
 
-        <div className="mt-3 flex items-center gap-2 min-h-[40px]">
+        <div className="mt-2 flex items-end gap-2">
 
-          <span className="text-xl font-bold text-[#98691D] sm:text-2xl">
+          <span className="text-2xl font-extrabold text-[#98691D]">
             ৳{product.sale_price ?? product.price}
           </span>
 
           {product.sale_price && (
-            <span className="text-sm text-gray-400 line-through">
+            <span className="text-xs text-gray-400 line-through">
               ৳{product.price}
             </span>
           )}
 
         </div>
 
-        <div className="mt-auto pt-4">
+        <div className="mt-auto pt-2">
   <div className="flex items-center justify-between border-t border-[#EFE8DA] pt-3">
     <span className="text-sm font-medium text-gray-500 transition group-hover:text-[#98691D]">
-      Tap to View
+      View Details
     </span>
 
     <span className="text-xl font-semibold text-[#98691D] transition-transform duration-300 group-hover:translate-x-1">
