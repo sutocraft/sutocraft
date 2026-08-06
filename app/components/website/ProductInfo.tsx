@@ -2,6 +2,10 @@
 
 import { Star, ShieldCheck, Truck, PackageCheck } from "lucide-react";
 
+import type { WebsiteProduct } from "@/lib/products";
+
+
+
 type Size = {
   id: string;
   name: string;
@@ -16,7 +20,7 @@ type Color = {
 
 
 type Props = {
-  product: Product;
+  product: WebsiteProduct;
 
   selectedSize: string;
   selectedColor: string;
