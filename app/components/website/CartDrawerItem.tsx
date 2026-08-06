@@ -37,20 +37,20 @@ const regularPrice =
   return (
     <div className="flex gap-4 py-4 border-b border-[#e8dcc6]">
       {/* Image */}
-      <div className="w-24 h-24 rounded-xl overflow-hidden bg-[#f8f5ef] flex items-center justify-center shrink-0">
+      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#f8f5ef] shadow-sm sm:h-24 sm:w-24 flex items-center justify-center">
         <Image
   src={image}
   alt={product?.name ?? "Product"}
   width={96}
   height={96}
   unoptimized
-  className="w-full h-full object-cover"
+  className="h-full w-full object-contain p-2 transition-transform duration-300"
 />
       </div>
 
       {/* Details */}
       <div className="flex-1">
-        <h3 className="font-semibold text-[#1f2937] leading-5">
+        <h3 className="line-clamp-2 text-base font-semibold leading-6 text-[#1F2937]">
           {product?.name}
         </h3>
 
@@ -73,7 +73,7 @@ const regularPrice =
           <span style={{
   color: themeColor,
 }}
-className="text-lg font-bold">
+className="text-xl font-bold">
   ৳{price}
 </span>
 
@@ -87,7 +87,7 @@ className="text-lg font-bold">
         {/* Qty */}
         <div className="flex items-center justify-between mt-3">
   <div
-    className="flex items-center rounded-lg overflow-hidden"
+    className="flex items-center overflow-hidden rounded-xl"
     style={{
       border: `1px solid ${themeColor}40`,
       opacity: loading ? 0.6 : 1,
@@ -96,7 +96,7 @@ className="text-lg font-bold">
     <button
       onClick={onDecrease}
       disabled={loading}
-      className="w-9 h-9 flex items-center justify-center transition disabled:cursor-not-allowed"
+      className="flex h-11 w-11 items-center justify-center transition active:scale-95 disabled:cursor-not-allowed"
       style={{
         color: themeColor,
       }}
@@ -105,7 +105,7 @@ className="text-lg font-bold">
     </button>
 
     <div
-      className="w-16 text-center text-sm font-semibold"
+      className="w-12 text-center text-base font-bold"
       style={{
         color: themeColor,
       }}
@@ -134,7 +134,7 @@ className="text-lg font-bold">
       opacity: loading ? 0.5 : 1,
     }}
   >
-    <Trash2 size={18} />
+    <Trash2 size={20} />
   </button>
 </div>
       </div>
