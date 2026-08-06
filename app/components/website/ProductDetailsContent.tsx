@@ -26,7 +26,7 @@ type Product = {
 
   name: string;
 
-  sku?: string;
+  sku?: string | null;
 
   image_url?: string;
 
@@ -50,7 +50,7 @@ type Product = {
 
   stock: number;
 
-  short_description?: string;
+  short_description?: string | null;
 
   description?: string;
 
