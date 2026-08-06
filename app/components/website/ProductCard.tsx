@@ -16,7 +16,7 @@ export default function ProductCard({
   return (
     <Link
   href={`/product/${product.slug}`}
-  className="product-card group flex h-full min-h-[390px] sm:min-h-[470px] lg:min-h-[560px] flex-col overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+  className="product-card group flex h-full min-h-[340px] sm:min-h-[440px] lg:min-h-[540px] flex-col overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
 >
 
       {/* Image */}
@@ -25,13 +25,13 @@ export default function ProductCard({
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
 
           {product.new_arrival && (
-            <span className="rounded-full bg-[#98691D] px-3 py-1 text-xs font-semibold text-white">
+            <span className="rounded-full bg-[#98691D] px-3 py-1 text-[11px] font-bold tracking-wide text-white shadow-sm">
               NEW
             </span>
           )}
 
           {product.discount_percentage > 0 && (
-            <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white">
+            <span className="rounded-full bg-[#E11D48] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
               -{product.discount_percentage}%
             </span>
           )}
