@@ -237,9 +237,17 @@ if (!product) {
 
 <div className="space-y-6">
 
-  <h1 className="text-3xl sm:text-4xl font-bold leading-tight text-[#2B2B2B]">
+  <div>
+  <h1 className="text-3xl font-bold leading-tight text-[#1F2937] lg:text-5xl">
     {product.name}
   </h1>
+
+  {(product.sub_category?.name || product.category?.name) && (
+    <p className="mt-2 text-base font-medium text-gray-500 lg:text-lg">
+      {product.sub_category?.name ?? product.category?.name}
+    </p>
+  )}
+</div>
 
   {/* Rating */}
 
