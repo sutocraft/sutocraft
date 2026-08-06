@@ -1,9 +1,11 @@
 import Container from "./Container";
 import {
-  Facebook,
-  Youtube,
-} from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+  FaWhatsapp,
+  FaFacebookF,
+  FaYoutube,
+} from "react-icons/fa";
+
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -159,7 +161,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-[#D9A441]"
               >
-                <Facebook size={20} />
+                <FaFacebookF size={20} />
               </a>
 
               <a
@@ -168,7 +170,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-red-600"
               >
-                <Youtube size={20} />
+                <FaYoutube size={20} />
               </a>
 
               <a
@@ -187,20 +189,32 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-[#3A3A3A] py-6">
+  <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-gray-400 lg:flex-row">
 
-          <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-gray-400 lg:flex-row">
+    <p>
+      © {new Date().getFullYear()} SutoCraft. All Rights Reserved.
+    </p>
 
-            <p>
-              © {new Date().getFullYear()} SutoCraft. All Rights Reserved.
-            </p>
+    <div className="flex items-center gap-6">
 
-            <p>
-              Made with ❤️ in Bangladesh
-            </p>
+      <p>
+        Made with ❤️ in Bangladesh
+      </p>
 
-          </div>
+      <Link
+        href="/admin/login"
+        className="text-xs transition-opacity duration-300 hover:opacity-100"
+        style={{
+          opacity: 0.08,
+        }}
+      >
+        Admin Login
+      </Link>
 
-        </div>
+    </div>
+
+  </div>
+</div>
       </Container>
     </footer>
   );
