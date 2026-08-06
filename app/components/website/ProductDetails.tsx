@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useCartFly } from "@/app/context/cart-fly-context";
+import { getImageStartPosition } from "@/lib/fly";
 
 import {
   getProductBySlug,
@@ -27,6 +29,8 @@ export default function ProductDetails({
 }: Props) {
   const [product, setProduct] =
     useState<WebsiteProduct | null>(null);
+
+    const { startFly } = useCartFly();
 
   const [gallery, setGallery] =
     useState<GalleryImage[]>([]);
@@ -102,46 +106,59 @@ export default function ProductDetails({
   }
 
   async function handleAddToCart() {
-    if (!product) return;
+  if (!product) return;
 
-    if (product.stock <= 0) {
-      alert("Out of stock.");
-      return;
-    }
-
-    if (
-      (product.sizes?.length ?? 0) > 0 &&
-      !selectedSize
-    ) {
-      alert("Select size.");
-      return;
-    }
-
-    if (
-      (product.colors?.length ?? 0) > 0 &&
-      !selectedColor
-    ) {
-      alert("Select color.");
-      return;
-    }
-
-    await addToCart({
-      productId: product.id,
-      quantity,
-      sizeId:
-        selectedSize || null,
-      colorId:
-        selectedColor || null,
-    });
-
-    window.dispatchEvent(
-      new Event("cart-updated")
-    );
-
-    window.dispatchEvent(
-      new Event("open-cart")
-    );
+  if (product.stock <= 0) {
+    alert("Out of stock.");
+    return;
   }
+
+  if (
+    (product.sizes?.length ?? 0) > 0 &&
+    !selectedSize
+  ) {
+    alert("Select size.");
+    return;
+  }
+
+  if (
+    (product.colors?.length ?? 0) > 0 &&
+    !selectedColor
+  ) {
+    alert("Select color.");
+    return;
+  }
+
+  const image = document.getElementById(
+    "product-main-image"
+  ) as HTMLImageElement | null;
+
+  if (image) {
+    const pos =
+      getImageStartPosition(image);
+
+    startFly({
+      image: product.image_url || "",
+      startX: pos.x,
+      startY: pos.y,
+    });
+  }
+
+  await addToCart({
+    productId: product.id,
+    quantity,
+    sizeId: selectedSize || null,
+    colorId: selectedColor || null,
+  });
+
+  window.dispatchEvent(
+    new Event("cart-updated")
+  );
+
+  window.dispatchEvent(
+    new Event("open-cart")
+  );
+}
 
     function handleBuyNow() {
     handleAddToCart().then(() => {
@@ -176,23 +193,22 @@ export default function ProductDetails({
   }
 
   const galleryImages = useMemo(() => {
-    if (!product) return [];
+  if (!product) return [];
 
-    return [
-      ...(product.image_url
-        ? [
-            {
-              id: "cover",
-              image_url:
-                product.image_url,
-              sort_order: 0,
-            },
-          ]
-        : []),
+  if (gallery.length > 0) {
+    return gallery;
+  }
 
-      ...gallery,
-    ];
-  }, [product, gallery]);
+  return product.image_url
+    ? [
+        {
+          id: "cover",
+          image_url: product.image_url,
+          sort_order: 0,
+        },
+      ]
+    : [];
+}, [product, gallery]);
 
   if (loading) {
     return (
