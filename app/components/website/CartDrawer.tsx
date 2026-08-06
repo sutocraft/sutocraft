@@ -227,7 +227,7 @@ const [updatingId, setUpdatingId] =
       {/* Backdrop */}
 
       <div
-        onClick={closeCart}
+        onClick={handleCloseDrawer}
         className={`fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm transition-all duration-300 ${
           isOpen
             ? "opacity-100 visible"
@@ -267,7 +267,7 @@ const [updatingId, setUpdatingId] =
           </div>
 
           <button
-            onClick={closeCart}
+            onClick={handleCloseDrawer}
             className="rounded-full p-2 transition hover:bg-gray-100"
           >
             <X
