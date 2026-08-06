@@ -41,7 +41,7 @@ console.log(products);
         </div>
 
         {/* Products */}
-        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))] lg:gap-8">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
           {products.map((product) => (
   <ProductCard
     key={product.id}
