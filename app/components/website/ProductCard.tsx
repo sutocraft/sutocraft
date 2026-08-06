@@ -18,7 +18,7 @@ export default function ProductCard({
 
 const { startFly } = useCartFly();
   return (
-    <div className="product-card group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E8E1CE] bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <div className="product-card group flex h-full min-h-[430px] flex-col overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:min-h-[480px] lg:min-h-[620px]">
 
       {/* Image */}
       <div className="relative overflow-hidden bg-[#F8F5EE]">
@@ -45,7 +45,7 @@ const { startFly } = useCartFly();
 
         <Link href={`/product/${product.slug}`}>
 
-          <div className="relative h-[260px] sm:h-[320px] lg:h-[420px] w-full overflow-hidden bg-[#F8F5EE]">
+          <div className="relative h-[250px] w-full overflow-hidden bg-[#F8F5EE] sm:h-[320px] lg:h-[430px]">
 
             {product.image_url ? (
               <img
@@ -72,9 +72,9 @@ const { startFly } = useCartFly();
 
       {/* Content */}
 
-      <div className="flex flex-1 flex-col p-4 lg:p-5">
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
 
-        <div className="mb-2 text-xs text-yellow-500">
+        <div className="mb-3 text-[11px] text-yellow-500 sm:text-xs">
           ★★★★★
           <span className="ml-2 text-gray-500">
             (24 Reviews)
@@ -83,13 +83,13 @@ const { startFly } = useCartFly();
 
         <Link href={`/product/${product.slug}`}>
 
-          <h3 className="line-clamp-2 text-sm font-semibold text-[#2B2B2B] hover:text-[#98691D] sm:text-lg">
+          <h3 className="line-clamp-2 min-h-[48px] text-base font-semibold leading-6 text-[#2B2B2B] transition sm:text-lg">
             {product.name}
           </h3>
 
         </Link>
 
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2 min-h-[40px]">
 
           <span className="text-xl font-bold text-[#98691D] sm:text-2xl">
             ৳{product.sale_price ?? product.price}
@@ -134,7 +134,7 @@ const { startFly } = useCartFly();
 
     router.refresh();
   }}
-  className="mt-auto w-full rounded-xl py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.02]"
+  className="mt-auto w-full rounded-2xl py-3.5 text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98]"
   style={{
     backgroundColor: "#98691D",
   }}
