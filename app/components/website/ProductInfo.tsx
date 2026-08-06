@@ -16,7 +16,7 @@ type Color = {
 type Product = {
   id: string;
   name: string;
-  sku?: string;
+  sku?: string | null;
   category?: {
     name: string;
   };
@@ -30,7 +30,7 @@ type Product = {
   sale_price?: number | null;
   discount_percentage?: number;
   stock: number;
-  short_description?: string;
+  short_description?: string | null;
 };
 
 type Props = {
