@@ -22,35 +22,33 @@ export default function ProductCard({
       {/* Image */}
       <div className="relative overflow-hidden bg-[#F8F5EE]">
 
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+        <div className="absolute right-4 top-4 z-20 flex flex-col items-end gap-1.5">
+  {product.new_arrival && (
+    <span className="rounded-full bg-[#A87316] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow">
+      NEW
+    </span>
+  )}
 
-          {product.new_arrival && (
-            <span className="rounded-full bg-[#98691D] px-3 py-1 text-[11px] font-bold tracking-wide text-white shadow-sm">
-              NEW
-            </span>
-          )}
+  {product.discount_percentage > 0 && (
+    <span className="rounded-full bg-[#FF214F] px-3 py-1 text-[11px] font-bold text-white shadow">
+      -{product.discount_percentage}%
+    </span>
+  )}
+</div>
 
-          {product.discount_percentage > 0 && (
-            <span className="rounded-full bg-[#E11D48] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
-              -{product.discount_percentage}%
-            </span>
-          )}
-
-        </div>
-
-        <div className="absolute right-3 top-3 z-10">
+        <div className="absolute bottom-4 right-4 z-20">
   <WishlistButton productId={product.id} />
 </div>
 
         
 
-          <div className="relative h-[250px] w-full overflow-hidden bg-[#F8F5EE] sm:h-[320px] lg:h-[430px]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F8F5EE]">
 
             {product.image_url ? (
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-full w-full object-contain p-2 transition-all duration-500 group-hover:scale-[1.04]"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
@@ -80,14 +78,18 @@ export default function ProductCard({
 
         
 
-          <div className="min-h-[54px]">
+          <div className="min-h-[52px]">
   <h3 className="line-clamp-2 text-[15px] font-semibold leading-5 text-[#2B2B2B]">
     {product.name}
   </h3>
 
-  {(product.sub_category?.name || product.category?.name) && (
-    <p className="mt-1 text-xs font-medium uppercase tracking-[0.08em] text-gray-500">
-      {product.sub_category?.name ?? product.category?.name}
+  {(product.category?.name || product.sub_category?.name) && (
+    <p className="mt-1 line-clamp-1 text-[11px] font-medium uppercase tracking-[0.08em] text-gray-500">
+      {product.category?.name}
+      {product.category?.name &&
+        product.sub_category?.name &&
+        " • "}
+      {product.sub_category?.name}
     </p>
   )}
 </div>
@@ -109,13 +111,13 @@ export default function ProductCard({
         </div>
 
         <div className="mt-auto pt-2">
-  <div className="flex items-center justify-between border-t border-[#EFE8DA] pt-3">
+  <div className="flex items-center justify-between border-t border-[#F2EEE6] pt-3">
     <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#98691D] lg:transition lg:group-hover:text-[#7A5318]">
       View Details
     </span>
 
     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#98691D] text-white transition-all duration-300 lg:bg-[#F8F5EE] lg:text-[#98691D] lg:group-hover:bg-[#98691D] lg:group-hover:text-white">
-  <span className="text-base transition-transform duration-300 lg:group-hover:translate-x-0.5">
+  <span className="text-base transition-transform duration-300 lg:group-hover:translate-x-1">
     →
   </span>
 </div>
