@@ -1,5 +1,7 @@
 import { supabase } from "./supabase";
 
+
+
 export type WebsiteProduct = {
   id: string;
   name: string;
