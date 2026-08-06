@@ -13,25 +13,7 @@ type Color = {
   code?: string;
 };
 
-type Product = {
-  id: string;
-  name: string;
-  sku?: string | null;
-  category?: {
-    name: string;
-  };
-  sub_category?: {
-    name: string;
-  };
-  brand?: {
-    name: string;
-  };
-  price: number;
-  sale_price?: number | null;
-  discount_percentage?: number;
-  stock: number;
-  short_description?: string | null;
-};
+
 
 type Props = {
   product: Product;
