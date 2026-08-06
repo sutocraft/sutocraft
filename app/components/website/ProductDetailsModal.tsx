@@ -20,13 +20,31 @@ export default function ProductDetailsModal({
 
     document.body.style.overflow = "hidden";
 
+    window.history.pushState(
+      { productModal: true },
+      ""
+    );
+
+    const handlePopState = () => {
+      onClose();
+    };
+
     const handleKeyDown = (
       e: KeyboardEvent
     ) => {
       if (e.key === "Escape") {
-        onClose();
+        if (window.history.state?.productModal) {
+          window.history.back();
+        } else {
+          onClose();
+        }
       }
     };
+
+    window.addEventListener(
+      "popstate",
+      handlePopState
+    );
 
     window.addEventListener(
       "keydown",
@@ -35,6 +53,11 @@ export default function ProductDetailsModal({
 
     return () => {
       document.body.style.overflow = "";
+
+      window.removeEventListener(
+        "popstate",
+        handlePopState
+      );
 
       window.removeEventListener(
         "keydown",
@@ -47,7 +70,13 @@ export default function ProductDetailsModal({
 
   return (
     <div
-      onClick={onClose}
+      onClick={() => {
+        if (window.history.state?.productModal) {
+          window.history.back();
+        } else {
+          onClose();
+        }
+      }}
       className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm"
     >
       <div
@@ -57,7 +86,13 @@ export default function ProductDetailsModal({
         className="absolute inset-0 mx-auto h-screen w-full overflow-hidden bg-[#F8F5EE] lg:h-[95vh] lg:max-w-7xl lg:translate-y-[2.5vh] lg:rounded-3xl lg:shadow-2xl"
       >
         <button
-          onClick={onClose}
+          onClick={() => {
+            if (window.history.state?.productModal) {
+              window.history.back();
+            } else {
+              onClose();
+            }
+          }}
           className="absolute right-5 top-5 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#2B2B2B] shadow-lg transition hover:bg-[#98691D] hover:text-white"
         >
           <X size={22} />
@@ -65,8 +100,8 @@ export default function ProductDetailsModal({
 
         <div className="h-full overflow-y-auto">
           <ProductDetails slug={slug} />
+        </div>
 
-                  </div>
       </div>
     </div>
   );
