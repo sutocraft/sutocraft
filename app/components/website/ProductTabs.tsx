@@ -8,9 +8,8 @@ import {
 } from "lucide-react";
 
 type Props = {
-  description?: string;
-
-  specification?: string;
+  description?: string | null;
+specification?: string | null;
 
   reviews?: {
     id: string;
