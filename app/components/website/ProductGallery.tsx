@@ -25,7 +25,7 @@ export default function ProductGallery({
 
   const [active, setActive] = useState(0);
 
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
 
   const [fullscreen, setFullscreen] =
     useState(false);
@@ -35,28 +35,32 @@ export default function ProductGallery({
 
   useEffect(() => {
     setActive(0);
-    setLoaded(false);
+    setLoaded(true);
   }, [images]);
 
   function previous() {
-    setLoaded(false);
+  if (gallery.length <= 1) return;
 
-    setActive((prev) =>
-      prev === 0
-        ? gallery.length - 1
-        : prev - 1
-    );
-  }
+  setLoaded(false);
+
+  setActive((prev) =>
+    prev === 0
+      ? gallery.length - 1
+      : prev - 1
+  );
+}
 
   function next() {
-    setLoaded(false);
+  if (gallery.length <= 1) return;
 
-    setActive((prev) =>
-      prev === gallery.length - 1
-        ? 0
-        : prev + 1
-    );
-  }
+  setLoaded(false);
+
+  setActive((prev) =>
+    prev === gallery.length - 1
+      ? 0
+      : prev + 1
+  );
+}
 
   function handleTouchStart(
     e: React.TouchEvent<HTMLDivElement>
@@ -122,23 +126,21 @@ export default function ProductGallery({
         >
           <div className="relative aspect-[4/5]">
 
-            {!loaded && (
+            {false && (
               <div className="absolute inset-0 animate-pulse bg-[#EFE8D8]" />
             )}
 
             <Image
-              src={gallery[active]}
+  id="product-main-image"
+  src={gallery[active]}
               alt={productName}
               fill
               priority
-              onLoad={() =>
-                setLoaded(true)
-              }
-              className={`object-contain p-4 transition-all duration-500 ${
-                loaded
-                  ? "opacity-100"
-                  : "opacity-0"
-              } hover:scale-[1.03]`}
+              onLoadingComplete={() => {
+  setLoaded(true);
+}}
+              className="object-contain p-4 transition-all duration-500 hover:scale-[1.03]"
+              
             />
 
             <button
@@ -182,9 +184,11 @@ export default function ProductGallery({
               <button
                 key={index}
                 onClick={() => {
-                  setLoaded(false);
-                  setActive(index);
-                }}
+  if (index === active) return;
+
+  setLoaded(false);
+  setActive(index);
+}}
                 className={`relative aspect-square overflow-hidden rounded-2xl border transition-all duration-300 ${
                   active === index
                     ? "border-[#98691D] ring-2 ring-[#98691D]/20"
