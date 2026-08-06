@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { WebsiteProduct } from "@/lib/products";
 import WishlistButton from "@/app/components/website/WishlistButton";
-import { addToCart } from "@/lib/cart";
-import { useRouter } from "next/navigation";
-import { useCartFly } from "@/app/context/cart-fly-context";
+
 
 type Props = {
   product: WebsiteProduct;
@@ -14,11 +12,12 @@ type Props = {
 export default function ProductCard({
   product,
 }: Props) {
-  const router = useRouter();
-
-const { startFly } = useCartFly();
+  
   return (
-    <div className="product-card group flex h-full min-h-[430px] flex-col overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl sm:min-h-[480px] lg:min-h-[620px]">
+    <Link
+  href={`/product/${product.slug}`}
+  className="product-card group flex h-full min-h-[430px] flex-col overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:min-h-[480px] lg:min-h-[620px]"
+>
 
       {/* Image */}
       <div className="relative overflow-hidden bg-[#F8F5EE]">
@@ -43,7 +42,7 @@ const { startFly } = useCartFly();
   <WishlistButton productId={product.id} />
 </div>
 
-        <Link href={`/product/${product.slug}`}>
+        
 
           <div className="relative h-[250px] w-full overflow-hidden bg-[#F8F5EE] sm:h-[320px] lg:h-[430px]">
 
@@ -66,7 +65,7 @@ const { startFly } = useCartFly();
 
           </div>
 
-        </Link>
+        
 
       </div>
 
@@ -81,13 +80,13 @@ const { startFly } = useCartFly();
           </span>
         </div>
 
-        <Link href={`/product/${product.slug}`}>
+        
 
           <h3 className="line-clamp-2 min-h-[48px] text-base font-semibold leading-6 text-[#2B2B2B] transition sm:text-lg">
             {product.name}
           </h3>
 
-        </Link>
+       
 
         <div className="mt-3 flex items-center gap-2 min-h-[40px]">
 
@@ -103,46 +102,19 @@ const { startFly } = useCartFly();
 
         </div>
 
-        <button
-  onClick={async (e) => {
-    console.count("ADD TO CART CLICK");
-    const card =
-      e.currentTarget.closest(".product-card");
+        <div className="mt-auto pt-4">
+  <div className="flex items-center justify-between border-t border-[#EFE8DA] pt-3">
+    <span className="text-sm font-medium text-gray-500 transition group-hover:text-[#98691D]">
+      Tap to View
+    </span>
 
-    const image =
-      card?.querySelector("img");
-
-    if (image) {
-      const rect =
-        image.getBoundingClientRect();
-
-      startFly({
-        image: product.image_url ?? "",
-        startX:
-          rect.left + rect.width / 2,
-        startY:
-          rect.top + rect.height / 2,
-      });
-    }
-
-    await addToCart({
-  productId: product.id,
-  sizeId: null,
-  colorId: null,
-  quantity: 1,
-});
-
-    router.refresh();
-  }}
-  className="mt-auto w-full rounded-2xl py-3.5 text-sm font-semibold text-white transition-all duration-200 active:scale-[0.98]"
-  style={{
-    backgroundColor: "#98691D",
-  }}
->
-  Add To Cart
-</button>
+    <span className="text-xl font-semibold text-[#98691D] transition-transform duration-300 group-hover:translate-x-1">
+      →
+    </span>
+  </div>
+</div>
       </div>
 
-    </div>
+    </Link>
   );
 }
