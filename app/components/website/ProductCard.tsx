@@ -210,10 +210,10 @@ export default function ProductCard({
       </article>
 
             <ProductDetailsModal
-        open={open}
-        slug={product.slug}
-        onClose={() => setOpen(false)}
-      />
+  open={open}
+  slug={product.slug}
+  onClose={() => setOpen(false)}
+/>
 
     </>
   );
