@@ -105,6 +105,7 @@ const { startFly } = useCartFly();
 
         <button
   onClick={async (e) => {
+    console.count("ADD TO CART CLICK");
     const card =
       e.currentTarget.closest(".product-card");
 
