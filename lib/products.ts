@@ -50,7 +50,11 @@ colors?: {
 export async function getFeaturedProducts(): Promise<WebsiteProduct[]> {
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+  *,
+  category:categories(name),
+  sub_category:sub_categories(name)
+`)
     .eq("featured", true)
     .eq("active", true)
     .order("created_at", { ascending: false });
@@ -66,7 +70,11 @@ export async function getFeaturedProducts(): Promise<WebsiteProduct[]> {
 export async function getNewArrivalProducts(): Promise<WebsiteProduct[]> {
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+  *,
+  category:categories(name),
+  sub_category:sub_categories(name)
+`)
     .eq("new_arrival", true)
     .eq("active", true)
     .order("created_at", { ascending: false });
@@ -82,7 +90,11 @@ export async function getNewArrivalProducts(): Promise<WebsiteProduct[]> {
 export async function getAllProducts(): Promise<WebsiteProduct[]> {
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+  *,
+  category:categories(name),
+  sub_category:sub_categories(name)
+`)
     .eq("active", true)
     .order("created_at", { ascending: false });
 
