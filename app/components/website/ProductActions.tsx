@@ -25,79 +25,28 @@ type Props = {
 
 export default function ProductActions({
   inStock,
-  onAddToCart,
-  onBuyNow,
   onWishlist,
   onShare,
   wishlist = false,
   loading = false,
 }: Props) {
   return (
-    <div className="mt-8 space-y-4">
+    <div className="mt-6 space-y-4">
 
-      {/* Add To Cart */}
-
-      <button
-        onClick={onAddToCart}
-        disabled={!inStock || loading}
-        className="group flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#98691D] text-base font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7A5318] disabled:cursor-not-allowed disabled:bg-gray-300"
-      >
-        <ShoppingCart
-          size={20}
-          className="transition group-hover:scale-110"
-        />
-
-        {loading
-          ? "Adding..."
-          : "Add To Cart"}
-      </button>
-
-      {/* Buy Now */}
-
-      <button
-        onClick={onBuyNow}
-        disabled={!inStock}
-        className="group flex h-14 w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
-      >
-        <Zap
-          size={20}
-          className="transition group-hover:scale-110"
-        />
-
-        Buy Now
-      </button>
 
       {/* Secondary Actions */}
 
       <div className="grid grid-cols-2 gap-3">
 
-        <button
-          onClick={onWishlist}
-          className={`flex h-12 items-center justify-center gap-2 rounded-xl border transition-all duration-300 ${
-            wishlist
-              ? "border-[#98691D] bg-[#98691D] text-white"
-              : "border-[#E8E1CE] bg-white text-[#2B2B2B] hover:border-[#98691D]"
-          }`}
-        >
-          <Heart
-            size={18}
-            className={
-              wishlist
-                ? "fill-current"
-                : ""
-            }
-          />
-
-          Wishlist
-        </button>
+       
 
         <button
           onClick={onShare}
-          className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#E8E1CE] bg-white text-[#2B2B2B] transition-all duration-300 hover:border-[#98691D] hover:text-[#98691D]"
+          className="flex h-12 w-120 items-center justify-center gap-2 rounded-xl border border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
         >
           <Share2 size={18} />
 
-          Share
+          Share Product
         </button>
 
       </div>
