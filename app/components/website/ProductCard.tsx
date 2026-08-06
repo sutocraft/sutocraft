@@ -102,13 +102,15 @@ export default function ProductCard({
 
         <div className="mt-auto pt-2">
   <div className="flex items-center justify-between border-t border-[#EFE8DA] pt-3">
-    <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#98691D] transition group-hover:text-[#7A5318]">
+    <span className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#98691D] lg:transition lg:group-hover:text-[#7A5318]">
       View Details
     </span>
 
-    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F8F5EE] transition-all duration-300 group-hover:bg-[#98691D] group-hover:text-white">
-      <span className="text-base">→</span>
-    </div>
+    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#98691D] text-white transition-all duration-300 lg:bg-[#F8F5EE] lg:text-[#98691D] lg:group-hover:bg-[#98691D] lg:group-hover:text-white">
+  <span className="text-base transition-transform duration-300 lg:group-hover:translate-x-0.5">
+    →
+  </span>
+</div>
   </div>
 </div>
       </div>
