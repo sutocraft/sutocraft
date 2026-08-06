@@ -54,10 +54,10 @@ export default function Hero({
 );
 
   return (
-    <section className="bg-[#F8F5EE]">
+    <section className="bg-[#F8F5EE] overflow-hidden">
       <Container>
 
-        <div className="grid items-center gap-12 py-16 lg:min-h-[620px] lg:grid-cols-2 lg:gap-20">
+        <div className="grid items-center gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-[680px] lg:grid-cols-2 lg:gap-20 lg:py-16">
 
           {/* Left Side */}
 
@@ -100,10 +100,10 @@ export default function Hero({
 
          {/* Right Side */}
 
-<div className="order-1 flex justify-center lg:order-2 lg:justify-end">
+<div className="order-1 flex justify-center px-2 sm:px-4 lg:order-2 lg:justify-end lg:px-0">
   <Link
     href={`/product/${product.slug}`}
-    className="group relative block h-[280px] w-full max-w-[320px] overflow-hidden rounded-[30px] bg-white shadow-sm transition hover:shadow-xl sm:h-[360px] sm:max-w-[420px] lg:h-[460px] lg:max-w-[520px]"
+    className="group relative block h-[360px] w-[95%] max-w-[380px] overflow-hidden rounded-[34px] bg-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:h-[430px] sm:max-w-[460px] lg:h-[560px] lg:w-full lg:max-w-[560px]"
   >
     <Image
   key={product.id}
@@ -114,7 +114,7 @@ export default function Hero({
       style={{
   transitionDuration: `${settings?.hero_transition_speed || 600}ms`,
 }}
-className="object-contain p-6 transition group-hover:scale-105"
+className="object-contain p-4 transition-transform duration-500 group-hover:scale-110 sm:p-6 lg:p-8"
     />
   </Link>
 </div>
