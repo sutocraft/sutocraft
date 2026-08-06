@@ -63,12 +63,12 @@ export default function Hero({
 
           <div className="order-2 text-center lg:order-1 lg:text-left">
 
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.4em] text-[#98691D]">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#98691D] sm:mb-3">
               {settings?.hero_subtitle || "NEW COLLECTION"}
             </p>
 
             
-            <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-gray-600 lg:mx-0">
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-gray-600 sm:text-base lg:mx-0">
               {settings?.hero_description ||
  product.short_description ||
  "Premium quality crafted for everyday comfort."}
@@ -78,18 +78,18 @@ export default function Hero({
   {settings?.hero_title || "Wear Your Style"}
 </h1>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
+            <div className="mt-6 flex flex-row justify-center gap-3 lg:justify-start">
 
               <Link
                 href={`/product/${product.slug}`}
-                className="rounded-xl bg-[#98691D] px-8 py-4 font-semibold text-white transition hover:bg-[#B48630]"
+                className="rounded-xl bg-[#98691D] px-5 py-3 font-semibold text-white transition hover:bg-[#B48630]"
               >
                 {settings?.hero_button_1_text || "Shop Now"}
               </Link>
 
               <Link
                 href="/products"
-                className="rounded-xl border border-[#98691D] px-8 py-4 font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white"
+                className="rounded-xl border border-[#98691D] px-5 py-3 font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white"
               >
                 {settings?.hero_button_2_text || "Explore Collection"}
               </Link>
@@ -121,7 +121,7 @@ className="object-contain p-4 transition-transform duration-500 group-hover:scal
 
 {/* Slider Dots */}
 
-<div className="col-span-full mt-8 flex justify-center gap-3">
+<div className="order-0 col-span-full -mb-2 flex justify-center gap-3 lg:order-none lg:mb-0 lg:mt-8">
 
   {products.map((_, index) => (
 
