@@ -327,7 +327,7 @@ style={{
 </Link>
 
               <button
-  id="header-cart"
+  id="header-cart-mobile"
   onClick={openCart}
   className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
 >
