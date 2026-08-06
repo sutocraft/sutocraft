@@ -48,11 +48,19 @@ type CartItem = {
 
 export default function CartDrawer() {
   const {
-    isOpen,
-    closeCart,
-    cartCount,
-    setCartCount,
-  } = useCart();
+  isOpen,
+  closeCart,
+  cartCount,
+  setCartCount,
+} = useCart();
+
+function handleCloseDrawer() {
+  closeCart();
+
+  if (window.history.state?.cartDrawer) {
+    window.history.back();
+  }
+}
 
   const {
     themeColor,
@@ -87,10 +95,31 @@ const [updatingId, setUpdatingId] =
   }
 
   useEffect(() => {
-    if (isOpen) {
-      loadCart();
-    }
-  }, [isOpen]);
+  if (!isOpen) return;
+
+  loadCart();
+
+  window.history.pushState(
+    { cartDrawer: true },
+    ""
+  );
+
+  const handlePopState = () => {
+    closeCart();
+  };
+
+  window.addEventListener(
+    "popstate",
+    handlePopState
+  );
+
+  return () => {
+    window.removeEventListener(
+      "popstate",
+      handlePopState
+    );
+  };
+}, [isOpen]);
 
   const subtotal = useMemo(() => {
     return items.reduce((sum, item) => {
@@ -349,7 +378,7 @@ const [updatingId, setUpdatingId] =
   <div className="grid gap-3">
     <Link
       href="/cart"
-      onClick={closeCart}
+      onClick={handleCloseDrawer}
       className="rounded-xl border py-3 text-center font-semibold transition-all duration-200 hover:bg-[#F8F5EF]"
       style={{
         borderColor: themeColor,
@@ -361,7 +390,7 @@ const [updatingId, setUpdatingId] =
 
     <Link
       href="/checkout"
-      onClick={closeCart}
+      onClick={handleCloseDrawer}
       className="rounded-xl py-3 text-center font-semibold text-white transition-opacity duration-200 hover:opacity-90"
       style={{
         backgroundColor: themeColor,
