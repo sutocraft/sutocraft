@@ -5,6 +5,8 @@ import ProductInfo from "./ProductInfo";
 import ProductActions from "./ProductActions";
 import ProductTabs from "./ProductTabs";
 
+import type { WebsiteProduct } from "@/lib/products";
+
 
 type GalleryImage = {
   id: string;
@@ -25,7 +27,7 @@ type Color = {
 
 
 type Props = {
-  product: Product;
+  product: WebsiteProduct;
 
   gallery: GalleryImage[];
 
