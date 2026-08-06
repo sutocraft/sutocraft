@@ -13,3 +13,18 @@ arekta bishoy full website er thems color use korte bollam tmk r tumi blue use k
               <h3 className="mt-4 text-[#B6862C] text-xl font-semibold">
                 Your cart is empty
               </h3>
+
+              check and next
+
+✅ Hero
+✅ Categories
+✅ Product Cards
+✅ New Arrivals
+✅ Featured Products
+🟡 Product Details (Functionality)
+⬜ Cart Drawer
+⬜ Checkout
+⬜ Wishlist
+⬜ Search
+⬜ Profile
+⬜ Orders
