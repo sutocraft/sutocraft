@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import {
   FiHome,
   FiGrid,
   FiSearch,
@@ -13,7 +19,48 @@ import {
 export default function MobileBottomNav() {
   const pathname = usePathname();
 
-  const menus = [
+const [showNav, setShowNav] =
+  useState(true);
+
+const lastScrollY =
+  useRef(0);
+
+  useEffect(() => {
+  function handleScroll() {
+    const currentScrollY =
+      window.scrollY;
+
+    if (currentScrollY < 20) {
+      setShowNav(true);
+    } else if (
+      currentScrollY >
+      lastScrollY.current
+    ) {
+      setShowNav(false);
+    } else {
+      setShowNav(true);
+    }
+
+    lastScrollY.current =
+      currentScrollY;
+  }
+
+  window.addEventListener(
+    "scroll",
+    handleScroll,
+    {
+      passive: true,
+    }
+  );
+
+  return () =>
+    window.removeEventListener(
+      "scroll",
+      handleScroll
+    );
+}, []);
+
+const menus = [
     {
       title: "Home",
       href: "/",
@@ -42,7 +89,13 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[999] lg:hidden">
+    <div
+  className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
+    showNav
+      ? "translate-y-0"
+      : "translate-y-full"
+  }`}
+>
       <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
 
         <div className="grid grid-cols-5">
