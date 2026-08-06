@@ -48,7 +48,11 @@ export default function ProductCard({
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="h-full w-full object-contain p-2 transition-all duration-500 group-hover:scale-[1.04]"
+                className={`h-full w-full object-contain transition-all duration-500 group-hover:scale-[1.04] ${
+  product.category?.name === "Woman"
+    ? "p-0"
+    : "p-2"
+}`}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
