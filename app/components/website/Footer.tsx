@@ -1,4 +1,9 @@
 import Container from "./Container";
+import {
+  Facebook,
+  Youtube,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -154,7 +159,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-[#D9A441]"
               >
-                FB
+                <Facebook size={20} />
               </a>
 
               <a
@@ -163,7 +168,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-red-600"
               >
-                YT
+                <Youtube size={20} />
               </a>
 
               <a
@@ -172,7 +177,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2F2F2F] transition hover:bg-[#25D366]"
               >
-                WA
+                <FaWhatsapp size={20} />
               </a>
 
             </div>
