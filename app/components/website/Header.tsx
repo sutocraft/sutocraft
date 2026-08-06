@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   getCurrentUser,
@@ -39,12 +39,55 @@ const {
   logoUrl,
 } = useTheme();
 
+const [showHeader, setShowHeader] =
+  useState(true);
+
+const lastScrollY =
+  useRef(0);
+
   useEffect(() => {
   checkLogin();
 
-  const interval = setInterval(checkLogin, 1000);
+  const interval =
+    setInterval(checkLogin, 1000);
 
-  return () => clearInterval(interval);
+  return () =>
+    clearInterval(interval);
+}, []);
+
+useEffect(() => {
+  function handleScroll() {
+    const currentScrollY =
+      window.scrollY;
+
+    if (currentScrollY < 20) {
+      setShowHeader(true);
+    } else if (
+      currentScrollY >
+      lastScrollY.current
+    ) {
+      setShowHeader(false);
+    } else {
+      setShowHeader(true);
+    }
+
+    lastScrollY.current =
+      currentScrollY;
+  }
+
+  window.addEventListener(
+    "scroll",
+    handleScroll,
+    {
+      passive: true,
+    }
+  );
+
+  return () =>
+    window.removeEventListener(
+      "scroll",
+      handleScroll
+    );
 }, []);
 
   async function checkLogin() {
@@ -82,7 +125,13 @@ const {
 }
   
   return (
-    <header className="sticky top-0 z-50 border-b border-[#E8E1CE] bg-white">
+    <header
+  className={`sticky top-0 z-50 border-b border-[#E8E1CE] bg-white transition-transform duration-300 ${
+    showHeader
+      ? "translate-y-0"
+      : "-translate-y-full"
+  }`}
+>
 
       <Container>
 
