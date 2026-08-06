@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/lib/cart-context";
 import {
   useEffect,
   useRef,
@@ -18,6 +19,8 @@ import {
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+
+const { isOpen } = useCart();
 
 const [showNav, setShowNav] =
   useState(true);
@@ -91,7 +94,7 @@ const menus = [
   return (
     <div
   className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
-    showNav
+    showNav && !isOpen
       ? "translate-y-0"
       : "translate-y-full"
   }`}
