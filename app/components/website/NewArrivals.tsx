@@ -41,7 +41,7 @@ export default function NewArrivals() {
         </div>
 
         {/* Products */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))] lg:gap-8">
           {products.map((product) => (
   <ProductCard
     key={product.id}
