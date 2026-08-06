@@ -80,9 +80,17 @@ export default function ProductCard({
 
         
 
-          <h3 className="line-clamp-2 min-h-[42px] text-[15px] font-semibold leading-5 text-[#2B2B2B] transition sm:text-lg">
-            {product.name}
-          </h3>
+          <div className="min-h-[54px]">
+  <h3 className="line-clamp-2 text-[15px] font-semibold leading-5 text-[#2B2B2B]">
+    {product.name}
+  </h3>
+
+  {(product.sub_category?.name || product.category?.name) && (
+    <p className="mt-1 text-xs font-medium uppercase tracking-[0.08em] text-gray-500">
+      {product.sub_category?.name ?? product.category?.name}
+    </p>
+  )}
+</div>
 
        
 
