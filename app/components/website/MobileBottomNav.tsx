@@ -20,7 +20,10 @@ import {
 export default function MobileBottomNav() {
   const pathname = usePathname();
 
-const { isOpen } = useCart();
+const {
+  isOpen,
+  openCart,
+} = useCart();
 
 const [showNav, setShowNav] =
   useState(true);
@@ -80,10 +83,11 @@ const menus = [
       icon: FiSearch,
     },
     {
-      title: "Cart",
-      href: "/cart",
-      icon: FiShoppingCart,
-    },
+  title: "Cart",
+  href: "#",
+  icon: FiShoppingCart,
+  action: openCart,
+},
     {
       title: "Account",
       href: "/login",
@@ -111,34 +115,51 @@ const menus = [
               (menu.href !== "/" && pathname.startsWith(menu.href));
 
             return (
-              <Link
-                key={menu.title}
-                href={menu.href}
-                className="relative flex flex-col items-center justify-center gap-1 py-3"
-              >
-                {active && (
-                  <span className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full bg-[#98691D]" />
-                )}
+              menu.action ? (
+  <button
+    key={menu.title}
+    onClick={menu.action}
+    className="relative flex w-full flex-col items-center justify-center gap-1 py-3"
+  >
+    <Icon
+      size={22}
+      className="text-gray-500"
+    />
 
-                <Icon
-                  size={22}
-                  className={
-                    active
-                      ? "text-[#98691D]"
-                      : "text-gray-500"
-                  }
-                />
+    <span className="text-[11px] font-medium text-gray-500">
+      {menu.title}
+    </span>
+  </button>
+) : (
+  <Link
+    key={menu.title}
+    href={menu.href}
+    className="relative flex flex-col items-center justify-center gap-1 py-3"
+  >
+    {active && (
+      <span className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full bg-[#98691D]" />
+    )}
 
-                <span
-                  className={`text-[11px] font-medium ${
-                    active
-                      ? "text-[#98691D]"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {menu.title}
-                </span>
-              </Link>
+    <Icon
+      size={22}
+      className={
+        active
+          ? "text-[#98691D]"
+          : "text-gray-500"
+      }
+    />
+
+    <span
+      className={`text-[11px] font-medium ${
+        active
+          ? "text-[#98691D]"
+          : "text-gray-500"
+      }`}
+    >
+      {menu.title}
+    </span>
+  </Link>
+)
             );
           })}
 
