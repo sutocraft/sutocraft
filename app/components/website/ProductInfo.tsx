@@ -236,7 +236,7 @@ export default function ProductInfo({
 
         <div className="mt-8">
 
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#2B2B2B]">
+          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider !text-[#2B2B2B]">
             Select Size
           </h3>
 
@@ -268,117 +268,128 @@ export default function ProductInfo({
 
       {/* Color */}
 
-      {colors.length > 0 && (
+{colors.length > 0 && (
+  <div className="mt-8">
 
-        <div className="mt-8">
+    <h3 className="mb-4 text-[13px] font-bold uppercase tracking-[0.15em] text-[#2B2B2B]">
+      Select Color
+    </h3>
 
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#2B2B2B]">
-            Select Color
-          </h3>
+    <div className="flex flex-wrap gap-3">
 
-          <div className="flex flex-wrap gap-3">
+      {colors.map((color) => {
+        const active = selectedColor === color.id;
 
-            {colors.map((color) => (
+        return (
+          <button
+            key={color.id}
+            onClick={() => onColorChange(color.id)}
+            className={`group flex min-w-[105px] items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-300 ${
+              active
+                ? "border-[#98691D] bg-[#98691D] text-white shadow-lg shadow-[#98691D]/25"
+                : "border-[#E8E1CE] bg-white text-[#2B2B2B] hover:border-[#98691D] hover:shadow-md"
+            }`}
+          >
+            <span
+              className={`h-5 w-5 rounded-full border-2 ${
+                active
+                  ? "border-white"
+                  : "border-gray-300"
+              }`}
+              style={{
+                backgroundColor:
+                  color.code || "#98691D",
+              }}
+            />
 
-              <button
-                key={color.id}
-                onClick={() =>
-                  onColorChange(color.id)
-                }
-                className={`flex items-center gap-2 rounded-xl border px-4 py-3 transition-all duration-300 ${
-                  selectedColor === color.id
-                    ? "border-[#98691D] bg-[#98691D] text-white shadow-lg"
-                    : "border-[#E8E1CE] bg-white hover:border-[#98691D]"
-                }`}
-              >
-
-                <span
-                  className="h-5 w-5 rounded-full border"
-                  style={{
-                    background:
-                      color.code ??
-                      "#98691D",
-                  }}
-                />
-
-                <span className="text-sm font-medium">
-                  {color.name}
-                </span>
-
-              </button>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      )}
-
-            {/* Quantity */}
-
-      <div className="mt-8">
-
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#2B2B2B]">
-          Quantity
-        </h3>
-
-        <div className="flex items-center gap-5">
-
-          <div className="flex items-center overflow-hidden rounded-2xl border border-[#E8E1CE]">
-
-            <button
-              onClick={onDecrease}
-              className="flex h-12 w-12 items-center justify-center text-xl font-bold transition hover:bg-[#98691D] hover:text-white"
+            <span
+              className={`text-sm font-semibold ${
+                active
+                  ? "text-white"
+                  : "text-[#2B2B2B]"
+              }`}
             >
-              −
-            </button>
-
-            <div className="flex h-12 min-w-[60px] items-center justify-center border-x border-[#E8E1CE] text-base font-bold">
-              {quantity}
-            </div>
-
-            <button
-              onClick={onIncrease}
-              className="flex h-12 w-12 items-center justify-center text-xl font-bold transition hover:bg-[#98691D] hover:text-white"
-            >
-              +
-            </button>
-
-          </div>
-
-          <span className="text-sm text-gray-500">
-            Available :
-            <span className="ml-1 font-semibold text-[#2B2B2B]">
-              {product.stock}
+              {color.name}
             </span>
-          </span>
 
-        </div>
+          </button>
+        );
+      })}
 
+    </div>
+
+  </div>
+)}
+
+{/* Quantity */}
+
+<div className="mt-8">
+
+  <h3 className="mb-4 text-[13px] font-bold uppercase tracking-[0.15em] text-[#2B2B2B]">
+    Quantity
+  </h3>
+
+  <div className="flex items-center justify-between gap-5 flex-wrap">
+
+    <div className="flex items-center overflow-hidden rounded-2xl border border-[#D9C8A6] bg-white shadow-sm">
+
+      <button
+        onClick={onDecrease}
+        className="flex h-12 w-12 items-center justify-center text-2xl font-bold text-[#2B2B2B] transition hover:bg-[#98691D] hover:text-white"
+      >
+        −
+      </button>
+
+      <div className="flex h-12 min-w-[64px] items-center justify-center border-x border-[#D9C8A6] bg-[#FCFAF6] text-lg font-bold text-[#2B2B2B]">
+        {quantity}
       </div>
 
-      {/* Action Buttons */}
+      <button
+        onClick={onIncrease}
+        className="flex h-12 w-12 items-center justify-center text-2xl font-bold text-[#2B2B2B] transition hover:bg-[#98691D] hover:text-white"
+      >
+        +
+      </button>
 
-      <div className="mt-10 grid gap-4">
+    </div>
 
-        <button
-          onClick={onAddToCart}
-          disabled={!inStock}
-          className="flex h-14 items-center justify-center rounded-2xl bg-[#98691D] text-base font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:bg-[#7A5318] disabled:cursor-not-allowed disabled:bg-gray-300"
-        >
-          Add To Cart
-        </button>
+    <div className="rounded-xl bg-[#F8F5EE] px-4 py-2">
 
-        <button
-          onClick={onBuyNow}
-          disabled={!inStock}
-          className="flex h-14 items-center justify-center rounded-2xl border-2 border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
-        >
-          Buy Now
-        </button>
+      <span className="text-sm font-medium text-[#666]">
+        Available
+      </span>
 
-      </div>
+      <span className="ml-2 text-base font-bold text-[#2B2B2B]">
+        {product.stock}
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+{/* Action Buttons */}
+
+<div className="mt-10 grid gap-4">
+
+  <button
+    onClick={onAddToCart}
+    disabled={!inStock}
+    className="flex h-14 items-center justify-center rounded-2xl bg-[#98691D] text-base font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7A5318] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300"
+  >
+    Add To Cart
+  </button>
+
+  <button
+    onClick={onBuyNow}
+    disabled={!inStock}
+    className="flex h-14 items-center justify-center rounded-2xl border-2 border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
+  >
+    Buy Now
+  </button>
+
+</div>
 
       {/* Extra Info */}
 
