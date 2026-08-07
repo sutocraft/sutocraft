@@ -1,15 +1,17 @@
 import { supabase } from "@/lib/auth";
 
 async function getCurrentUserId() {
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("User not logged in");
+    return null;
   }
 
   return user.id;
+
 }
 
 // ==============================
@@ -18,6 +20,11 @@ async function getCurrentUserId() {
 
 export async function getWishlist() {
   const userId = await getCurrentUserId();
+
+if (!userId) {
+  return [];
+}
+
 
   const { data, error } = await supabase
     .from("wishlists")
@@ -40,6 +47,11 @@ export async function getWishlist() {
 export async function getWishlistCount() {
   const userId = await getCurrentUserId();
 
+if (!userId) {
+  return 0;
+}
+
+
   const { count, error } = await supabase
     .from("wishlists")
     .select("*", {
@@ -58,9 +70,13 @@ export async function getWishlistCount() {
 // ==============================
 
 export async function isWishlisted(productId: string) {
-  const userId = await getCurrentUserId();
+ const userId = await getCurrentUserId();
 
-  const { data, error } = await supabase
+if (!userId) {
+  return false;
+}
+
+const { data, error } = await supabase
     .from("wishlists")
     .select("id")
     .eq("user_id", userId)
@@ -78,6 +94,11 @@ export async function isWishlisted(productId: string) {
 
 export async function addToWishlist(productId: string) {
   const userId = await getCurrentUserId();
+
+if (!userId) {
+  throw new Error("LOGIN_REQUIRED");
+}
+
 
   const { error } = await supabase
     .from("wishlists")
@@ -98,7 +119,11 @@ export async function addToWishlist(productId: string) {
 export async function removeFromWishlist(productId: string) {
   const userId = await getCurrentUserId();
 
-  const { error } = await supabase
+if (!userId) {
+  return false;
+}
+
+const { error } = await supabase
     .from("wishlists")
     .delete()
     .eq("user_id", userId)
