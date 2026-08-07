@@ -16,9 +16,14 @@ export default function ProductDetailsModal({
   onClose,
 }: Props) {
   useEffect(() => {
-    if (!open) return;
 
-    document.body.style.overflow = "hidden";
+  if (!open) return;
+
+  document.body.style.overflow = "hidden";
+
+  document.body.classList.add(
+    "product-modal-open"
+  );
 
     window.history.pushState(
       { productModal: true },
@@ -52,7 +57,12 @@ export default function ProductDetailsModal({
     );
 
     return () => {
-      document.body.style.overflow = "";
+
+  document.body.style.overflow = "";
+
+  document.body.classList.remove(
+    "product-modal-open"
+  );
 
       window.removeEventListener(
         "popstate",
