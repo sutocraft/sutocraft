@@ -178,18 +178,23 @@ export default function Hero({
 
         <div
   className="
-    relative
-    grid
-    min-h-auto
-    items-center
-    gap-8
-    py-6
+relative
+grid
 
-    lg:min-h-[760px]
-    lg:gap-14
-    lg:py-10
-    lg:grid-cols-[1fr_560px]
-  "
+gap-8
+
+pt-6
+pb-20
+
+lg:pt-10
+lg:pb-20
+
+items-center
+
+lg:grid-cols-[1fr_560px]
+lg:min-h-[760px]
+lg:gap-14
+"
 >
 
           {/* =======================
@@ -310,7 +315,8 @@ export default function Hero({
 
               <div
   className="
-    mt-8
+    mt-5
+
     flex
     flex-col
     gap-4
@@ -318,8 +324,13 @@ export default function Hero({
     sm:flex-row
     sm:justify-center
 
-    lg:mt-10
+    lg:mt-8
     lg:justify-start
+
+    h-[132px]
+    sm:h-[64px]
+
+    flex-shrink-0
   "
 >
 
@@ -392,12 +403,17 @@ export default function Hero({
 
                             <div
   className="
-    mt-8
+    mt-4
+
     flex
     justify-center
 
-    lg:mt-12
+    lg:mt-8
     lg:justify-start
+
+    h-[86px]
+
+    flex-shrink-0
   "
 >
 
@@ -674,7 +690,19 @@ export default function Hero({
 
           {products.length > 1 && (
 
-            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3">
+            <div
+  className="
+    absolute
+
+    bottom-5
+    left-1/2
+    flex
+    -translate-x-1/2
+    gap-3
+
+    lg:bottom-8
+  "
+>
 
               {products.map((_, index) => (
 
