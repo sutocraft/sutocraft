@@ -185,7 +185,7 @@ export default function Header() {
           : "-translate-y-full"
       }`}
       style={{
-        background: "#ffffffee",
+        background: "#ffffff",
         backdropFilter:
           "blur(16px)",
         borderBottom:
