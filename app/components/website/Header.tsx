@@ -202,8 +202,13 @@ export default function Header() {
 
   if (!currentUser) {
 
-    window.location.href =
-      "/login?redirect=cart";
+    localStorage.setItem(
+  "login-redirect",
+  "cart"
+);
+
+window.location.href =
+"/login";
 
     return;
 
