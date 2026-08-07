@@ -571,61 +571,19 @@ lg:gap-14
 
               </div>
 
-                            {/* Floating Badge */}
-
-              <div
-  className="
-    absolute
-    left-3
-    top-3
-    rounded-xl
-    bg-white
-    px-3
-    py-2
-    shadow-lg
-
-    lg:-left-8
-    lg:top-10
-    lg:rounded-2xl
-    lg:px-5
-    lg:py-4
-  "
->
               
-                <p
-                  className="text-xs font-bold uppercase tracking-[.25em]"
-                  style={{
-                    color: themeColor,
-                  }}
-                >
-                  Best Seller
-                </p>
-
-                <p
-  className="
-    mt-1
-    text-lg
-    font-black
-    text-[#1E293B]
-
-    lg:text-2xl
-  "
->
-                  Premium
-                </p>
-              </div>
 
               {/* Rating Card */}
 
               <div
   className="
     absolute
-    bottom-3
-    right-3
+    bottom-2
+    right-2
     rounded-xl
     bg-white
-    px-3
-    py-2
+    px-1
+    py-1
     shadow-xl
 
     lg:-bottom-6
@@ -641,15 +599,15 @@ lg:gap-14
                   <div
   className="
     flex
-    h-9
-    w-9
+    h-6
+    w-6
     items-center
     justify-center
     rounded-full
     text-white
 
-    lg:h-12
-    lg:w-12
+    lg:h-8
+    lg:w-8
   "
 
                     style={{
@@ -663,7 +621,7 @@ lg:gap-14
 
                     <p
   className="
-    text-sm
+    text-[11px]
     font-bold
     text-[#1E293B]
 
@@ -677,7 +635,7 @@ lg:gap-14
 
                     <p
   className="
-    text-[11px]
+    text-[8px]
     text-[#64748B]
 
     lg:text-sm
