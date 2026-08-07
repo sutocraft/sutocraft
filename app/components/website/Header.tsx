@@ -327,27 +327,72 @@ export default function Header() {
             </Link>
 
                         <button
-              id="header-cart"
-              onClick={openCart}
-              className="relative flex h-11 items-center gap-2 rounded-xl px-5 font-semibold text-white transition-all duration-300 hover:scale-[1.03]"
-              style={{
-                backgroundColor: themeColor,
-              }}
-            >
+  id="header-cart"
+  onClick={openCart}
+  className="
+    relative
+    flex
+    h-11
+    items-center
+    gap-2
+    rounded-xl
+    px-5
+
+    font-semibold
+    text-white
+
+    transition-all
+    duration-300
+
+    hover:-translate-y-0.5
+    hover:scale-105
+
+    will-change-transform
+  "
+  style={{
+    backgroundColor: themeColor,
+    transform: "translateZ(0)",
+  }}
+>
               <ShoppingBag size={18} />
 
               <span>Cart</span>
 
               {cartCount > 0 && (
-                <span
-                  className="absolute -right-2 -top-2 flex h-6 min-w-[24px] items-center justify-center rounded-full px-1 text-xs font-bold text-white shadow-lg"
-                  style={{
-                    backgroundColor: "#FF214F",
-                  }}
-                >
-                  {cartCount}
-                </span>
-              )}
+  <span
+    id="header-cart-badge"
+    className="
+      absolute
+      -right-2
+      -top-2
+
+      flex
+      h-6
+      min-w-[24px]
+
+      items-center
+      justify-center
+
+      rounded-full
+
+      px-1
+
+      text-xs
+      font-bold
+      text-white
+
+      shadow-xl
+
+      will-change-transform
+    "
+    style={{
+      backgroundColor: "#FF214F",
+      transform: "translateZ(0)",
+    }}
+  >
+    {cartCount}
+  </span>
+)}
             </button>
 
             {user ? (
@@ -389,7 +434,8 @@ export default function Header() {
           <div className="flex items-center gap-2 lg:hidden">
 
             <button
-              id="header-cart-mobile"
+  id="header-cart-mobile"
+  data-cart-target="true"
               onClick={openCart}
               className="relative flex h-11 w-11 items-center justify-center rounded-xl text-white"
               style={{
@@ -399,10 +445,41 @@ export default function Header() {
               <ShoppingBag size={20} />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
+  <span
+    id="header-cart-mobile-badge"
+    className="
+      absolute
+      -right-1
+      -top-1
+
+      flex
+      h-5
+      min-w-[20px]
+
+      items-center
+      justify-center
+
+      rounded-full
+
+      bg-red-500
+
+      px-1
+
+      text-[10px]
+      font-bold
+      text-white
+
+      shadow-lg
+
+      will-change-transform
+    "
+    style={{
+      transform: "translateZ(0)",
+    }}
+  >
+    {cartCount}
+  </span>
+)}
             </button>
 
             <button
