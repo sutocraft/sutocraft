@@ -79,32 +79,68 @@ export default function AddToCartFly() {
             : -180;
 
         setStyle({
-          left:
-            flyItem.startX -
-            flySize / 2,
 
-          top:
-            flyItem.startY -
-            flySize / 2,
+  left:
+    flyItem.startX -
+    flySize / 2,
 
-          transform: `
+  top:
+    flyItem.startY -
+    flySize / 2,
+
+  transform: `
 translate3d(
-${dx}px,
-${dy + curve}px,
+${dx * .22}px,
+${dy * .18}px,
 0
 )
-scale(.78)
-rotate(-14deg)
+scale(.96)
+rotate(-10deg)
 `,
 
-          opacity: .95,
+  opacity: .95,
 
-          filter:
-            "drop-shadow(0 22px 40px rgba(0,0,0,.35))",
+  filter:
+    "drop-shadow(0 22px 40px rgba(0,0,0,.35))",
 
-          transition:
-            "all .58s cubic-bezier(.22,.82,.22,1)",
-        });
+  transition:
+    "all .28s ease-out",
+
+});
+
+setTimeout(() => {
+
+  setStyle({
+
+    left:
+      flyItem.startX -
+      flySize / 2,
+
+    top:
+      flyItem.startY -
+      flySize / 2,
+
+    transform: `
+translate3d(
+${dx}px,
+${dy}px,
+0
+)
+scale(.18)
+rotate(16deg)
+`,
+
+    opacity: 0,
+
+    filter:
+      "drop-shadow(0 30px 60px rgba(0,0,0,.22))",
+
+    transition:
+      "all .42s cubic-bezier(.18,.88,.22,1)",
+
+  });
+
+}, 260);
 
       });
     });
@@ -115,9 +151,7 @@ rotate(-14deg)
     document.getElementById(
       window.innerWidth < 1024
         ? (
-            document.getElementById(
-              "bottom-cart"
-            )
+            document.getElementById("bottom-cart")
               ? "bottom-cart"
               : "header-cart-mobile"
           )
@@ -131,47 +165,44 @@ rotate(-14deg)
 
         {
           transform:
-            "scale(1)",
+            "translate3d(0,0,0) scale(1)",
         },
 
         {
           transform:
-            "scale(1.22)",
+            "translate3d(0,-4px,0) scale(1.24)",
         },
 
         {
           transform:
-            "scale(.88)",
+            "translate3d(0,2px,0) scale(.90)",
         },
 
         {
           transform:
-            "scale(1.12)",
+            "translate3d(0,-2px,0) scale(1.10)",
         },
 
         {
           transform:
-            "scale(.97)",
-        },
-
-        {
-          transform:
-            "scale(1)",
+            "translate3d(0,0,0) scale(1)",
         },
 
       ],
       {
-        duration: 650,
+
+        duration: 700,
+
         easing:
-          "cubic-bezier(.22,.82,.22,1)",
+          "cubic-bezier(.18,.88,.22,1)",
+
       }
     );
 
   }
 
   if (
-    typeof navigator !==
-      "undefined" &&
+    typeof navigator !== "undefined" &&
     "vibrate" in navigator
   ) {
     navigator.vibrate(20);
@@ -179,7 +210,7 @@ rotate(-14deg)
 
   endFly();
 
-}, 620);
+}, 700);
 
     return () =>
       clearTimeout(timer);
@@ -191,47 +222,56 @@ rotate(-14deg)
   ]);
 
     if (!flyItem || !style) {
-    return null;
-  }
+  return null;
+}
 
-  return (
-
-    <div
+return (
+  <div
+    className="
+      pointer-events-none
+      fixed
+      left-0
+      top-0
+      z-[99999]
+      select-none
+      will-change-transform
+      will-change-opacity
+      transform-gpu
+    "
+    style={{
+      ...style,
+      backfaceVisibility: "hidden",
+      transformStyle: "preserve-3d",
+      perspective: "1000px",
+      WebkitBackfaceVisibility: "hidden",
+      WebkitTransform: "translateZ(0)",
+    }}
+  >
+    <Image
+      src={flyItem.image || "/placeholder.png"}
+      alt="Product"
+      width={flySize}
+      height={flySize}
+      priority
+      draggable={false}
       className="
+        rounded-3xl
+        object-cover
         pointer-events-none
-
-        fixed
-
-        left-0
-        top-0
-
-        z-[99999]
-
+        select-none
+        ring-1
+        ring-white/70
+        shadow-2xl
         will-change-transform
+        will-change-opacity
+        transform-gpu
       "
-      style={style}
-    >
-
-      <Image
-        src={flyItem.image}
-        alt="Product"
-        width={flySize}
-        height={flySize}
-        priority
-        draggable={false}
-        className="
-          rounded-2xl
-
-          object-cover
-
-          select-none
-
-          shadow-2xl
-        "
-      />
-
-    </div>
-
-  );
-
+      style={{
+        backfaceVisibility: "hidden",
+        transformStyle: "preserve-3d",
+        imageRendering: "auto",
+      }}
+    />
+  </div>
+);
 }
