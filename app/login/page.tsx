@@ -37,15 +37,7 @@ export default function LoginPage() {
 
     await loginCustomer(emailOrPhone, password);
 
-    alert("Login Success");
-
-    console.log("Before router.push");
-    alert("Before router.push");
-
-    router.push("/account");
-
-    console.log("After router.push");
-    alert("After router.push");
+  
 
   } catch (err) {
     if (err instanceof Error) {
