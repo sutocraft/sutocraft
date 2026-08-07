@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import Container from "./Container";
+import type { WebsiteProduct } from "@/lib/products";
 
 import {
   getWebsiteSettings,
@@ -26,23 +27,7 @@ import {
   useTheme,
 } from "./settings.theme_color";
 
-type HeroProduct = {
-  id: string;
-  name: string;
-  slug: string;
 
-  image_url: string | null;
-
-  short_description: string | null;
-
-  price: number;
-
-  sale_price: number | null;
-
-  badge: string | null;
-
-  hero_order: number | null;
-};
 
 export default function Hero() {
 
@@ -51,7 +36,7 @@ export default function Hero() {
   } = useTheme();
 
   const [products, setProducts] =
-    useState<HeroProduct[]>([]);
+useState<WebsiteProduct[]>([]);
 
   const [current, setCurrent] =
     useState(0);
