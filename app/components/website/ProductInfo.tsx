@@ -211,8 +211,10 @@ export default function ProductInfo({
             </span>
 
             <span
-              className="text-gray-500"
-            >
+              style={{
+    color: themeColor,
+  }}
+>
               (128 Reviews)
             </span>
 
@@ -221,10 +223,10 @@ export default function ProductInfo({
           {product.sku && (
 
             <span
-              className="
-                text-gray-500
-              "
-            >
+              style={{
+    color: themeColor,
+  }}
+>
               SKU :
 
               <span
@@ -317,11 +319,11 @@ export default function ProductInfo({
 
               sm:text-4xl
             "
-            style={{
-              color:
-                themeColor,
-            }}
-          >
+              style={{
+                color:
+                  themeColor,
+              }}
+            >
             ৳{price}
           </span>
 
@@ -337,6 +339,9 @@ export default function ProductInfo({
 
                 line-through
               "
+              style={{
+                color: themeColor,
+              }}
             >
               ৳{oldPrice}
             </span>
@@ -355,6 +360,9 @@ export default function ProductInfo({
 
               text-gray-600
             "
+            style={{
+              color: themeColor,
+            }}
           >
             {product.short_description}
           </p>
@@ -999,8 +1007,10 @@ style={{
 </span>
 
           <span
-            className="font-semibold"
-          >
+             style={{
+    color: themeColor,
+  }}
+>
             {product.brand?.name ??
               "SutoCraft"}
           </span>
@@ -1036,8 +1046,10 @@ style={{
 </span>
 
           <span
-            className="font-semibold"
-          >
+             style={{
+    color: themeColor,
+  }}
+>
             {product.category?.name ??
               "-"}
           </span>
