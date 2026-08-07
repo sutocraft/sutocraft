@@ -124,8 +124,7 @@ const menus = [
   <div
     className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
       showNav &&
-      !isOpen &&
-      !modalOpen
+!isOpen
         ? "translate-y-0"
         : "translate-y-full"
     }`}
