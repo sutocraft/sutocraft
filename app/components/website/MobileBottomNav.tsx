@@ -28,6 +28,31 @@ const {
 const [showNav, setShowNav] =
   useState(true);
 
+  const [modalOpen, setModalOpen] =
+  useState(false);
+
+  useEffect(() => {
+
+  const checkModal = () => {
+
+    setModalOpen(
+      document.body.classList.contains(
+        "product-modal-open"
+      )
+    );
+
+  };
+
+  checkModal();
+
+  const interval =
+    setInterval(checkModal, 150);
+
+  return () =>
+    clearInterval(interval);
+
+}, []);
+
 const lastScrollY =
   useRef(0);
 
@@ -96,20 +121,17 @@ const menus = [
   ];
 
   return (
-    <div
-  className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
-  showNav &&
-  !isOpen &&
-  !document.body.classList.contains(
-    "product-modal-open"
-  )
-    ? "translate-y-0"
-    : "translate-y-full"
-}`}
->
-      <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
-
-        <div className="grid grid-cols-5">
+  <div
+    className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
+      showNav &&
+      !isOpen &&
+      !modalOpen
+        ? "translate-y-0"
+        : "translate-y-full"
+    }`}
+  >
+    <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
+      <div className="grid grid-cols-5">
 
           {menus.map((menu) => {
             const Icon = menu.icon;
