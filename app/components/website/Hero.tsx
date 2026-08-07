@@ -230,14 +230,26 @@ lg:gap-14
             >
 
               <span
-                className="mb-5 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
-                style={{
-                  background: `${themeColor}15`,
-                  color: themeColor,
-                }}
-              >
-                {product.badge ?? "New Collection 2026"}
-              </span>
+  className="
+    mb-2
+    inline-flex
+    rounded-full
+    px-4
+    py-2
+    text-xs
+    font-bold
+    uppercase
+    tracking-[.35em]
+
+    lg:mb-5
+  "
+  style={{
+    background: `${themeColor}15`,
+    color: themeColor,
+  }}
+>
+  {product.badge ?? "New Collection 2026"}
+</span>
 
               <h1
   className="
@@ -248,7 +260,7 @@ lg:gap-14
     text-[#1E293B]
 
     text-[38px]
-    leading-[1.08]
+    leading-[1.05]
 
     sm:text-5xl
 
@@ -256,9 +268,9 @@ lg:gap-14
     lg:max-w-[650px]
     lg:text-7xl
 
-    min-h-[92px]
-    sm:min-h-[110px]
-    lg:min-h-[170px]
+    min-h-[58px]
+    sm:min-h-[70px]
+    lg:min-h-[150px]
 
     flex
     items-center
@@ -272,9 +284,9 @@ lg:gap-14
   style={{
     fontSize:
       product.name.length > 40
-        ? "2.2rem"
+        ? "2rem"
         : product.name.length > 28
-        ? "2.55rem"
+        ? "2.3rem"
         : undefined,
   }}
 >
@@ -284,23 +296,23 @@ lg:gap-14
               <p
   className="
     mx-auto
-    mt-4
+    mt-1
 
     max-w-full
 
     text-base
-    leading-7
+    leading-6
     text-[#5B6473]
 
     lg:mx-0
-    lg:mt-7
+    lg:mt-3
     lg:max-w-[620px]
     lg:text-lg
-    lg:leading-9
+    lg:leading-8
 
-    min-h-[56px]
-    sm:min-h-[60px]
-    lg:min-h-[72px]
+    min-h-[36px]
+    sm:min-h-[40px]
+    lg:min-h-[55px]
 
     flex
     items-center
@@ -315,20 +327,20 @@ lg:gap-14
 
               <div
   className="
-    mt-5
+    mt-3
 
     flex
     flex-col
-    gap-4
+    gap-3
 
     sm:flex-row
     sm:justify-center
 
-    lg:mt-8
+    lg:mt-5
     lg:justify-start
 
-    h-[132px]
-    sm:h-[64px]
+    h-[124px]
+    sm:h-[60px]
 
     flex-shrink-0
   "
