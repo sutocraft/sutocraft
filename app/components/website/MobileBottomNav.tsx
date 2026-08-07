@@ -117,7 +117,12 @@ const menus = [
             return (
               menu.action ? (
   <button
-    key={menu.title}
+  id={
+    menu.title === "Cart"
+      ? "bottom-cart"
+      : undefined
+  }
+  key={menu.title}
     onClick={menu.action}
     className="relative flex w-full flex-col items-center justify-center gap-1 py-3"
   >
