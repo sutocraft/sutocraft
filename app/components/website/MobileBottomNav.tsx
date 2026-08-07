@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import {
   useEffect,
@@ -20,10 +23,40 @@ import {
 export default function MobileBottomNav() {
   const pathname = usePathname();
 
+const router = useRouter();
+
 const {
   isOpen,
   openCart,
 } = useCart();
+
+const closeModalAndNavigate = (
+  href: string
+) => {
+
+  if (
+    document.body.classList.contains(
+      "product-modal-open"
+    )
+  ) {
+
+    if (
+      window.history.state
+        ?.productModal
+    ) {
+      window.history.back();
+    }
+
+    setTimeout(() => {
+      router.push(href);
+    }, 180);
+
+    return;
+  }
+
+  router.push(href);
+
+};
 
 const [showNav, setShowNav] =
   useState(true);
@@ -103,33 +136,39 @@ const lastScrollY =
 }, []);
 
 const menus = [
-    {
-      title: "Home",
-      href: "/",
-      icon: FiHome,
-    },
-    {
-      title: "Products",
-      href: "/products",
-      icon: FiGrid,
-    },
-    {
-      title: "Search",
-      href: "/search",
-      icon: FiSearch,
-    },
-    {
-  title: "Cart",
-  href: "#",
-  icon: FiShoppingCart,
-  action: openCart,
-},
-    {
-      title: "Account",
-      href: "/login",
-      icon: FiUser,
-    },
-  ];
+
+  {
+    title: "Home",
+    href: "/",
+    icon: FiHome,
+  },
+
+  {
+    title: "Products",
+    href: "/products",
+    icon: FiGrid,
+  },
+
+  {
+    title: "Search",
+    href: "/search",
+    icon: FiSearch,
+  },
+
+  {
+    title: "Cart",
+    href: "#",
+    icon: FiShoppingCart,
+    action: true,
+  },
+
+  {
+    title: "Account",
+    href: "/login",
+    icon: FiUser,
+  },
+
+];
 
   return (
   <div
