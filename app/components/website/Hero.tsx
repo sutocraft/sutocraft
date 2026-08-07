@@ -442,6 +442,7 @@ export default function Hero({
   key={product.image_url}
   className="
     order-1
+    relative
     mx-auto
     w-full
     max-w-[340px]
@@ -451,23 +452,23 @@ export default function Hero({
     lg:order-2
     lg:max-w-[560px]
   "
-              initial={{
-                opacity: 0,
-                scale: .92,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-              }}
-              exit={{
-                opacity: 0,
-                scale: .92,
-              }}
-              transition={{
-                duration: .45,
-              }}
-              className="relative mx-auto w-full max-w-[560px]"
-            >
+  initial={{
+    opacity: 0,
+    scale: 0.92,
+  }}
+  animate={{
+    opacity: 1,
+    scale: 1,
+  }}
+  exit={{
+    opacity: 0,
+    scale: 0.92,
+  }}
+  transition={{
+    duration: 0.45,
+  }}
+>
+
 
               <div
   className="
