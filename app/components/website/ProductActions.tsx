@@ -2,109 +2,293 @@
 
 import {
   Heart,
+  Share2,
+  ShieldCheck,
+  Truck,
+  RotateCcw,
   ShoppingCart,
   Zap,
-  Share2,
 } from "lucide-react";
+
+import {
+  useTheme,
+} from "@/app/components/website/settings.theme_color";
 
 type Props = {
   inStock: boolean;
 
-  onAddToCart: () => void;
-
-  onBuyNow: () => void;
-
-  onWishlist: () => void;
-
-  onShare: () => void;
+  loading?: boolean;
 
   wishlist?: boolean;
 
-  loading?: boolean;
+  onWishlist: () => void;
+  onShare: () => void;
+
+  onAddToCart: () => void;
+  onBuyNow: () => void;
 };
 
 export default function ProductActions({
   inStock,
+
+  loading = false,
+
+  wishlist = false,
+
   onWishlist,
   onShare,
-  wishlist = false,
-  loading = false,
+
+  onAddToCart,
+  onBuyNow,
 }: Props) {
+
+  const {
+    themeColor,
+  } = useTheme();
+
   return (
-    <div className="mt-6 space-y-4">
+
+    <div className="mt-8 space-y-6">
 
 
-      {/* Secondary Actions */}
 
-      <div className="grid grid-cols-2 gap-3">
+        <div className="mb-6">
 
-       
+  <button
+    onClick={onShare}
+    className="
+  flex
+  h-12
+  w-full
+  items-center
+  justify-center
+  gap-2
+  rounded-2xl
+  border
+  bg-white
+  text-sm
+  font-semibold
+  transition-all
+  duration-300
+  hover:-translate-y-1
+  hover:text-white
+"
+style={{
+  borderColor: themeColor,
+  color: themeColor,
+}}
+onMouseEnter={(e) => {
+  e.currentTarget.style.background = themeColor;
+  e.currentTarget.style.color = "#fff";
+}}
+onMouseLeave={(e) => {
+  e.currentTarget.style.background = "#fff";
+  e.currentTarget.style.color = themeColor;
+}}
+  >
+    <Share2 size={18} />
+    Share Product
+  </button>
 
-        <button
-          onClick={onShare}
-          className="flex h-12 w-120 items-center justify-center gap-2 rounded-xl border border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
+</div>
+
+      {/* Trust Section */}
+
+      <div
+        className="
+          rounded-3xl
+
+          border
+
+          bg-white
+
+          p-6
+        "
+        style={{
+          borderColor:
+            `${themeColor}25`,
+        }}
+      >
+
+        <h3
+          className="
+            mb-5
+
+            text-sm
+
+            font-bold
+
+            uppercase
+
+            tracking-[0.15em]
+          "
+          style={{
+            color: themeColor,
+          }}
         >
-          <Share2 size={18} />
-
-          Share Product
-        </button>
-
-      </div>
-
-            {/* Security & Payment */}
-
-      <div className="rounded-3xl border border-[#E8E1CE] bg-[#FDFBF7] p-5">
-
-        <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.15em] text-[#2B2B2B]">
           Shop With Confidence
         </h3>
 
-        <div className="space-y-3">
+        <div className="space-y-5">
 
-          <div className="flex items-center justify-between">
+                    <div
+            className="
+              flex
 
-            <span className="text-sm text-gray-600">
-              Cash On Delivery
-            </span>
+              items-center
 
-            <span className="font-semibold text-green-600">
-              Available
+              justify-between
+
+              rounded-2xl
+
+              bg-gray-50
+
+              p-4
+            "
+          >
+
+            <div className="flex items-center gap-3">
+
+              <Truck
+                size={20}
+                style={{
+                  color: themeColor,
+                }}
+              />
+
+              <span
+                className="
+                  text-sm
+
+                  font-medium
+
+                  text-gray-700
+                "
+              >
+                Fast Delivery
+              </span>
+
+            </div>
+
+            <span
+              className="
+                text-sm
+
+                font-semibold
+              "
+              style={{
+                color: themeColor,
+              }}
+            >
+              2–5 Days
             </span>
 
           </div>
 
-          <div className="flex items-center justify-between">
+          <div
+            className="
+              flex
 
-            <span className="text-sm text-gray-600">
-              Secure Checkout
-            </span>
+              items-center
 
-            <span className="font-semibold text-[#98691D]">
+              justify-between
+
+              rounded-2xl
+
+              bg-gray-50
+
+              p-4
+            "
+          >
+
+            <div className="flex items-center gap-3">
+
+              <ShieldCheck
+                size={20}
+                style={{
+                  color: themeColor,
+                }}
+              />
+
+              <span
+                className="
+                  text-sm
+
+                  font-medium
+
+                  text-gray-700
+                "
+              >
+                Secure Checkout
+              </span>
+
+            </div>
+
+            <span
+              className="
+                text-sm
+
+                font-semibold
+              "
+              style={{
+                color: themeColor,
+              }}
+            >
               SSL Protected
             </span>
 
           </div>
 
-          <div className="flex items-center justify-between">
+          <div
+            className="
+              flex
 
-            <span className="text-sm text-gray-600">
-              Return Policy
-            </span>
+              items-center
 
-            <span className="font-semibold text-[#98691D]">
+              justify-between
+
+              rounded-2xl
+
+              bg-gray-50
+
+              p-4
+            "
+          >
+
+            <div className="flex items-center gap-3">
+
+              <RotateCcw
+                size={20}
+                style={{
+                  color: themeColor,
+                }}
+              />
+
+              <span
+                className="
+                  text-sm
+
+                  font-medium
+
+                  text-gray-700
+                "
+              >
+                Easy Return
+              </span>
+
+            </div>
+
+            <span
+              className="
+                text-sm
+
+                font-semibold
+              "
+              style={{
+                color: themeColor,
+              }}
+            >
               7 Days
-            </span>
-
-          </div>
-
-          <div className="flex items-center justify-between">
-
-            <span className="text-sm text-gray-600">
-              Delivery Time
-            </span>
-
-            <span className="font-semibold text-[#98691D]">
-              2–5 Days
             </span>
 
           </div>
@@ -113,18 +297,63 @@ export default function ProductActions({
 
       </div>
 
-      {/* Shipping Notice */}
+            {/* Shipping Notice */}
 
-      <div className="rounded-2xl border border-[#E8E1CE] bg-[#F8F5EE] p-4">
+      <div
+        className="
+          rounded-3xl
 
-        <p className="text-sm leading-6 text-gray-600">
-          Your order will be packed carefully and shipped
-          using trusted courier partners. You will receive
-          an order confirmation immediately after checkout.
+          border
+
+          bg-white
+
+          p-6
+        "
+        style={{
+          borderColor:
+            `${themeColor}25`,
+        }}
+      >
+
+        <h3
+          className="
+            mb-4
+
+            text-sm
+
+            font-bold
+
+            uppercase
+
+            tracking-[0.15em]
+          "
+          style={{
+            color: themeColor,
+          }}
+        >
+          Shipping Information
+        </h3>
+
+        <p
+          className="
+            text-sm
+
+            leading-7
+
+            text-gray-600
+          "
+        >
+          Your order will be packed carefully and
+          shipped using trusted courier partners.
+          You will receive order confirmation and
+          tracking information immediately after
+          dispatch.
         </p>
 
       </div>
 
     </div>
+
   );
+
 }
