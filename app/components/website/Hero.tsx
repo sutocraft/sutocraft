@@ -16,10 +16,6 @@ import Container from "./Container";
 import type { WebsiteProduct } from "@/lib/products";
 
 import {
-  getWebsiteSettings,
-} from "@/lib/settings";
-
-import {
   getHeroProducts,
 } from "@/lib/products";
 
@@ -204,8 +200,7 @@ useState<WebsiteProduct[]>([]);
                   color: themeColor,
                 }}
               >
-                {product.badge ??
-                  "New Collection 2026"}
+                {product.badge ?? "New Collection 2026"}
               </span>
 
               <h1 className="max-w-[650px] text-5xl font-black leading-tight text-[#1E293B] lg:text-7xl">
