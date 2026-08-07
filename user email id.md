@@ -30,3 +30,20 @@ arekta bishoy full website er thems color use korte bollam tmk r tumi blue use k
 ⬜ Search
 ⬜ Profile
 ⬜ Orders
+
+আমি এখন যে ক্রমে কাজ করব
+Sprint 0.1
+Header Dynamic + Responsive
+Theme System Centralization
+Sprint 0.2
+Hero Dynamic (100% Admin Controlled)
+Sprint 0.3
+Product Card Responsive System
+Sprint 0.4
+Product Details (Desktop + Mobile Premium)
+Sprint 0.5
+Cart Drawer Premium Responsive
+Sprint 0.6
+Global Responsive Audit (320px → 1920px)
+
+এরপরই Search, Filter, Checkout-এর মতো নতুন module শুরু করা উচিত। এতে নতুন feature যোগ করার আগে পুরো UI, responsive behavior এবং theme system production quality-তে চলে আসবে।
