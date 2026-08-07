@@ -35,7 +35,10 @@ export default function LoginPage() {
   try {
     setLoading(true);
 
-    await loginCustomer(emailOrPhone, password);
+    await loginCustomer(
+  emailOrPhone,
+  password
+);
 
 const redirect =
   localStorage.getItem(
@@ -46,42 +49,44 @@ localStorage.removeItem(
   "login-redirect"
 );
 
-switch (redirect) {
+if (redirect === "cart") {
 
-  case "cart":
+  localStorage.setItem(
+    "open-cart-after-login",
+    "true"
+  );
 
-    localStorage.setItem(
-      "open-cart-after-login",
-      "true"
-    );
+  router.replace("/");
 
-    router.push("/");
-
-    break;
-
-  case "checkout":
-
-    router.push("/checkout");
-
-    break;
-
-  case "account":
-
-    router.push("/account");
-
-    break;
-
-  case "wishlist":
-
-    router.push("/account/wishlist");
-
-    break;
-
-  default:
-
-    router.push("/account");
+  return;
 
 }
+
+if (redirect === "checkout") {
+
+  router.replace("/checkout");
+
+  return;
+
+}
+
+if (redirect === "account") {
+
+  router.replace("/account");
+
+  return;
+
+}
+
+if (redirect === "wishlist") {
+
+  router.replace("/wishlist");
+
+  return;
+
+}
+
+router.replace("/account");
 
   } catch (err) {
     if (err instanceof Error) {
