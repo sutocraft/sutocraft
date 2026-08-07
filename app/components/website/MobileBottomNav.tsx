@@ -5,7 +5,9 @@ import {
   usePathname,
   useRouter,
 } from "next/navigation";
+
 import { useCart } from "@/lib/cart-context";
+
 import {
   useEffect,
   useRef,
@@ -21,231 +23,292 @@ import {
 } from "react-icons/fi";
 
 export default function MobileBottomNav() {
-  const pathname = usePathname();
 
-const router = useRouter();
+  const pathname =
+    usePathname();
 
-const {
-  isOpen,
-  openCart,
-} = useCart();
+  const router =
+    useRouter();
 
-const closeModalAndNavigate = (
-  href: string
-) => {
+  const {
+    isOpen,
+    openCart,
+  } = useCart();
 
-  if (
-    document.body.classList.contains(
-      "product-modal-open"
-    )
-  ) {
+  const [showNav, setShowNav] =
+    useState(true);
 
-    if (
-      window.history.state
-        ?.productModal
-    ) {
-      window.history.back();
-    }
-
-    setTimeout(() => {
-      router.push(href);
-    }, 180);
-
-    return;
-  }
-
-  router.push(href);
-
-};
-
-const [showNav, setShowNav] =
-  useState(true);
-
-  const [modalOpen, setModalOpen] =
-  useState(false);
+  const lastScrollY =
+    useRef(0);
 
   useEffect(() => {
 
-  const checkModal = () => {
+    function handleScroll() {
 
-    setModalOpen(
+      if (
+        document.body.classList.contains(
+          "product-modal-open"
+        )
+      ) {
+        setShowNav(true);
+        return;
+      }
+
+      const current =
+        window.scrollY;
+
+      if (current < 20) {
+        setShowNav(true);
+      } else if (
+        current >
+        lastScrollY.current
+      ) {
+        setShowNav(false);
+      } else {
+        setShowNav(true);
+      }
+
+      lastScrollY.current =
+        current;
+    }
+
+    window.addEventListener(
+      "scroll",
+      handleScroll,
+      {
+        passive: true,
+      }
+    );
+
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
+
+  }, []);
+
+  function closeModal() {
+
+    if (
       document.body.classList.contains(
         "product-modal-open"
       )
-    );
+    ) {
 
-  };
+      if (
+        window.history.state
+          ?.productModal
+      ) {
+        window.history.back();
+      }
 
-  checkModal();
-
-  const interval =
-    setInterval(checkModal, 150);
-
-  return () =>
-    clearInterval(interval);
-
-}, []);
-
-const lastScrollY =
-  useRef(0);
-
-  useEffect(() => {
-  function handleScroll() {
-
-  if (
-    document.body.classList.contains(
-      "product-modal-open"
-    )
-  ) {
-    setShowNav(true);
-    return;
-  }
-
-  const currentScrollY =
-    window.scrollY;
-
-  if (currentScrollY < 20) {
-    setShowNav(true);
-  } else if (
-    currentScrollY >
-    lastScrollY.current
-  ) {
-    setShowNav(false);
-  } else {
-    setShowNav(true);
-  }
-
-  lastScrollY.current =
-    currentScrollY;
-
-}
-
-  window.addEventListener(
-    "scroll",
-    handleScroll,
-    {
-      passive: true,
+      return true;
     }
-  );
 
-  return () =>
-    window.removeEventListener(
-      "scroll",
-      handleScroll
-    );
-}, []);
+    return false;
 
-const menus = [
+  }
 
-  {
-    title: "Home",
-    href: "/",
-    icon: FiHome,
-  },
+  function navigate(
+    href: string
+  ) {
 
-  {
-    title: "Products",
-    href: "/products",
-    icon: FiGrid,
-  },
+    const closed =
+      closeModal();
 
-  {
-    title: "Search",
-    href: "/search",
-    icon: FiSearch,
-  },
+    if (closed) {
 
-  {
-    title: "Cart",
-    href: "#",
-    icon: FiShoppingCart,
-    action: true,
-  },
+      setTimeout(() => {
 
-  {
-    title: "Account",
-    href: "/login",
-    icon: FiUser,
-  },
+        router.push(href);
 
-];
+      }, 180);
+
+      return;
+
+    }
+
+    router.push(href);
+
+  }
+
+  function openCartDrawer() {
+
+    const closed =
+      closeModal();
+
+    if (closed) {
+
+      setTimeout(() => {
+
+        openCart();
+
+      }, 180);
+
+      return;
+
+    }
+
+    openCart();
+
+  }
+
+  const menus = [
+
+    {
+      title: "Home",
+      href: "/",
+      icon: FiHome,
+    },
+
+    {
+      title: "Products",
+      href: "/products",
+      icon: FiGrid,
+    },
+
+    {
+      title: "Search",
+      href: "/search",
+      icon: FiSearch,
+    },
+
+    {
+      title: "Cart",
+      href: "#",
+      icon: FiShoppingCart,
+    },
+
+    {
+      title: "Account",
+      href: "/login",
+      icon: FiUser,
+    },
+
+  ];
 
   return (
+
   <div
     className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
-      showNav &&
-!isOpen
+      showNav && !isOpen
         ? "translate-y-0"
         : "translate-y-full"
     }`}
   >
+
     <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
+
       <div className="grid grid-cols-5">
 
-          {menus.map((menu) => {
-            const Icon = menu.icon;
+        {menus.map((menu) => {
 
-            const active =
-              pathname === menu.href ||
-              (menu.href !== "/" && pathname.startsWith(menu.href));
+          const Icon =
+            menu.icon;
 
-            return (
-              menu.action ? (
-  <button
-  id={
-    menu.title === "Cart"
-      ? "bottom-cart"
-      : undefined
-  }
-  key={menu.title}
-    onClick={menu.action}
-    className="relative flex w-full flex-col items-center justify-center gap-1 py-3"
-  >
-    <Icon
-      size={22}
-      className="text-gray-500"
-    />
-
-    <span className="text-[11px] font-medium text-gray-500">
-      {menu.title}
-    </span>
-  </button>
-) : (
-  <Link
-    key={menu.title}
-    href={menu.href}
-    className="relative flex flex-col items-center justify-center gap-1 py-3"
-  >
-    {active && (
-      <span className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full bg-[#98691D]" />
-    )}
-
-    <Icon
-      size={22}
-      className={
-        active
-          ? "text-[#98691D]"
-          : "text-gray-500"
-      }
-    />
-
-    <span
-      className={`text-[11px] font-medium ${
-        active
-          ? "text-[#98691D]"
-          : "text-gray-500"
-      }`}
-    >
-      {menu.title}
-    </span>
-  </Link>
-)
+          const active =
+            pathname === menu.href ||
+            (
+              menu.href !== "/" &&
+              pathname.startsWith(menu.href)
             );
-          })}
 
-        </div>
+          const handleClick = () => {
+
+            switch (menu.title) {
+
+              case "Home":
+                navigate("/");
+                break;
+
+              case "Products":
+                navigate("/products");
+                break;
+
+              case "Search":
+                navigate("/search");
+                break;
+
+              case "Cart":
+                openCartDrawer();
+                break;
+
+              case "Account":
+                navigate("/login");
+                break;
+
+            }
+
+          };
+
+          return (
+
+            <button
+              key={menu.title}
+              id={
+                menu.title === "Cart"
+                  ? "bottom-cart"
+                  : undefined
+              }
+              onClick={handleClick}
+              className="
+                relative
+                flex
+                flex-col
+                items-center
+                justify-center
+                gap-1
+                py-3
+                transition-all
+                duration-300
+              "
+            >
+
+              {active && (
+
+                <span
+                  className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full"
+                  style={{
+                    backgroundColor:
+                      "#98691D",
+                  }}
+                />
+
+              )}
+
+              <Icon
+                size={22}
+                style={{
+                  color: active
+                    ? "#98691D"
+                    : "#6B7280",
+                }}
+              />
+
+              <span
+                className="text-[11px] font-medium"
+                style={{
+                  color: active
+                    ? "#98691D"
+                    : "#6B7280",
+                }}
+              >
+                {menu.title}
+              </span>
+
+            </button>
+
+          );
+
+        })}
 
       </div>
+
     </div>
-  );
+
+  </div>
+
+);
+
 }
