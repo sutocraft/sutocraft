@@ -1,10 +1,19 @@
 "use client";
 
-import { Star, ShieldCheck, Truck, PackageCheck } from "lucide-react";
+import {
+  Star,
+  ShieldCheck,
+  Truck,
+  PackageCheck,
+} from "lucide-react";
 
-import type { WebsiteProduct } from "@/lib/products";
+import {
+  useTheme,
+} from "@/app/components/website/settings.theme_color";
 
-
+import type {
+  WebsiteProduct,
+} from "@/lib/products";
 
 type Size = {
   id: string;
@@ -16,8 +25,6 @@ type Color = {
   name: string;
   code?: string;
 };
-
-
 
 type Props = {
   product: WebsiteProduct;
@@ -33,8 +40,13 @@ type Props = {
   sizes: Size[];
   colors: Color[];
 
-  onSizeChange: (id: string) => void;
-  onColorChange: (id: string) => void;
+  onSizeChange: (
+    id: string
+  ) => void;
+
+  onColorChange: (
+    id: string
+  ) => void;
 
   onAddToCart: () => void;
   onBuyNow: () => void;
@@ -61,8 +73,13 @@ export default function ProductInfo({
   onBuyNow,
 }: Props) {
 
+  const {
+    themeColor,
+  } = useTheme();
+
   const price =
-    product.sale_price ?? product.price;
+    product.sale_price ??
+    product.price;
 
   const oldPrice =
     product.sale_price
@@ -73,61 +90,164 @@ export default function ProductInfo({
     product.stock > 0;
 
   return (
+
     <div className="flex h-full flex-col">
 
-      <div className="space-y-4">
+      <div className="space-y-5">
+
+        {/* Badge */}
 
         <div className="flex flex-wrap items-center gap-2">
 
-          {product.discount_percentage ? (
-            <span className="rounded-full bg-[#FF214F] px-3 py-1 text-xs font-bold text-white">
-              -{product.discount_percentage}%
-            </span>
-          ) : null}
+          {product.discount_percentage >
+            0 && (
 
-          {inStock ? (
-            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-              In Stock
+            <span
+              className="
+                rounded-full
+
+                px-3
+                py-1
+
+                text-xs
+                font-bold
+
+                text-white
+              "
+              style={{
+                background:
+                  "#FF214F",
+              }}
+            >
+              -
+              {
+                product.discount_percentage
+              }
+              %
             </span>
-          ) : (
-            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-600">
-              Out Of Stock
-            </span>
+
           )}
+
+          <span
+            className="
+              rounded-full
+
+              px-3
+              py-1
+
+              text-xs
+              font-semibold
+            "
+            style={{
+              background:
+                inStock
+                  ? "#DCFCE7"
+                  : "#FEE2E2",
+
+              color:
+                inStock
+                  ? "#15803D"
+                  : "#DC2626",
+            }}
+          >
+            {inStock
+              ? "In Stock"
+              : "Out Of Stock"}
+          </span>
 
         </div>
 
-        <h1 className="text-3xl font-bold leading-tight text-[#2B2B2B] lg:text-4xl">
+        {/* Title */}
+
+        <h1
+          className="
+            text-2xl
+
+            font-bold
+
+            leading-tight
+
+            sm:text-3xl
+
+            lg:text-4xl
+          "
+          style={{
+            color:
+              "#2B2B2B",
+          }}
+        >
           {product.name}
         </h1>
 
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+        {/* Rating */}
+
+        <div
+          className="
+            flex
+            flex-wrap
+
+            items-center
+
+            gap-4
+
+            text-sm
+          "
+        >
 
           <div className="flex items-center gap-1">
 
             <Star
               size={16}
-              className="fill-yellow-400 text-yellow-400"
+              className="
+                fill-yellow-400
+                text-yellow-400
+              "
             />
 
-            <span className="font-semibold">
+            <span
+              className="font-semibold"
+            >
               4.9
             </span>
 
-            <span>(128 Reviews)</span>
+            <span
+              className="text-gray-500"
+            >
+              (128 Reviews)
+            </span>
 
           </div>
 
           {product.sku && (
-            <span>
+
+            <span
+              className="
+                text-gray-500
+              "
+            >
               SKU :
-              <span className="ml-1 font-semibold text-[#2B2B2B]">
+
+              <span
+                className="
+                  ml-1
+
+                  font-semibold
+                "
+                style={{
+                  color:
+                    "#2B2B2B",
+                }}
+              >
                 {product.sku}
               </span>
+
             </span>
+
           )}
 
         </div>
+
+                {/* Category */}
 
         {(product.category ||
           product.sub_category) && (
@@ -135,116 +255,330 @@ export default function ProductInfo({
           <div className="flex flex-wrap gap-2">
 
             {product.category && (
-              <span className="rounded-full bg-[#F8F5EE] px-3 py-1 text-xs font-semibold text-[#98691D]">
+
+              <span
+                className="
+                  rounded-full
+
+                  px-3
+                  py-1
+
+                  text-xs
+                  font-semibold
+                "
+                style={{
+                  background:
+                    `${themeColor}12`,
+                  color:
+                    themeColor,
+                }}
+              >
                 {product.category.name}
               </span>
+
             )}
 
             {product.sub_category && (
-              <span className="rounded-full bg-[#F8F5EE] px-3 py-1 text-xs font-semibold text-[#98691D]">
+
+              <span
+                className="
+                  rounded-full
+
+                  px-3
+                  py-1
+
+                  text-xs
+                  font-semibold
+                "
+                style={{
+                  background:
+                    `${themeColor}12`,
+                  color:
+                    themeColor,
+                }}
+              >
                 {product.sub_category.name}
               </span>
+
             )}
 
           </div>
+
         )}
+
+        {/* Price */}
 
         <div className="flex items-end gap-3">
 
-          <span className="text-4xl font-extrabold text-[#98691D]">
+          <span
+            className="
+              text-3xl
+              font-extrabold
+
+              sm:text-4xl
+            "
+            style={{
+              color:
+                themeColor,
+            }}
+          >
             ৳{price}
           </span>
 
           {oldPrice && (
-            <span className="pb-1 text-lg text-gray-400 line-through">
+
+            <span
+              className="
+                pb-1
+
+                text-lg
+
+                text-gray-400
+
+                line-through
+              "
+            >
               ৳{oldPrice}
             </span>
+
           )}
 
         </div>
 
+        {/* Short Description */}
+
         {product.short_description && (
-          <p className="leading-7 text-gray-600">
+
+          <p
+            className="
+              leading-7
+
+              text-gray-600
+            "
+          >
             {product.short_description}
           </p>
+
         )}
 
       </div>
 
-            {/* Features */}
+      {/* Feature Cards */}
+      
 
-      <div className="mt-8 grid grid-cols-3 gap-3">
+      <div
+        className="
+          mt-8
 
-        <div className="rounded-2xl border border-[#E8E1CE] bg-[#FDFBF7] p-4 text-center">
+          grid
+
+          grid-cols-3
+
+          gap-3
+        "
+      >
+
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor:
+              `${themeColor}25`,
+          }}
+        >
 
           <Truck
             size={22}
-            className="mx-auto mb-2 text-[#98691D]"
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
           />
 
-          <p className="text-xs font-semibold text-[#2B2B2B]">
-            Fast Delivery
-          </p>
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Fast Delivery
+</p>
 
         </div>
 
-        <div className="rounded-2xl border border-[#E8E1CE] bg-[#FDFBF7] p-4 text-center">
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor:
+              `${themeColor}25`,
+          }}
+        >
 
           <ShieldCheck
             size={22}
-            className="mx-auto mb-2 text-[#98691D]"
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
           />
 
-          <p className="text-xs font-semibold text-[#2B2B2B]">
-            Quality Guaranteed
-          </p>
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Quality
+</p>
 
         </div>
 
-        <div className="rounded-2xl border border-[#E8E1CE] bg-[#FDFBF7] p-4 text-center">
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor:
+              `${themeColor}25`,
+          }}
+        >
 
           <PackageCheck
             size={22}
-            className="mx-auto mb-2 text-[#98691D]"
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
           />
 
-          <p className="text-xs font-semibold text-[#2B2B2B]">
-            Easy Return
-          </p>
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Quality
+</p>
 
         </div>
 
       </div>
 
-      {/* Size */}
+            {/* Size */}
 
       {sizes.length > 0 && (
 
         <div className="mt-8">
 
-          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider !text-[#2B2B2B]">
-            Select Size
-          </h3>
+          <h3
+  className="
+    mb-3
+    text-[13px]
+    font-bold
+    uppercase
+    tracking-[0.15em]
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Select Size
+</h3>
 
           <div className="flex flex-wrap gap-3">
 
-            {sizes.map((size) => (
+            {sizes.map((size) => {
 
-              <button
-                key={size.id}
-                onClick={() =>
-                  onSizeChange(size.id)
-                }
-                className={`min-w-[52px] rounded-xl border px-5 py-3 text-sm font-semibold transition-all duration-300 ${
-                  selectedSize === size.id
-                    ? "border-[#98691D] bg-[#98691D] text-white shadow-lg"
-                    : "border-[#E8E1CE] bg-white text-[#2B2B2B] hover:border-[#98691D]"
-                }`}
-              >
-                {size.name}
-              </button>
+              const active =
+                selectedSize === size.id;
 
-            ))}
+              return (
+
+                <button
+                  key={size.id}
+                  onClick={() =>
+                    onSizeChange(
+                      size.id
+                    )
+                  }
+                  className="
+                    min-w-[54px]
+
+                    rounded-2xl
+
+                    border
+
+                    px-5
+                    py-3
+
+                    text-sm
+                    font-semibold
+
+                    transition-all
+                    duration-300
+                  "
+                  style={{
+                    borderColor:
+                      active
+                        ? themeColor
+                        : `${themeColor}30`,
+
+                    background:
+                      active
+                        ? themeColor
+                        : "#FFFFFF",
+
+                    color:
+                      active
+                        ? "#FFFFFF"
+                        : "#2B2B2B",
+                  }}
+                >
+                  {size.name}
+                </button>
+
+              );
+
+            })}
 
           </div>
 
@@ -254,169 +588,489 @@ export default function ProductInfo({
 
       {/* Color */}
 
-{colors.length > 0 && (
-  <div className="mt-8">
+      {colors.length > 0 && (
 
-    <h3 className="mb-4 text-[13px] font-bold uppercase tracking-[0.15em] text-[#2B2B2B]">
-      Select Color
-    </h3>
+        <div className="mt-8">
 
-    <div className="flex flex-wrap gap-3">
+          <h3
+  className="
+    mb-4
+    text-[13px]
+    font-bold
+    uppercase
+    tracking-[0.15em]
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Select Color
+</h3>
 
-      {colors.map((color) => {
-        const active = selectedColor === color.id;
+          <div className="flex flex-wrap gap-3">
 
-        return (
-          <button
-            key={color.id}
-            onClick={() => onColorChange(color.id)}
-            className={`group flex min-w-[105px] items-center gap-3 rounded-2xl border px-4 py-3 transition-all duration-300 ${
-              active
-                ? "border-[#98691D] bg-[#98691D] text-white shadow-lg shadow-[#98691D]/25"
-                : "border-[#E8E1CE] bg-white text-[#2B2B2B] hover:border-[#98691D] hover:shadow-md"
-            }`}
+            {colors.map(
+              (color) => {
+
+                const active =
+                  selectedColor ===
+                  color.id;
+
+                return (
+
+                  <button
+                    key={color.id}
+                    onClick={() =>
+                      onColorChange(
+                        color.id
+                      )
+                    }
+                    className="
+                      flex
+
+                      min-w-[110px]
+
+                      items-center
+
+                      gap-3
+
+                      rounded-2xl
+
+                      border
+
+                      px-4
+                      py-3
+
+                      transition-all
+                      duration-300
+                    "
+                    style={{
+                      borderColor:
+                        active
+                          ? themeColor
+                          : `${themeColor}30`,
+
+                      background:
+                        active
+                          ? themeColor
+                          : "#FFFFFF",
+
+                      color:
+                        active
+                          ? "#FFFFFF"
+                          : "#2B2B2B",
+                    }}
+                  >
+
+                    <span
+                      className="
+                        h-5
+                        w-5
+
+                        rounded-full
+
+                        border-2
+                      "
+                      style={{
+                        background:
+                          color.code ||
+                          themeColor,
+
+                        borderColor:
+                          active
+                            ? "#FFFFFF"
+                            : "#D1D5DB",
+                      }}
+                    />
+
+                    <span
+                      className="
+                        text-sm
+
+                        font-semibold
+                      "
+                    >
+                      {color.name}
+                    </span>
+
+                  </button>
+
+                );
+
+              }
+            )}
+
+          </div>
+
+        </div>
+
+      )}
+
+            {/* Quantity */}
+
+      <div className="mt-8">
+
+        <h3
+  className="
+    mb-4
+    text-[13px]
+    font-bold
+    uppercase
+    tracking-[0.15em]
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Quantity
+</h3>
+
+        <div
+          className="
+            flex
+            flex-wrap
+
+            items-center
+            justify-between
+
+            gap-5
+          "
+        >
+
+          <div
+            className="
+              flex
+
+              items-center
+
+              overflow-hidden
+
+              rounded-2xl
+
+              border
+
+              bg-white
+            "
+            style={{
+              borderColor:
+                `${themeColor}30`,
+            }}
           >
-            <span
-              className={`h-5 w-5 rounded-full border-2 ${
-                active
-                  ? "border-white"
-                  : "border-gray-300"
-              }`}
+
+            <button
+              onClick={onDecrease}
+              className="
+                flex
+
+                h-12
+                w-12
+
+                items-center
+                justify-center
+
+                text-2xl
+
+                font-bold
+
+                transition-all
+                duration-300
+              "
               style={{
-                backgroundColor:
-                  color.code || "#98691D",
+                color: themeColor,
               }}
-            />
+            >
+              −
+            </button>
+
+            <div
+              className="
+                flex
+
+                h-12
+                min-w-[68px]
+
+                items-center
+                justify-center
+
+                border-x
+
+                bg-gray-50
+
+                text-lg
+
+                font-bold
+              "
+              style={{
+                borderColor:
+                  `${themeColor}30`,
+              }}
+            >
+              {quantity}
+            </div>
+
+            <button
+              onClick={onIncrease}
+              className="
+                flex
+
+                h-12
+                w-12
+
+                items-center
+                justify-center
+
+                text-2xl
+
+                font-bold
+
+                transition-all
+                duration-300
+              "
+              style={{
+                color: themeColor,
+              }}
+            >
+              +
+            </button>
+
+          </div>
+
+          <div
+            className="
+              rounded-2xl
+
+              px-4
+              py-3
+            "
+            style={{
+              background:
+                `${themeColor}10`,
+            }}
+          >
 
             <span
-              className={`text-sm font-semibold ${
-                active
-                  ? "text-white"
-                  : "text-[#2B2B2B]"
-              }`}
+              className="text-sm"
+style={{
+  color: themeColor,
+}}
             >
-              {color.name}
+              Available
             </span>
 
-          </button>
-        );
-      })}
+            <span
+              className="
+                ml-2
 
-    </div>
+                text-base
 
-  </div>
-)}
+                font-bold
+              "
+            >
+              {product.stock}
+            </span>
 
-{/* Quantity */}
+          </div>
 
-<div className="mt-8">
+        </div>
 
-  <h3 className="mb-4 text-[13px] font-bold uppercase tracking-[0.15em] text-[#2B2B2B]">
-    Quantity
-  </h3>
-
-  <div className="flex items-center justify-between gap-5 flex-wrap">
-
-    <div className="flex items-center overflow-hidden rounded-2xl border border-[#D9C8A6] bg-white shadow-sm">
-
-      <button
-        onClick={onDecrease}
-        className="flex h-12 w-12 items-center justify-center text-2xl font-bold text-[#2B2B2B] transition hover:bg-[#98691D] hover:text-white"
-      >
-        −
-      </button>
-
-      <div className="flex h-12 min-w-[64px] items-center justify-center border-x border-[#D9C8A6] bg-[#FCFAF6] text-lg font-bold text-[#2B2B2B]">
-        {quantity}
       </div>
 
-      <button
-        onClick={onIncrease}
-        className="flex h-12 w-12 items-center justify-center text-2xl font-bold text-[#2B2B2B] transition hover:bg-[#98691D] hover:text-white"
+      {/* Primary Buttons */}
+
+      <div className="mt-10 space-y-4">
+
+        <button
+          onClick={onAddToCart}
+          disabled={!inStock}
+          className="
+            flex
+
+            h-14
+            w-full
+
+            items-center
+            justify-center
+
+            rounded-2xl
+
+            text-base
+
+            font-bold
+
+            text-white
+
+            transition-all
+            duration-300
+
+            hover:-translate-y-1
+
+            disabled:cursor-not-allowed
+            disabled:bg-gray-300
+          "
+          style={{
+            background:
+              themeColor,
+          }}
+        >
+          Add To Cart
+        </button>
+
+        <button
+          onClick={onBuyNow}
+          disabled={!inStock}
+          className="
+            flex
+
+            h-14
+            w-full
+
+            items-center
+            justify-center
+
+            rounded-2xl
+
+            border-2
+
+            bg-white
+
+            text-base
+
+            font-bold
+
+            transition-all
+            duration-300
+          "
+          style={{
+            borderColor:
+              themeColor,
+            color:
+              themeColor,
+          }}
+        >
+          Buy Now
+        </button>
+
+      </div>
+
+            {/* Extra Information */}
+
+      <div
+        className="
+          mt-10
+
+          rounded-3xl
+
+          border
+
+          bg-white
+
+          p-6
+        "
+        style={{
+          borderColor:
+            `${themeColor}25`,
+        }}
       >
-        +
-      </button>
 
-    </div>
+        <div
+          className="
+            flex
 
-    <div className="rounded-xl bg-[#F8F5EE] px-4 py-2">
+            items-center
 
-      <span className="text-sm font-medium text-[#666]">
-        Available
-      </span>
+            justify-between
 
-      <span className="ml-2 text-base font-bold text-[#2B2B2B]">
-        {product.stock}
-      </span>
+            border-b
 
-    </div>
-
-  </div>
-
-</div>
-
-{/* Action Buttons */}
-
-<div className="mt-10 grid gap-4">
-
-  <button
-    onClick={onAddToCart}
-    disabled={!inStock}
-    className="flex h-14 items-center justify-center rounded-2xl bg-[#98691D] text-base font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7A5318] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-gray-300"
-  >
-    Add To Cart
-  </button>
-
-  <button
-    onClick={onBuyNow}
-    disabled={!inStock}
-    className="flex h-14 items-center justify-center rounded-2xl border-2 border-[#98691D] bg-white text-base font-bold text-[#98691D] transition-all duration-300 hover:bg-[#98691D] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-300"
-  >
-    Buy Now
-  </button>
-
-</div>
-
-      {/* Extra Info */}
-
-      <div className="mt-10 rounded-3xl border border-[#E8E1CE] bg-[#FDFBF7] p-6">
-
-        <div className="flex items-center justify-between border-b border-[#ECE4D2] pb-3">
-
-          <span className="font-medium text-gray-500">
-            Brand
-          </span>
-
-          <span className="font-semibold text-[#2B2B2B]">
-            {product.brand?.name ?? "SutoCraft"}
-          </span>
-
-        </div>
-
-        <div className="mt-3 flex items-center justify-between border-b border-[#ECE4D2] pb-3">
-
-          <span className="font-medium text-gray-500">
-            Category
-          </span>
-
-          <span className="font-semibold text-[#2B2B2B]">
-            {product.category?.name ?? "-"}
-          </span>
-
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-
-          <span className="font-medium text-gray-500">
-            Availability
-          </span>
+            pb-3
+          "
+          style={{
+            borderColor:
+              `${themeColor}15`,
+          }}
+        >
 
           <span
-            className={`font-semibold ${
-              inStock
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
+  style={{
+    color: themeColor,
+  }}
+>
+  Brand
+</span>
+
+          <span
+            className="font-semibold"
+          >
+            {product.brand?.name ??
+              "SutoCraft"}
+          </span>
+
+        </div>
+
+        <div
+          className="
+            mt-3
+
+            flex
+
+            items-center
+
+            justify-between
+
+            border-b
+
+            pb-3
+          "
+          style={{
+            borderColor:
+              `${themeColor}15`,
+          }}
+        >
+
+          <span
+  style={{
+    color: themeColor,
+  }}
+>
+  Category
+</span>
+
+          <span
+            className="font-semibold"
+          >
+            {product.category?.name ??
+              "-"}
+          </span>
+
+        </div>
+
+        <div
+          className="
+            mt-3
+
+            flex
+
+            items-center
+
+            justify-between
+          "
+        >
+
+          <span
+  style={{
+    color: themeColor,
+  }}
+>
+  Availability
+</span>
+
+          <span
+            className="font-semibold"
+            style={{
+              color: inStock
+                ? "#16A34A"
+                : "#DC2626",
+            }}
           >
             {inStock
               ? "In Stock"
@@ -426,6 +1080,11 @@ export default function ProductInfo({
         </div>
 
       </div>
+
     </div>
+
   );
+
 }
+
+
