@@ -439,7 +439,18 @@ export default function Hero({
           >
 
             <motion.div
-              key={product.image_url}
+  key={product.image_url}
+  className="
+    order-1
+    mx-auto
+    w-full
+    max-w-[340px]
+
+    sm:max-w-[420px]
+
+    lg:order-2
+    lg:max-w-[560px]
+  "
               initial={{
                 opacity: 0,
                 scale: .92,
@@ -458,20 +469,42 @@ export default function Hero({
               className="relative mx-auto w-full max-w-[560px]"
             >
 
-              <div className="rounded-[42px] bg-white p-7 shadow-[0_25px_80px_rgba(0,0,0,.10)]">
+              <div
+  className="
+    rounded-[26px]
+    bg-white
+    p-4
+    shadow-[0_18px_50px_rgba(0,0,0,.10)]
 
-                <div className="relative aspect-square overflow-hidden rounded-[30px]">
+    sm:p-5
+
+    lg:rounded-[42px]
+    lg:p-7
+    lg:shadow-[0_25px_80px_rgba(0,0,0,.10)]
+  "
+>
+
+                <div
+  className="
+    relative
+    aspect-square
+    overflow-hidden
+    rounded-[20px]
+
+    lg:rounded-[30px]
+  "
+>
 
                   <Image
-                    src={
-                      product.image_url ??
-                      "/images/hero.webp"
-                    }
-                    alt={product.name}
-                    fill
-                    priority
-                    sizes="(max-width:768px) 100vw, 560px"
-                    className="object-contain transition-transform duration-500 hover:scale-105"
+  src={
+    product.image_url ??
+    "/images/hero.webp"
+  }
+  alt={product.name}
+  fill
+  priority
+  sizes="(max-width:640px) 90vw,(max-width:1024px) 60vw,560px"
+  className="object-contain transition-transform duration-500"
                   />
 
                 </div>
@@ -481,8 +514,24 @@ export default function Hero({
                             {/* Floating Badge */}
 
               <div
-                className="absolute -left-8 top-10 hidden rounded-2xl bg-white px-5 py-4 shadow-xl lg:block"
-              >
+  className="
+    absolute
+    left-3
+    top-3
+    rounded-xl
+    bg-white
+    px-3
+    py-2
+    shadow-lg
+
+    lg:-left-8
+    lg:top-10
+    lg:rounded-2xl
+    lg:px-5
+    lg:py-4
+  "
+>
+              
                 <p
                   className="text-xs font-bold uppercase tracking-[.25em]"
                   style={{
@@ -492,19 +541,57 @@ export default function Hero({
                   Best Seller
                 </p>
 
-                <p className="mt-1 text-2xl font-black text-[#1E293B]">
+                <p
+  className="
+    mt-1
+    text-lg
+    font-black
+    text-[#1E293B]
+
+    lg:text-2xl
+  "
+>
                   Premium
                 </p>
               </div>
 
               {/* Rating Card */}
 
-              <div className="absolute -bottom-6 right-8 hidden rounded-2xl bg-white px-6 py-4 shadow-2xl lg:block">
+              <div
+  className="
+    absolute
+    bottom-3
+    right-3
+    rounded-xl
+    bg-white
+    px-3
+    py-2
+    shadow-xl
+
+    lg:-bottom-6
+    lg:right-8
+    lg:rounded-2xl
+    lg:px-6
+    lg:py-4
+  "
+>
 
                 <div className="flex items-center gap-3">
 
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-full text-white"
+  className="
+    flex
+    h-9
+    w-9
+    items-center
+    justify-center
+    rounded-full
+    text-white
+
+    lg:h-12
+    lg:w-12
+  "
+
                     style={{
                       background: themeColor,
                     }}
@@ -514,13 +601,28 @@ export default function Hero({
 
                   <div>
 
-                    <p className="text-lg font-bold text-[#1E293B]">
+                    <p
+  className="
+    text-sm
+    font-bold
+    text-[#1E293B]
+
+    lg:text-lg
+  "
+>
 
                       4.9 / 5
 
                     </p>
 
-                    <p className="text-sm text-[#64748B]">
+                    <p
+  className="
+    text-[11px]
+    text-[#64748B]
+
+    lg:text-sm
+  "
+>
 
                       Customer Rating
 
