@@ -55,7 +55,15 @@ export default function CartDrawer() {
 } = useCart();
 
 function handleCloseDrawer() {
+
   closeCart();
+
+  if (window.history.state?.cartDrawer) {
+
+    window.history.back();
+
+  }
+
 }
 
   const {
@@ -91,22 +99,21 @@ const [updatingId, setUpdatingId] =
   }
 
   useEffect(() => {
+
   if (!isOpen) return;
 
   loadCart();
 
-  if (!window.history.state?.cartDrawer) {
   window.history.pushState(
     { cartDrawer: true },
     ""
   );
-}
 
-  const handlePopState = (e: PopStateEvent) => {
-  if (e.state?.cartDrawer) {
+  const handlePopState = () => {
+
     closeCart();
-  }
-};
+
+  };
 
   window.addEventListener(
     "popstate",
@@ -114,11 +121,14 @@ const [updatingId, setUpdatingId] =
   );
 
   return () => {
+
     window.removeEventListener(
       "popstate",
       handlePopState
     );
+
   };
+
 }, [isOpen]);
 
   const subtotal = useMemo(() => {
