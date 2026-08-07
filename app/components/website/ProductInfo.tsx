@@ -804,13 +804,17 @@ export default function ProductInfo({
 
                 bg-gray-50
 
-                text-lg
+                text-[25px]
 
                 font-bold
               "
               style={{
                 borderColor:
                   `${themeColor}30`,
+              }}
+
+            style={{
+                color: themeColor,
               }}
             >
               {quantity}
@@ -873,6 +877,9 @@ style={{
 
                 font-bold
               "
+            style={{
+                color: themeColor,
+              }}
             >
               {product.stock}
             </span>
@@ -927,33 +934,34 @@ style={{
           onClick={onBuyNow}
           disabled={!inStock}
           className="
-            flex
-
-            h-14
-            w-full
-
-            items-center
-            justify-center
-
-            rounded-2xl
-
-            border-2
-
-            bg-white
-
-            text-base
-
-            font-bold
-
-            transition-all
-            duration-300
-          "
-          style={{
-            borderColor:
-              themeColor,
-            color:
-              themeColor,
-          }}
+  flex
+  h-14
+  w-full
+  items-center
+  justify-center
+  gap-3
+  rounded-2xl
+  border-2
+  bg-white
+  text-base
+  font-bold
+  transition-all
+  duration-300
+  hover:-translate-y-1
+  hover:text-white
+"
+style={{
+  borderColor: themeColor,
+  color: themeColor,
+}}
+onMouseEnter={(e) => {
+  e.currentTarget.style.background = themeColor;
+  e.currentTarget.style.color = "#fff";
+}}
+onMouseLeave={(e) => {
+  e.currentTarget.style.background = "#fff";
+  e.currentTarget.style.color = themeColor;
+}}
         >
           Buy Now
         </button>
