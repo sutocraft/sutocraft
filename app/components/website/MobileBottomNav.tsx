@@ -58,23 +58,34 @@ const lastScrollY =
 
   useEffect(() => {
   function handleScroll() {
-    const currentScrollY =
-      window.scrollY;
 
-    if (currentScrollY < 20) {
-      setShowNav(true);
-    } else if (
-      currentScrollY >
-      lastScrollY.current
-    ) {
-      setShowNav(false);
-    } else {
-      setShowNav(true);
-    }
-
-    lastScrollY.current =
-      currentScrollY;
+  if (
+    document.body.classList.contains(
+      "product-modal-open"
+    )
+  ) {
+    setShowNav(true);
+    return;
   }
+
+  const currentScrollY =
+    window.scrollY;
+
+  if (currentScrollY < 20) {
+    setShowNav(true);
+  } else if (
+    currentScrollY >
+    lastScrollY.current
+  ) {
+    setShowNav(false);
+  } else {
+    setShowNav(true);
+  }
+
+  lastScrollY.current =
+    currentScrollY;
+
+}
 
   window.addEventListener(
     "scroll",
