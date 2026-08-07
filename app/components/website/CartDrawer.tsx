@@ -386,17 +386,7 @@ const [updatingId, setUpdatingId] =
   )}
 
   <div className="grid gap-3">
-    <Link
-      href="/cart"
-      onClick={handleCloseDrawer}
-      className="rounded-xl border py-3 text-center font-semibold transition-all duration-200 hover:bg-[#F8F5EF]"
-      style={{
-        borderColor: themeColor,
-        color: themeColor,
-      }}
-    >
-      View Cart
-    </Link>
+    
 
     <Link
       href="/checkout"
