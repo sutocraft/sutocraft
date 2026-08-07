@@ -1,21 +1,38 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import Link from "next/link";
+import Image from "next/image";
+
+import {
+  Menu,
+  X,
+  Search,
+  Heart,
+  ShoppingBag,
+} from "lucide-react";
+
+import Container from "./Container";
+import UserMenu from "./UserMenu";
+
 import {
   getCurrentUser,
   getCurrentUserProfile,
   logoutCustomer,
 } from "@/lib/auth";
 
-import UserMenu from "./UserMenu";
+import {
+  getCartCount,
+} from "@/lib/cart";
 
-import Image from "next/image";
-import Container from "./Container";
-import { getHeaderSettings } from "@/lib/header";
-import { getCartCount } from "@/lib/cart";
-import { useCart } from "@/lib/cart-context";
-import { useTheme } from "@/app/components/website/settings.theme_color";
+import {
+  useCart,
+} from "@/lib/cart-context";
+
+import {
+  useTheme,
+} from "@/app/components/website/settings.theme_color";
 
 type HeaderSettings = {
   website_name: string;
@@ -25,314 +42,466 @@ type HeaderSettings = {
 
 export default function Header() {
 
-  const [user, setUser] = useState<any>(null);
-const [profile, setProfile] = useState<any>(null);
-const {
-  openCart,
-  cartCount,
-  setCartCount,
-} = useCart();
+  const {
+    openCart,
+    cartCount,
+    setCartCount,
+  } = useCart();
 
-const {
-  themeColor,
-  websiteName,
-  logoUrl,
-} = useTheme();
+  const {
+    themeColor,
+    websiteName,
+    logoUrl,
+  } = useTheme();
 
-const [showHeader, setShowHeader] =
-  useState(true);
+  const [user, setUser] =
+    useState<any>(null);
 
-const lastScrollY =
-  useRef(0);
+  const [profile, setProfile] =
+    useState<any>(null);
+
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
+  const [showHeader, setShowHeader] =
+    useState(true);
+
+  const [isScrolled, setIsScrolled] =
+    useState(false);
+
+  const lastScrollY =
+    useRef(0);
 
   useEffect(() => {
-  checkLogin();
+    checkLogin();
 
-  const interval =
-    setInterval(checkLogin, 1000);
+    const interval =
+      setInterval(
+        checkLogin,
+        1000
+      );
 
-  return () =>
-    clearInterval(interval);
-}, []);
+    return () =>
+      clearInterval(interval);
+  }, []);
 
-useEffect(() => {
-  function handleScroll() {
-    const currentScrollY =
-      window.scrollY;
+  useEffect(() => {
 
-    if (currentScrollY < 20) {
-      setShowHeader(true);
-    } else if (
-      currentScrollY >
-      lastScrollY.current
-    ) {
-      setShowHeader(false);
-    } else {
-      setShowHeader(true);
+    function handleScroll() {
+
+      const current =
+        window.scrollY;
+
+      setIsScrolled(
+        current > 10
+      );
+
+      if (current < 20) {
+
+        setShowHeader(true);
+
+      } else if (
+        current >
+        lastScrollY.current
+      ) {
+
+        setShowHeader(false);
+
+      } else {
+
+        setShowHeader(true);
+
+      }
+
+      lastScrollY.current =
+        current;
+
     }
 
-    lastScrollY.current =
-      currentScrollY;
-  }
-
-  window.addEventListener(
-    "scroll",
-    handleScroll,
-    {
-      passive: true,
-    }
-  );
-
-  return () =>
-    window.removeEventListener(
+    window.addEventListener(
       "scroll",
-      handleScroll
+      handleScroll,
+      {
+        passive: true,
+      }
     );
-}, []);
+
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
+
+  }, []);
 
   async function checkLogin() {
-  const currentUser = await getCurrentUser();
 
-  setUser(currentUser);
+    const currentUser =
+      await getCurrentUser();
 
-  if (currentUser) {
-    const p = await getCurrentUserProfile();
-    setProfile(p);
+    setUser(currentUser);
 
-    const count = await getCartCount();
-    setCartCount(count);
+    if (currentUser) {
 
-  } else {
+      const p =
+        await getCurrentUserProfile();
 
-    setProfile(null);
-    setCartCount(0);
+      setProfile(p);
+
+      const count =
+        await getCartCount();
+
+      setCartCount(count);
+
+    } else {
+
+      setProfile(null);
+
+      setCartCount(0);
+
+    }
 
   }
-}
-
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // ThemeProvider handles website settings.
-// No local header settings state needed.
 
   async function handleLogout() {
-  await logoutCustomer();
 
-  setUser(null);
-  setProfile(null);
+    await logoutCustomer();
 
-  window.location.href = "/";
-}
-  
+    setUser(null);
+
+    setProfile(null);
+
+    window.location.href =
+      "/";
+
+  }
+
   return (
+
     <header
-  className={`sticky top-0 z-50 border-b border-[#E8E1CE] bg-white transition-transform duration-300 ${
-    showHeader
-      ? "translate-y-0"
-      : "-translate-y-full"
-  }`}
->
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        showHeader
+          ? "translate-y-0"
+          : "-translate-y-full"
+      }`}
+      style={{
+        background: "#ffffffee",
+        backdropFilter:
+          "blur(16px)",
+        borderBottom:
+          isScrolled
+            ? "1px solid #ECE5D6"
+            : "1px solid transparent",
+      }}
+    >
 
       <Container>
 
-        {/* Top Bar */}
+        <div className="flex h-[66px] items-center justify-between lg:h-[76px]">
 
-        <div className="flex h-16 items-center justify-between lg:h-[72px]">
-
-          {/* Logo */}
+                    {/* ===========================
+              Logo
+          =========================== */}
 
           <Link
             href="/"
-            className="flex items-center gap-3"
+            className="flex shrink-0 items-center gap-3"
           >
-
             {logoUrl ? (
-
               <Image
                 src={logoUrl}
                 alt={websiteName}
                 width={180}
                 height={60}
-                className="h-12 w-auto object-contain"
                 priority
+                className="h-11 w-auto object-contain lg:h-12"
               />
-
             ) : (
-
               <span
-                className="text-3xl font-bold tracking-tight lg:text-5xl"
+                className="text-2xl font-extrabold tracking-tight lg:text-3xl"
                 style={{
                   color: themeColor,
                 }}
               >
                 {websiteName}
               </span>
-
             )}
-
           </Link>
 
-          {/* Desktop Menu */}
+          {/* ===========================
+              Desktop Menu
+          =========================== */}
 
-          <nav className="hidden items-center gap-10 lg:flex">
+          <nav className="hidden items-center gap-8 xl:gap-10 lg:flex">
 
             <Link
               href="/"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+              className="font-semibold text-[#2B2B2B] transition"
+              style={{
+                color: "#2B2B2B",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color =
+                  themeColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color =
+                  "#2B2B2B")
+              }
             >
               Home
             </Link>
 
             <Link
               href="/products"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+              className="font-semibold text-[#2B2B2B] transition"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color =
+                  themeColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color =
+                  "#2B2B2B")
+              }
             >
-              Products
+              Shop
             </Link>
 
             <Link
               href="/about"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+              className="font-semibold text-[#2B2B2B] transition"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color =
+                  themeColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color =
+                  "#2B2B2B")
+              }
             >
               About
             </Link>
 
             <Link
               href="/contact"
-              className="font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+              className="font-semibold text-[#2B2B2B] transition"
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color =
+                  themeColor)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color =
+                  "#2B2B2B")
+              }
             >
               Contact
             </Link>
 
           </nav>
 
-                    {/* Desktop Right */}
+          {/* ===========================
+              Desktop Actions
+          =========================== */}
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-2 lg:flex">
+
+            <button
+              className="flex h-11 w-11 items-center justify-center rounded-xl border transition"
+              style={{
+                borderColor: `${themeColor}30`,
+                color: themeColor,
+              }}
+            >
+              <Search size={20} />
+            </button>
+
+            <Link
+              href="/wishlist"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border transition"
+              style={{
+                borderColor: `${themeColor}30`,
+                color: themeColor,
+              }}
+            >
+              <Heart size={20} />
+            </Link>
+
+                        <button
+              id="header-cart"
+              onClick={openCart}
+              className="relative flex h-11 items-center gap-2 rounded-xl px-5 font-semibold text-white transition-all duration-300 hover:scale-[1.03]"
+              style={{
+                backgroundColor: themeColor,
+              }}
+            >
+              <ShoppingBag size={18} />
+
+              <span>Cart</span>
+
+              {cartCount > 0 && (
+                <span
+                  className="absolute -right-2 -top-2 flex h-6 min-w-[24px] items-center justify-center rounded-full px-1 text-xs font-bold text-white shadow-lg"
+                  style={{
+                    backgroundColor: "#FF214F",
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </button>
 
             {user ? (
 
-  <UserMenu
-    profile={profile}
-    onLogout={handleLogout}
-  />
+              <UserMenu
+                profile={profile}
+                onLogout={handleLogout}
+              />
 
-) : (
+            ) : (
 
-  <Link
-    href="/login"
-    className="rounded-xl border px-6 py-3 font-semibold transition hover:text-white"
-    style={{
-  borderColor: themeColor,
-  color: themeColor,
-}}
-onMouseEnter={(e) => {
-  e.currentTarget.style.backgroundColor =
-    themeColor;
-}}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.backgroundColor =
-        "transparent";
-    }}
-  >
-    Login
-  </Link>
+              <Link
+                href="/login"
+                className="rounded-xl border px-6 py-3 font-semibold transition-all duration-300 hover:text-white"
+                style={{
+                  borderColor: themeColor,
+                  color: themeColor,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    themeColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "transparent";
+                }}
+              >
+                Login
+              </Link>
 
-)}
-
-         <button
-  id="header-cart"
-  onClick={openCart}
-  className="px-5 py-3 rounded-lg text-white transition-all duration-200 hover:scale-105"
-style={{
-  backgroundColor: themeColor,
-}}
->
-  Cart ({cartCount})
-</button>   
+            )}
 
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* ===========================
+              Mobile Actions
+          =========================== */}
 
-          <button
-            onClick={() =>
-              setMenuOpen(!menuOpen)
-            }
-            className="flex h-11 w-11 items-center justify-center rounded-xl border-2 text-2xl font-bold lg:hidden"
-            style={{
-  borderColor: themeColor,
-  color: themeColor,
-}}
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+
+            <button
+              id="header-cart-mobile"
+              onClick={openCart}
+              className="relative flex h-11 w-11 items-center justify-center rounded-xl text-white"
+              style={{
+                backgroundColor: themeColor,
+              }}
+            >
+              <ShoppingBag size={20} />
+
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() =>
+                setMenuOpen(!menuOpen)
+              }
+              className="flex h-11 w-11 items-center justify-center rounded-xl border"
+              style={{
+                borderColor: themeColor,
+                color: themeColor,
+              }}
+            >
+              {menuOpen ? (
+                <X size={22} />
+              ) : (
+                <Menu size={22} />
+              )}
+            </button>
+
+          </div>
 
         </div>
 
-        {/* Mobile Menu */}
+                {/* ===========================
+            Mobile Menu
+        =========================== */}
 
         {menuOpen && (
 
-          <div className="border-t border-[#E8E1CE] bg-white py-6 lg:hidden">
+          <div className="border-t border-[#ECE4D5] bg-white lg:hidden">
 
-            <nav className="flex flex-col gap-6">
+            <nav className="flex flex-col py-3">
 
               <Link
                 href="/"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
               >
                 Home
               </Link>
 
               <Link
                 href="/products"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
               >
-                Products
+                Shop
               </Link>
 
               <Link
                 href="/about"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
               >
                 About
               </Link>
 
               <Link
                 href="/contact"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="text-xl font-semibold text-[#2B2B2B] transition hover:text-[#98691D]"
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
               >
                 Contact
               </Link>
 
               <Link
-  href={user ? "/account" : "/login"}
->
-    <button className="rounded-lg bg-amber-600 px-5 py-2 text-white hover:bg-amber-700">
-        {user ? "My Account" : "Login"}
-    </button>
-</Link>
+                href="/wishlist"
+                onClick={() => setMenuOpen(false)}
+                className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
+              >
+                Wishlist
+              </Link>
 
-              <button
-  id="header-cart-mobile"
-  onClick={openCart}
-  className="bg-[#98691D] text-white px-5 py-3 rounded-lg"
->
-  Cart ({cartCount})
-</button>   
+              {user ? (
+
+                <button
+                  onClick={handleLogout}
+                  className="mx-5 mt-4 rounded-xl py-3 font-semibold text-white transition"
+                  style={{
+                    backgroundColor: themeColor,
+                  }}
+                >
+                  Logout
+                </button>
+
+              ) : (
+
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="mx-5 mt-4 rounded-xl py-3 text-center font-semibold text-white transition"
+                  style={{
+                    backgroundColor: themeColor,
+                  }}
+                >
+                  Login
+                </Link>
+
+              )}
 
             </nav>
 
@@ -345,4 +514,5 @@ style={{
     </header>
 
   );
+
 }
