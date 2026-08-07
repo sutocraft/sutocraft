@@ -176,17 +176,36 @@ export default function Hero({
 
       <Container>
 
-        <div className="relative grid min-h-[760px] items-center gap-14 py-10 lg:grid-cols-[1fr_560px]">
+        <div
+  className="
+    relative
+    grid
+    min-h-auto
+    items-center
+    gap-8
+    py-6
+
+    lg:min-h-[760px]
+    lg:gap-14
+    lg:py-10
+    lg:grid-cols-[1fr_560px]
+  "
+>
 
           {/* =======================
               Left
           ======================= */}
 
-          <AnimatePresence
-            mode="wait"
-          >
+          <AnimatePresence mode="wait">
 
             <motion.div
+  className="
+    order-2
+    text-center
+
+    lg:order-1
+    lg:text-left
+  "
               key={product.id}
               initial={{
                 opacity: 0,
@@ -215,25 +234,86 @@ export default function Hero({
                 {product.badge ?? "New Collection 2026"}
               </span>
 
-              <h1 className="max-w-[650px] text-5xl font-black leading-tight text-[#1E293B] lg:text-7xl">
+              <h1
+  className="
+    mx-auto
+    max-w-full
+    text-4xl
+    font-black
+    leading-tight
+    text-[#1E293B]
+
+    sm:text-5xl
+
+    lg:mx-0
+    lg:max-w-[650px]
+    lg:text-7xl
+  "
+>
 
                 {product.name}
 
               </h1>
 
-              <p className="mt-7 max-w-[620px] text-lg leading-9 text-[#5B6473]">
+              <p
+  className="
+    mx-auto
+    mt-5
+    max-w-full
+    text-base
+    leading-8
+    text-[#5B6473]
+
+    lg:mx-0
+    lg:mt-7
+    lg:max-w-[620px]
+    lg:text-lg
+    lg:leading-9
+  "
+>
 
                 {product.short_description ??
                   "Premium quality clothing crafted with comfort, durability and timeless design."}
 
               </p>
 
-              <div className="mt-10 flex flex-wrap gap-5">
+              <div
+  className="
+    mt-8
+    flex
+    flex-col
+    gap-4
 
-                <Link
-                  href={`/product/${product.slug}`}
-                  className="inline-flex h-14 items-center gap-3 rounded-2xl px-8 font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.04]"
-                  style={{
+    sm:flex-row
+    sm:justify-center
+
+    lg:mt-10
+    lg:justify-start
+  "
+>
+
+               <Link
+  href={`/product/${product.slug}`}
+  className="
+    inline-flex
+    h-14
+    w-full
+    items-center
+    justify-center
+    gap-3
+    rounded-2xl
+    px-8
+    font-bold
+    text-white
+    shadow-xl
+    transition-all
+    duration-300
+    hover:scale-[1.02]
+
+    sm:w-auto
+    lg:w-auto
+  "
+   style={{
                     background: themeColor,
                   }}
                 >
@@ -246,7 +326,25 @@ export default function Hero({
                 </Link>
 
                 <button
-                  className="inline-flex h-14 items-center gap-3 rounded-2xl border bg-white px-8 font-bold transition-all duration-300 hover:shadow-lg"
+  className="
+    inline-flex
+    h-14
+    w-full
+    items-center
+    justify-center
+    gap-3
+    rounded-2xl
+    border
+    bg-white
+    px-8
+    font-bold
+    transition-all
+    duration-300
+    hover:shadow-lg
+
+    sm:w-auto
+    lg:w-auto
+  "
                   style={{
                     borderColor: themeColor,
                     color: themeColor,
@@ -263,7 +361,20 @@ export default function Hero({
 
               </div>
 
-                            <div className="mt-12 flex items-center gap-8">
+                            <div
+  className="
+    mt-10
+    flex
+    flex-col
+    items-center
+    gap-4
+
+    lg:mt-12
+    lg:flex-row
+    lg:items-center
+    lg:gap-8
+  "
+>
 
                 <div>
 
@@ -276,7 +387,17 @@ export default function Hero({
                     Starting From
                   </p>
 
-                  <div className="mt-2 flex items-end gap-3">
+                  <div
+  className="
+    mt-2
+    flex
+    items-end
+    justify-center
+    gap-3
+
+    lg:justify-start
+  "
+>
 
                     <span
                       className="text-5xl font-black"
