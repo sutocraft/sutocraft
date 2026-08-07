@@ -248,7 +248,7 @@ const [user, setUser] =
               pathname.startsWith(menu.href)
             );
 
-          const handleClick = () => {
+          const handleClick = async () => {
 
             switch (menu.title) {
 
@@ -268,9 +268,30 @@ const [user, setUser] =
                 openCartDrawer();
                 break;
 
-              case "Account":
-                navigate("/login");
-                break;
+              case "Account": {
+
+  const currentUser =
+    user ??
+    await getCurrentUser();
+
+  if (currentUser) {
+
+    navigate("/account");
+
+  } else {
+
+    localStorage.setItem(
+      "login-redirect",
+      "account"
+    );
+
+    navigate("/login");
+
+  }
+
+  break;
+
+}
 
             }
 
