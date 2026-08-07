@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import ProductDetails from "./ProductDetails";
 
+import MobileBottomNav from "./MobileBottomNav";
+
 type Props = {
   open: boolean;
   slug: string;
@@ -108,9 +110,13 @@ export default function ProductDetailsModal({
           <X size={22} />
         </button>
 
-        <div className="h-full overflow-y-auto">
-          <ProductDetails slug={slug} />
-        </div>
+        <div className="relative h-full overflow-y-auto pb-24">
+  <ProductDetails slug={slug} />
+
+  <div className="lg:hidden">
+    <MobileBottomNav />
+  </div>
+</div>
 
       </div>
     </div>
