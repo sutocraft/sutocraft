@@ -104,7 +104,7 @@ rotate(-10deg)
     "drop-shadow(0 22px 40px rgba(0,0,0,.35))",
 
   transition:
-    "all .28s ease-out",
+  "all .55s cubic-bezier(.18,.88,.22,1)",
 
 });
 
@@ -136,11 +136,11 @@ rotate(16deg)
       "drop-shadow(0 30px 60px rgba(0,0,0,.22))",
 
     transition:
-      "all .42s cubic-bezier(.18,.88,.22,1)",
+  "all .72s cubic-bezier(.18,.88,.22,1)",
 
   });
 
-}, 260);
+}, 480);
 
       });
     });
@@ -210,7 +210,7 @@ rotate(16deg)
 
   endFly();
 
-}, 700);
+}, 1200);
 
     return () =>
       clearTimeout(timer);
