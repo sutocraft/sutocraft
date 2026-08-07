@@ -105,11 +105,15 @@ export default function Header() {
       "open-cart-after-login"
     );
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
 
-      openCart();
+  setTimeout(() => {
 
-    }, 300);
+    openCart();
+
+  }, 150);
+
+});
 
   }
 
