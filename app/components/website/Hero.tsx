@@ -225,7 +225,7 @@ export default function Hero({
             >
 
               <span
-                className="mb-2 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
+                className="mb-5 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
                 style={{
                   background: `${themeColor}15`,
                   color: themeColor,
@@ -258,7 +258,7 @@ export default function Hero({
               <p
   className="
     mx-auto
-    mt-2
+    mt-5
     max-w-full
     text-base
     leading-8
@@ -279,7 +279,7 @@ export default function Hero({
 
               <div
   className="
-    mt-2
+    mt-8
     flex
     flex-col
     gap-4
@@ -292,11 +292,11 @@ export default function Hero({
   "
 >
 
-               <Link
+                <Link
   href={`/product/${product.slug}`}
   className="
     inline-flex
-    h-12
+    h-14
     w-full
     items-center
     justify-center
@@ -308,15 +308,14 @@ export default function Hero({
     shadow-xl
     transition-all
     duration-300
-    hover:scale-[1.02]
+    hover:scale-[1.03]
 
     sm:w-auto
-    lg:w-auto
   "
-   style={{
-                    background: themeColor,
-                  }}
-                >
+  style={{
+    background: themeColor,
+  }}
+>
                   Shop Now
 
                   <ArrowRight
@@ -328,7 +327,7 @@ export default function Hero({
                 <button
   className="
     inline-flex
-    h-12
+    h-14
     w-full
     items-center
     justify-center
@@ -343,13 +342,12 @@ export default function Hero({
     hover:shadow-lg
 
     sm:w-auto
-    lg:w-auto
   "
-                  style={{
-                    borderColor: themeColor,
-                    color: themeColor,
-                  }}
-                >
+  style={{
+    borderColor: themeColor,
+    color: themeColor,
+  }}
+>
 
                   <Play
                     size={18}
@@ -363,16 +361,12 @@ export default function Hero({
 
                             <div
   className="
-    mt-6
+    mt-8
     flex
-    flex-col
-    items-center
-    gap-4
+    justify-center
 
     lg:mt-12
-    lg:flex-row
-    lg:items-center
-    lg:gap-8
+    lg:justify-start
   "
 >
 
@@ -387,20 +381,15 @@ export default function Hero({
                     Starting From
                   </p>
 
-                  <div
-  className="
-    mt-2
-    flex
-    items-end
-    justify-center
-    gap-3
-
-    lg:justify-start
-  "
->
+                  <div className="mt-2 flex items-end gap-3">
 
                     <span
-                      className="text-5xl font-black"
+  className="
+    text-4xl
+    font-black
+
+    lg:text-5xl
+  "
                       style={{
                         color: themeColor,
                       }}
@@ -412,7 +401,17 @@ export default function Hero({
 
                     {product.sale_price && (
 
-                      <span className="pb-2 text-xl text-gray-400 line-through">
+                      <span
+  className="
+    pb-1
+    text-lg
+    text-gray-400
+    line-through
+
+    lg:pb-2
+    lg:text-xl
+  "
+>
 
                         ৳
                         {product.price}
@@ -541,7 +540,7 @@ export default function Hero({
 
           {products.length > 1 && (
 
-            <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-3">
+            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3">
 
               {products.map((_, index) => (
 
