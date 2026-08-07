@@ -1,147 +1,467 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
-import Container from "./Container";
-import type { WebsiteProduct } from "@/lib/products";
 
-type Props = {
-  products: WebsiteProduct[];
-  settings: any;
+import {
+  ArrowRight,
+  Play,
+} from "lucide-react";
+
+import { motion, AnimatePresence } from "framer-motion";
+
+import Container from "./Container";
+
+import {
+  getWebsiteSettings,
+} from "@/lib/settings";
+
+import {
+  getHeroProducts,
+} from "@/lib/products";
+
+import {
+  useTheme,
+} from "./settings.theme_color";
+
+type HeroProduct = {
+  id: string;
+  name: string;
+  slug: string;
+
+  image_url: string | null;
+
+  short_description: string | null;
+
+  price: number;
+
+  sale_price: number | null;
+
+  badge: string | null;
+
+  hero_order: number | null;
 };
 
-export default function Hero({
-  products,
-  settings,
-}: Props) {
-  const [current, setCurrent] = useState(0);
+export default function Hero() {
+
+  const {
+    themeColor,
+  } = useTheme();
+
+  const [products, setProducts] =
+    useState<HeroProduct[]>([]);
+
+  const [current, setCurrent] =
+    useState(0);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
-  if (
-    products.length <= 1 ||
-    !settings?.hero_auto_slide
-  ) {
-    return;
+
+    loadHero();
+
+  }, []);
+
+  async function loadHero() {
+
+    setLoading(true);
+
+    const data =
+      await getHeroProducts();
+
+    setProducts(data ?? []);
+
+    setLoading(false);
+
   }
 
-  const interval = setInterval(() => {
-    setCurrent((prev) =>
-      (prev + 1) % products.length
-    );
-  }, (settings?.hero_slide_interval || 5) * 1000);
+  useEffect(() => {
 
-  return () => clearInterval(interval);
-}, [
-  products.length,
-  settings?.hero_auto_slide,
-  settings?.hero_slide_interval,
-]);
+    if (products.length <= 1)
+      return;
 
-  if (!products.length) {
-    return null;
-  }
+    const timer =
+      setInterval(() => {
 
-  const product = products[current];
+        setCurrent((prev) =>
+          prev + 1 >= products.length
+            ? 0
+            : prev + 1
+        );
 
-  console.log(
-  "Current Index:",
-  current,
-  "Total:",
-  products.length,
-  "Product:",
-  product?.name
-);
+      }, 4500);
 
-  return (
-    <section className="bg-[#F8F5EE] overflow-hidden">
-      <Container>
+    return () =>
+      clearInterval(timer);
 
-        <div className="grid items-center gap-8 py-8 sm:gap-10 sm:py-12 lg:min-h-[680px] lg:grid-cols-2 lg:gap-20 lg:py-16">
+  }, [products]);
 
-          {/* Left Side */}
+  const product =
+    useMemo(() => {
 
-          <div className="order-2 text-center lg:order-1 lg:text-left">
+      return (
+        products[current] ??
+        null
+      );
 
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.35em] text-[#98691D] sm:mb-3">
-              {settings?.hero_subtitle || "NEW COLLECTION"}
-            </p>
+    }, [
+      current,
+      products,
+    ]);
 
-            
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-gray-600 sm:text-base lg:mx-0">
-              {settings?.hero_description ||
- product.short_description ||
- "Premium quality crafted for everyday comfort."}
-            </p>
+  if (loading) {
 
-            <h1 className="text-5xl font-extrabold leading-tight text-[#1F2937] sm:text-6xl xl:text-7xl">
-  {settings?.hero_title || "Wear Your Style"}
-</h1>
+    return (
 
-            <div className="mt-6 flex flex-row justify-center gap-3 lg:justify-start">
+      <section className="bg-[#F8F5EE]">
 
-              <Link
-                href={`/product/${product.slug}`}
-                className="rounded-xl bg-[#98691D] px-5 py-3 font-semibold text-white transition hover:bg-[#B48630]"
-              >
-                {settings?.hero_button_1_text || "Shop Now"}
-              </Link>
+        <Container>
 
-              <Link
-                href="/products"
-                className="rounded-xl border border-[#98691D] px-5 py-3 font-semibold text-[#98691D] transition hover:bg-[#98691D] hover:text-white"
-              >
-                {settings?.hero_button_2_text || "Explore Collection"}
-              </Link>
+          <div className="grid min-h-[720px] animate-pulse items-center gap-16 lg:grid-cols-2">
+
+            <div>
+
+              <div className="mb-6 h-4 w-40 rounded-full bg-gray-200" />
+
+              <div className="mb-5 h-16 w-full rounded-xl bg-gray-200" />
+
+              <div className="mb-3 h-5 w-[85%] rounded bg-gray-200" />
+
+              <div className="mb-10 h-5 w-[70%] rounded bg-gray-200" />
+
+              <div className="flex gap-4">
+
+                <div className="h-14 w-40 rounded-2xl bg-gray-200" />
+
+                <div className="h-14 w-44 rounded-2xl bg-gray-200" />
+
+              </div>
 
             </div>
+
+            <div className="mx-auto aspect-square w-full max-w-[560px] rounded-[40px] bg-gray-200" />
+
           </div>
 
+        </Container>
 
-         {/* Right Side */}
+      </section>
 
-<div className="order-1 flex justify-center px-2 sm:px-4 lg:order-2 lg:justify-end lg:px-0">
-  <Link
-    href={`/product/${product.slug}`}
-    className="group relative block h-[360px] w-[95%] max-w-[380px] overflow-hidden rounded-[34px] bg-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:h-[430px] sm:max-w-[460px] lg:h-[560px] lg:w-full lg:max-w-[560px]"
-  >
-    <Image
-  key={product.id}
-  src={product.image_url || "/images/hero/hero.webp"}
-  alt={product.name}
-  fill
-  unoptimized
-      style={{
-  transitionDuration: `${settings?.hero_transition_speed || 600}ms`,
-}}
-className="object-contain p-4 transition-transform duration-500 group-hover:scale-110 sm:p-6 lg:p-8"
-    />
-  </Link>
-</div>
+    );
 
-{/* Slider Dots */}
+  }
 
-<div className="order-0 col-span-full -mb-2 flex justify-center gap-3 lg:order-none lg:mb-0 lg:mt-8">
+  if (!product)
+    return null;
 
-  {products.map((_, index) => (
+    return (
 
-    <button
-      key={index}
-      onClick={() => setCurrent(index)}
-      className={`h-3 w-3 rounded-full transition ${
-        current === index
-          ? "bg-[#98691D] w-8"
-          : "bg-gray-300"
-      }`}
-    />
+    <section className="relative overflow-hidden bg-[#F8F5EE]">
 
-  ))}
+      {/* Background */}
 
-</div>
+      <div className="absolute inset-0">
 
+        <div
+          className="absolute -left-32 top-20 h-72 w-72 rounded-full blur-[120px]"
+          style={{
+            background: `${themeColor}18`,
+          }}
+        />
+
+        <div
+          className="absolute -right-24 bottom-16 h-80 w-80 rounded-full blur-[130px]"
+          style={{
+            background: `${themeColor}14`,
+          }}
+        />
+
+      </div>
+
+      <Container>
+
+        <div className="relative grid min-h-[760px] items-center gap-14 py-10 lg:grid-cols-[1fr_560px]">
+
+          {/* =======================
+              Left
+          ======================= */}
+
+          <AnimatePresence
+            mode="wait"
+          >
+
+            <motion.div
+              key={product.id}
+              initial={{
+                opacity: 0,
+                x: -40,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              exit={{
+                opacity: 0,
+                x: -40,
+              }}
+              transition={{
+                duration: .45,
+              }}
+            >
+
+              <span
+                className="mb-5 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
+                style={{
+                  background: `${themeColor}15`,
+                  color: themeColor,
+                }}
+              >
+                {product.badge ??
+                  "New Collection 2026"}
+              </span>
+
+              <h1 className="max-w-[650px] text-5xl font-black leading-tight text-[#1E293B] lg:text-7xl">
+
+                {product.name}
+
+              </h1>
+
+              <p className="mt-7 max-w-[620px] text-lg leading-9 text-[#5B6473]">
+
+                {product.short_description ??
+                  "Premium quality clothing crafted with comfort, durability and timeless design."}
+
+              </p>
+
+              <div className="mt-10 flex flex-wrap gap-5">
+
+                <Link
+                  href={`/product/${product.slug}`}
+                  className="inline-flex h-14 items-center gap-3 rounded-2xl px-8 font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.04]"
+                  style={{
+                    background: themeColor,
+                  }}
+                >
+                  Shop Now
+
+                  <ArrowRight
+                    size={18}
+                  />
+
+                </Link>
+
+                <button
+                  className="inline-flex h-14 items-center gap-3 rounded-2xl border bg-white px-8 font-bold transition-all duration-300 hover:shadow-lg"
+                  style={{
+                    borderColor: themeColor,
+                    color: themeColor,
+                  }}
+                >
+
+                  <Play
+                    size={18}
+                  />
+
+                  Explore Collection
+
+                </button>
+
+              </div>
+
+                            <div className="mt-12 flex items-center gap-8">
+
+                <div>
+
+                  <p
+                    className="text-sm uppercase tracking-[.3em]"
+                    style={{
+                      color: themeColor,
+                    }}
+                  >
+                    Starting From
+                  </p>
+
+                  <div className="mt-2 flex items-end gap-3">
+
+                    <span
+                      className="text-5xl font-black"
+                      style={{
+                        color: themeColor,
+                      }}
+                    >
+                      ৳
+                      {product.sale_price ??
+                        product.price}
+                    </span>
+
+                    {product.sale_price && (
+
+                      <span className="pb-2 text-xl text-gray-400 line-through">
+
+                        ৳
+                        {product.price}
+
+                      </span>
+
+                    )}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </motion.div>
+
+          </AnimatePresence>
+
+          {/* =======================
+              Right
+          ======================= */}
+
+          <AnimatePresence
+            mode="wait"
+          >
+
+            <motion.div
+              key={product.image_url}
+              initial={{
+                opacity: 0,
+                scale: .92,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                scale: .92,
+              }}
+              transition={{
+                duration: .45,
+              }}
+              className="relative mx-auto w-full max-w-[560px]"
+            >
+
+              <div className="rounded-[42px] bg-white p-7 shadow-[0_25px_80px_rgba(0,0,0,.10)]">
+
+                <div className="relative aspect-square overflow-hidden rounded-[30px]">
+
+                  <Image
+                    src={
+                      product.image_url ??
+                      "/images/hero.webp"
+                    }
+                    alt={product.name}
+                    fill
+                    priority
+                    sizes="(max-width:768px) 100vw, 560px"
+                    className="object-contain transition-transform duration-500 hover:scale-105"
+                  />
+
+                </div>
+
+              </div>
+
+                            {/* Floating Badge */}
+
+              <div
+                className="absolute -left-8 top-10 hidden rounded-2xl bg-white px-5 py-4 shadow-xl lg:block"
+              >
+                <p
+                  className="text-xs font-bold uppercase tracking-[.25em]"
+                  style={{
+                    color: themeColor,
+                  }}
+                >
+                  Best Seller
+                </p>
+
+                <p className="mt-1 text-2xl font-black text-[#1E293B]">
+                  Premium
+                </p>
+              </div>
+
+              {/* Rating Card */}
+
+              <div className="absolute -bottom-6 right-8 hidden rounded-2xl bg-white px-6 py-4 shadow-2xl lg:block">
+
+                <div className="flex items-center gap-3">
+
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-full text-white"
+                    style={{
+                      background: themeColor,
+                    }}
+                  >
+                    ★
+                  </div>
+
+                  <div>
+
+                    <p className="text-lg font-bold text-[#1E293B]">
+
+                      4.9 / 5
+
+                    </p>
+
+                    <p className="text-sm text-[#64748B]">
+
+                      Customer Rating
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </motion.div>
+
+          </AnimatePresence>
+
+          {/* Slider Dots */}
+
+          {products.length > 1 && (
+
+            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3">
+
+              {products.map((_, index) => (
+
+                <button
+                  key={index}
+                  onClick={() =>
+                    setCurrent(index)
+                  }
+                  className={`h-3 rounded-full transition-all duration-300 ${
+                    current === index
+                      ? "w-10"
+                      : "w-3"
+                  }`}
+                  style={{
+                    background:
+                      current === index
+                        ? themeColor
+                        : "#D4D4D8",
+                  }}
+                />
+
+              ))}
+
+            </div>
+
+          )}
 
         </div>
+
       </Container>
+
     </section>
+
   );
+
 }
