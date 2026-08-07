@@ -18,6 +18,9 @@ discount_percentage: number;
 description: string | null;
 specification: string | null;
 
+badge: string | null;
+hero_order: number | null;
+
 sku: string | null;
 
 brand_id: string | null;
@@ -175,15 +178,24 @@ export async function getProductGallery(productId: string) {
 }
 
   
-export async function getHeroProducts(limit = 5): Promise<WebsiteProduct[]> {
+export async function getHeroProducts(
+  limit = 5
+): Promise<WebsiteProduct[]> {
+
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+      *,
+      brand:brands(name),
+      category:categories(name),
+      sub_category:sub_categories(name)
+    `)
     .eq("active", true)
     .eq("show_hero", true)
     .order("hero_order", {
       ascending: true,
-    });
+    })
+    .limit(limit);
 
   if (error) {
     console.error(error);
@@ -191,4 +203,5 @@ export async function getHeroProducts(limit = 5): Promise<WebsiteProduct[]> {
   }
 
   return (data ?? []) as WebsiteProduct[];
+
 }
