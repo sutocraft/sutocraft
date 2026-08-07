@@ -238,30 +238,53 @@ export default function Hero({
   className="
     mx-auto
     max-w-full
-    text-4xl
+
     font-black
-    leading-tight
     text-[#1E293B]
+
+    text-[38px]
+    leading-[1.08]
 
     sm:text-5xl
 
     lg:mx-0
     lg:max-w-[650px]
     lg:text-7xl
+
+    min-h-[92px]
+    sm:min-h-[110px]
+    lg:min-h-[170px]
+
+    flex
+    items-center
+    justify-center
+
+    lg:justify-start
+
+    text-balance
+    break-words
   "
+  style={{
+    fontSize:
+      product.name.length > 40
+        ? "2.2rem"
+        : product.name.length > 28
+        ? "2.55rem"
+        : undefined,
+  }}
 >
-
-                {product.name}
-
-              </h1>
+  {product.name}
+</h1>
 
               <p
   className="
     mx-auto
-    mt-5
+    mt-4
+
     max-w-full
+
     text-base
-    leading-8
+    leading-7
     text-[#5B6473]
 
     lg:mx-0
@@ -269,13 +292,21 @@ export default function Hero({
     lg:max-w-[620px]
     lg:text-lg
     lg:leading-9
+
+    min-h-[56px]
+    sm:min-h-[60px]
+    lg:min-h-[72px]
+
+    flex
+    items-center
+    justify-center
+
+    lg:justify-start
   "
 >
-
-                {product.short_description ??
-                  "Premium quality clothing crafted with comfort, durability and timeless design."}
-
-              </p>
+  {product.short_description ??
+    "Premium quality clothing crafted with comfort, durability and timeless design."}
+</p>
 
               <div
   className="
