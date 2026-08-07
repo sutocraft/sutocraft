@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FileText,
-  ListChecks,
-  MessageSquare,
-} from "lucide-react";
+import { FileText, ClipboardList, Star } from "lucide-react";
+import { useTheme } from "./settings.theme_color";
 
 type Props = {
   description?: string | null;
-specification?: string | null;
-
+  specification?: string | null;
   reviews?: {
     id: string;
     name: string;
@@ -20,66 +16,91 @@ specification?: string | null;
   }[];
 };
 
-const tabs = [
-  {
-    id: "description",
-    label: "Description",
-    icon: FileText,
-  },
-  {
-    id: "specification",
-    label: "Specification",
-    icon: ListChecks,
-  },
-  {
-    id: "reviews",
-    label: "Reviews",
-    icon: MessageSquare,
-  },
-] as const;
-
 export default function ProductTabs({
   description,
   specification,
   reviews = [],
 }: Props) {
+  const [tab, setTab] = useState<
+    "description" | "specification" | "reviews"
+  >("description");
 
-  const [activeTab, setActiveTab] =
-    useState<
-      "description" |
-      "specification" |
-      "reviews"
-    >("description");
+  const { themeColor } = useTheme();
+
+    const tabs = [
+    {
+      id: "description",
+      label: "Description",
+      icon: FileText,
+    },
+    {
+      id: "specification",
+      label: "Specification",
+      icon: ClipboardList,
+    },
+    {
+      id: "reviews",
+      label: "Reviews",
+      icon: Star,
+    },
+  ] as const;
 
   return (
-
     <div className="mt-12">
 
-      {/* Tabs */}
+      <div
+        className="
+          flex
+          flex-wrap
+          gap-3
 
-      <div className="flex flex-wrap gap-3 rounded-2xl bg-[#F8F5EE] p-2">
+          rounded-2xl
+          bg-white
+          p-2
+          shadow-sm
+        "
+      >
 
-        {tabs.map((tab) => {
+        {tabs.map((item) => {
 
-          const Icon = tab.icon;
+          const Icon = item.icon;
+          const active = tab === item.id;
 
           return (
 
             <button
-              key={tab.id}
-              onClick={() =>
-                setActiveTab(tab.id)
-              }
-              className={`flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-300 ${
-                activeTab === tab.id
-                  ? "bg-[#98691D] text-white shadow-lg"
-                  : "text-[#2B2B2B] hover:bg-white"
-              }`}
+              key={item.id}
+              onClick={() => setTab(item.id)}
+              className="
+                flex
+                items-center
+                gap-2
+
+                rounded-xl
+
+                px-5
+                py-3
+
+                text-sm
+                font-semibold
+
+                transition-all
+                duration-300
+              "
+              style={{
+                background: active
+                  ? themeColor
+                  : "transparent",
+
+                color: active
+                  ? "#FFFFFF"
+                  : themeColor,
+              }}
             >
 
-              <Icon size={18} />
+              <Icon size={17} />
 
-              {tab.label}
+              {item.label}
 
             </button>
 
@@ -89,13 +110,43 @@ export default function ProductTabs({
 
       </div>
 
-      {/* Content */}
+            <div
+        className="
+          mt-6
 
-      <div className="mt-6 rounded-3xl border border-[#E8E1CE] bg-white p-6">
+          rounded-3xl
 
-        {activeTab === "description" && (
+          border
 
-          <div className="prose prose-sm max-w-none text-gray-700">
+          bg-white
+
+          p-6
+
+          shadow-sm
+
+          sm:p-8
+        "
+        style={{
+          borderColor: `${themeColor}25`,
+        }}
+      >
+
+        {tab === "description" && (
+
+          <div
+            className="
+              prose
+
+              max-w-none
+
+              leading-8
+
+              text-gray-700
+            "
+          style={{
+                  color: themeColor,
+                }}
+              >
 
             {description ? (
 
@@ -107,7 +158,11 @@ export default function ProductTabs({
 
             ) : (
 
-              <p>
+              <p
+                style={{
+                  color: themeColor,
+                }}
+              >
                 No description available.
               </p>
 
@@ -117,14 +172,26 @@ export default function ProductTabs({
 
         )}
 
-                {activeTab === "specification" && (
+        {tab === "specification" && (
 
-          <div className="space-y-4">
+          <div
+            className="
+              prose
+
+              max-w-none
+
+              leading-8
+
+              text-gray-700
+            "
+          style={{
+                  color: themeColor,
+                }}
+              >
 
             {specification ? (
 
               <div
-                className="prose prose-sm max-w-none text-gray-700"
                 dangerouslySetInnerHTML={{
                   __html: specification,
                 }}
@@ -132,11 +199,13 @@ export default function ProductTabs({
 
             ) : (
 
-              <div className="rounded-2xl bg-[#F8F5EE] p-6 text-center text-gray-500">
-
+              <p
+                style={{
+                  color: themeColor,
+                }}
+              >
                 No specification available.
-
-              </div>
+              </p>
 
             )}
 
@@ -144,7 +213,7 @@ export default function ProductTabs({
 
         )}
 
-        {activeTab === "reviews" && (
+                {tab === "reviews" && (
 
           <div className="space-y-5">
 
@@ -154,36 +223,107 @@ export default function ProductTabs({
 
                 <div
                   key={review.id}
-                  className="rounded-2xl border border-[#E8E1CE] p-5"
+                  className="
+                    rounded-2xl
+
+                    border
+
+                    bg-white
+
+                    p-5
+
+                    transition-all
+                    duration-300
+                  "
+                  style={{
+                    borderColor:
+                      `${themeColor}25`,
+                  }}
                 >
 
-                  <div className="flex items-center justify-between">
+                  <div
+                    className="
+                      flex
 
-                    <h4 className="font-semibold text-[#2B2B2B]">
-                      {review.name}
-                    </h4>
+                      flex-wrap
 
-                    <span className="text-sm text-gray-500">
+                      items-center
+
+                      justify-between
+
+                      gap-3
+                    "
+                  >
+
+                    <div>
+
+                      <h4
+                        className="
+                          text-base
+
+                          font-bold
+                        "
+                        style={{
+                          color:
+                            themeColor,
+                        }}
+                      >
+                        {review.name}
+                      </h4>
+
+                      <div
+                        className="
+                          mt-2
+
+                          flex
+
+                          items-center
+
+                          gap-1
+
+                          text-yellow-500
+                        "
+                      >
+                        {Array.from({
+                          length:
+                            review.rating,
+                        }).map(
+                          (_, i) => (
+                            <span
+                              key={i}
+                            >
+                              ★
+                            </span>
+                          )
+                        )}
+                      </div>
+
+                    </div>
+
+                    <span
+                      className="
+                        text-sm
+
+                        text-gray-500
+                      "
+                    style={{
+                  color: themeColor,
+                }}
+              >
                       {review.created_at}
                     </span>
 
                   </div>
 
-                  <div className="mt-2 flex items-center gap-1 text-yellow-500">
+                  <p
+                    className="
+                      mt-4
 
-                    {Array.from({
-                      length: review.rating,
-                    }).map((_, index) => (
+                      leading-7
 
-                      <span key={index}>
-                        ★
-                      </span>
-
-                    ))}
-
-                  </div>
-
-                  <p className="mt-4 leading-7 text-gray-600">
+                      text-gray-600
+                    "
+                  >
                     {review.comment}
                   </p>
 
@@ -193,18 +333,53 @@ export default function ProductTabs({
 
             ) : (
 
-              <div className="rounded-2xl bg-[#F8F5EE] py-14 text-center">
+              <div
+                className="
+                  rounded-3xl
 
-                <div className="text-5xl">
+                  border
+
+                  bg-white
+
+                  py-16
+
+                  text-center
+                "
+                style={{
+                  borderColor:
+                    `${themeColor}20`,
+                }}
+              >
+
+                <div className="text-6xl">
                   ⭐
                 </div>
 
-                <h3 className="mt-4 text-lg font-bold text-[#2B2B2B]">
+                <h3
+                  className="
+                    mt-5
+
+                    text-xl
+
+                    font-bold
+                  "
+                  style={{
+                    color:
+                      themeColor,
+                  }}
+                >
                   No Reviews Yet
                 </h3>
 
-                <p className="mt-2 text-gray-500">
-                  Be the first customer to review this product.
+                <p
+                  className="
+                    mt-3
+
+                    text-gray-500
+                  "
+                >
+                  Be the first customer
+                  to review this product.
                 </p>
 
               </div>
@@ -214,11 +389,12 @@ export default function ProductTabs({
           </div>
 
         )}
-        
-              </div>
+
+      </div>
 
     </div>
 
   );
+
 }
 
