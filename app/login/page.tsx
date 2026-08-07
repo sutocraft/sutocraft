@@ -55,13 +55,14 @@ const redirect =
 
   case "cart":
 
-    window.dispatchEvent(
-      new Event("open-cart")
-    );
+  localStorage.setItem(
+    "open-cart-after-login",
+    "true"
+  );
 
-    router.push("/");
+  router.push("/");
 
-    break;
+  break;
 
   case "checkout":
 
