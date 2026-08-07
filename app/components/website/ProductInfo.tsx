@@ -741,15 +741,16 @@ export default function ProductInfo({
         <h3
   className="
     mb-4
-    text-[13px]
+    text-[15px]
     font-bold
     uppercase
     tracking-[0.15em]
   "
   style={{
-    color: themeColor,
-  }}
->
+                  color:
+                    "#2B2B2B",
+                }}
+              >
   Quantity
 </h3>
 
@@ -877,19 +878,30 @@ export default function ProductInfo({
           >
 
             <span
-              className="text-sm"
-style={{
-  color: themeColor,
-}}
-            >
-              Available
+               className="
+
+            items-center
+            justify-center
+
+            rounded-2xl
+
+            text-[13px]
+
+            font-bold
+  "
+  style={{
+                  color:
+                    "#2B2B2B",
+                }}
+              >
+              Available :
             </span>
 
             <span
               className="
                 ml-2
 
-                text-base
+                text-[18px]
 
                 font-bold
               "
