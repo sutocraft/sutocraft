@@ -25,14 +25,21 @@ import {
 
 
 
-export default function Hero() {
+type HeroProps = {
+  products?: WebsiteProduct[];
+  settings?: unknown;
+};
+
+export default function Hero({
+  products: initialProducts = [],
+}: HeroProps) {
 
   const {
     themeColor,
   } = useTheme();
 
   const [products, setProducts] =
-useState<WebsiteProduct[]>([]);
+  useState<WebsiteProduct[]>(initialProducts);
 
   const [current, setCurrent] =
     useState(0);
@@ -42,9 +49,14 @@ useState<WebsiteProduct[]>([]);
 
   useEffect(() => {
 
-    loadHero();
+  if (initialProducts.length > 0) {
+    setLoading(false);
+    return;
+  }
 
-  }, []);
+  loadHero();
+
+}, [initialProducts]);
 
   async function loadHero() {
 
