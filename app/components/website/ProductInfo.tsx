@@ -223,6 +223,14 @@ export default function ProductInfo({
           {product.sku && (
 
             <span
+                className="
+                  ml-1
+
+                  font-semibold
+                  text-[15px]
+                "
+
+            
               style={{
     color: themeColor,
   }}
@@ -234,6 +242,7 @@ export default function ProductInfo({
                   ml-1
 
                   font-semibold
+                  text-[15px]
                 "
                 style={{
                   color:
@@ -358,11 +367,16 @@ export default function ProductInfo({
             className="
               leading-7
 
+              font-extrabold
+
+              text-lg
+
               text-gray-600
             "
             style={{
-              color: themeColor,
-            }}
+                  color:
+                    "#2B2B2B",
+                }}
           >
             {product.short_description}
           </p>
@@ -520,15 +534,18 @@ export default function ProductInfo({
           <h3
   className="
     mb-3
-    text-[13px]
+    text-[15px]
     font-bold
     uppercase
     tracking-[0.15em]
-  "
-  style={{
-    color: themeColor,
-  }}
->
+  
+                "
+                style={{
+                  color:
+                    "#2B2B2B",
+                }}
+              >
+
   Select Size
 </h3>
 
@@ -603,15 +620,18 @@ export default function ProductInfo({
           <h3
   className="
     mb-4
-    text-[13px]
+    text-[15px]
     font-bold
     uppercase
     tracking-[0.15em]
-  "
-  style={{
-    color: themeColor,
-  }}
->
+  
+                "
+                style={{
+                  color:
+                    "#2B2B2B",
+                }}
+              >
+
   Select Color
 </h3>
 
@@ -791,34 +811,30 @@ export default function ProductInfo({
             </button>
 
             <div
-              className="
-                flex
+  className="
+    flex
 
-                h-12
-                min-w-[68px]
+    h-12
+    min-w-[68px]
 
-                items-center
-                justify-center
+    items-center
+    justify-center
 
-                border-x
+    border-x
 
-                bg-gray-50
+    bg-gray-50
 
-                text-[25px]
+    text-[25px]
 
-                font-bold
-              "
-              style={{
-                borderColor:
-                  `${themeColor}30`,
-              }}
-
-            style={{
-                color: themeColor,
-              }}
-            >
-              {quantity}
-            </div>
+    font-bold
+  "
+  style={{
+    borderColor: `${themeColor}30`,
+    color: themeColor,
+  }}
+>
+  {quantity}
+</div>
 
             <button
               onClick={onIncrease}
