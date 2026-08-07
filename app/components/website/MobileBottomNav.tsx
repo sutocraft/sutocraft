@@ -98,10 +98,14 @@ const menus = [
   return (
     <div
   className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
-    showNav && !isOpen
-      ? "translate-y-0"
-      : "translate-y-full"
-  }`}
+  showNav &&
+  !isOpen &&
+  !document.body.classList.contains(
+    "product-modal-open"
+  )
+    ? "translate-y-0"
+    : "translate-y-full"
+}`}
 >
       <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
 
