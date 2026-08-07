@@ -87,6 +87,38 @@ export default function Header() {
 
   useEffect(() => {
 
+  async function autoOpenCart() {
+
+    const pending =
+      localStorage.getItem(
+        "open-cart-after-login"
+      );
+
+    if (!pending) return;
+
+    const user =
+      await getCurrentUser();
+
+    if (!user) return;
+
+    localStorage.removeItem(
+      "open-cart-after-login"
+    );
+
+    setTimeout(() => {
+
+      openCart();
+
+    }, 300);
+
+  }
+
+  autoOpenCart();
+
+}, []);
+
+  useEffect(() => {
+
     function handleScroll() {
 
       const current =
