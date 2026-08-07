@@ -110,43 +110,76 @@ rotate(-14deg)
     });
 
     const timer = setTimeout(() => {
-      const cartButton =
-        document.getElementById(
-          "header-cart"
-        );
 
-      if (cartButton) {
-        cartButton.animate(
-          [
-            {
-              transform:
-                "scale(1)",
-            },
-            {
-              transform:
-                "scale(1.18)",
-            },
-            {
-              transform:
-                "scale(.92)",
-            },
-            {
-              transform:
-                "scale(1.08)",
-            },
-            {
-              transform:
-                "scale(1)",
-            },
-          ],
-          {
-            duration: 550,
-          }
-        );
+  const cartButton =
+    document.getElementById(
+      window.innerWidth < 1024
+        ? (
+            document.getElementById(
+              "bottom-cart"
+            )
+              ? "bottom-cart"
+              : "header-cart-mobile"
+          )
+        : "header-cart"
+    );
+
+  if (cartButton) {
+
+    cartButton.animate(
+      [
+
+        {
+          transform:
+            "scale(1)",
+        },
+
+        {
+          transform:
+            "scale(1.22)",
+        },
+
+        {
+          transform:
+            "scale(.88)",
+        },
+
+        {
+          transform:
+            "scale(1.12)",
+        },
+
+        {
+          transform:
+            "scale(.97)",
+        },
+
+        {
+          transform:
+            "scale(1)",
+        },
+
+      ],
+      {
+        duration: 650,
+        easing:
+          "cubic-bezier(.22,.82,.22,1)",
       }
+    );
 
-      endFly();
-    }, 650);
+  }
+
+  if (
+    typeof navigator !==
+      "undefined" &&
+    "vibrate" in navigator
+  ) {
+    navigator.vibrate(20);
+  }
+
+  endFly();
+
+}, 620);
 
     return () =>
       clearTimeout(timer);
