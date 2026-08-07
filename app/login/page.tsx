@@ -1,7 +1,10 @@
 "use client";
 
 import { loginCustomer } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
@@ -9,6 +12,12 @@ import { Eye, EyeOff } from "lucide-react";
 export default function LoginPage() {
 
   const router = useRouter();
+
+const searchParams =
+  useSearchParams();
+
+const redirect =
+  searchParams.get("redirect");
 
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +51,41 @@ export default function LoginPage() {
     console.log("Before router.push");
     alert("Before router.push");
 
+    switch (redirect) {
+
+  case "cart":
+
+    window.dispatchEvent(
+      new Event("open-cart")
+    );
+
+    router.push("/");
+
+    break;
+
+  case "checkout":
+
+    router.push("/checkout");
+
+    break;
+
+  case "account":
+
     router.push("/account");
+
+    break;
+
+  case "wishlist":
+
+    router.push("/wishlist");
+
+    break;
+
+  default:
+
+    router.push("/account");
+
+}
 
     console.log("After router.push");
     alert("After router.push");
