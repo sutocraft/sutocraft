@@ -225,7 +225,7 @@ export default function Hero({
             >
 
               <span
-                className="mb-5 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
+                className="mb-2 inline-flex rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[.35em]"
                 style={{
                   background: `${themeColor}15`,
                   color: themeColor,
@@ -258,7 +258,7 @@ export default function Hero({
               <p
   className="
     mx-auto
-    mt-5
+    mt-2
     max-w-full
     text-base
     leading-8
@@ -279,7 +279,7 @@ export default function Hero({
 
               <div
   className="
-    mt-8
+    mt-2
     flex
     flex-col
     gap-4
@@ -296,7 +296,7 @@ export default function Hero({
   href={`/product/${product.slug}`}
   className="
     inline-flex
-    h-14
+    h-12
     w-full
     items-center
     justify-center
@@ -328,7 +328,7 @@ export default function Hero({
                 <button
   className="
     inline-flex
-    h-14
+    h-12
     w-full
     items-center
     justify-center
@@ -363,7 +363,7 @@ export default function Hero({
 
                             <div
   className="
-    mt-10
+    mt-6
     flex
     flex-col
     items-center
@@ -541,7 +541,7 @@ export default function Hero({
 
           {products.length > 1 && (
 
-            <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3">
+            <div className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-3">
 
               {products.map((_, index) => (
 
