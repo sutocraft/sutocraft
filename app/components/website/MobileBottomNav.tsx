@@ -7,6 +7,7 @@ import {
 } from "next/navigation";
 
 import { useCart } from "@/lib/cart-context";
+import { getCurrentUser } from "@/lib/auth";
 
 import {
   useEffect,
@@ -35,6 +36,9 @@ export default function MobileBottomNav() {
   openCart,
   cartCount,
 } = useCart();
+
+const [user, setUser] =
+  useState<any>(null);
 
   const [showNav, setShowNav] =
     useState(true);
@@ -89,6 +93,21 @@ export default function MobileBottomNav() {
 
   }, []);
 
+  useEffect(() => {
+
+  async function loadUser() {
+
+    const currentUser =
+      await getCurrentUser();
+
+    setUser(currentUser);
+
+  }
+
+  loadUser();
+
+}, []);
+
   function closeModal() {
 
     if (
@@ -134,26 +153,40 @@ export default function MobileBottomNav() {
 
   }
 
-  function openCartDrawer() {
+  async function openCartDrawer() {
 
-    const closed =
-      closeModal();
+  const currentUser =
+    user ||
+    await getCurrentUser();
 
-    if (closed) {
+  if (!currentUser) {
 
-      setTimeout(() => {
+    navigate(
+      "/login?redirect=cart"
+    );
 
-        openCart();
-
-      }, 180);
-
-      return;
-
-    }
-
-    openCart();
+    return;
 
   }
+
+  const closed =
+    closeModal();
+
+  if (closed) {
+
+    setTimeout(() => {
+
+      openCart();
+
+    }, 180);
+
+    return;
+
+  }
+
+  openCart();
+
+}
 
   const menus = [
 
