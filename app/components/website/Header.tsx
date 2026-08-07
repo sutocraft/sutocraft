@@ -163,6 +163,24 @@ export default function Header() {
 
   }
 
+  async function handleCartClick() {
+
+  const currentUser =
+    await getCurrentUser();
+
+  if (!currentUser) {
+
+    window.location.href =
+      "/login?redirect=cart";
+
+    return;
+
+  }
+
+  openCart();
+
+}
+
   async function handleLogout() {
 
     await logoutCustomer();
@@ -328,7 +346,7 @@ export default function Header() {
 
                         <button
   id="header-cart"
-  onClick={openCart}
+  onClick={handleCartClick}
   className="
     relative
     flex
@@ -436,7 +454,7 @@ export default function Header() {
             <button
   id="header-cart-mobile"
   data-cart-target="true"
-              onClick={openCart}
+              onClick={handleCartClick}
               className="relative flex h-11 w-11 items-center justify-center rounded-xl text-white"
               style={{
                 backgroundColor: themeColor,
