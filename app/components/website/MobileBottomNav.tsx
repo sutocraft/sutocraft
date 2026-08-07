@@ -31,9 +31,10 @@ export default function MobileBottomNav() {
     useRouter();
 
   const {
-    isOpen,
-    openCart,
-  } = useCart();
+  isOpen,
+  openCart,
+  cartCount,
+} = useCart();
 
   const [showNav, setShowNav] =
     useState(true);
@@ -277,14 +278,52 @@ export default function MobileBottomNav() {
 
               )}
 
-              <Icon
-                size={22}
-                style={{
-                  color: active
-                    ? "#98691D"
-                    : "#6B7280",
-                }}
-              />
+              <div className="relative">
+
+  <Icon
+    size={22}
+    style={{
+      color: active
+        ? "#98691D"
+        : "#6B7280",
+    }}
+  />
+
+  {menu.title === "Cart" &&
+    cartCount > 0 && (
+
+      <span
+        className="
+          absolute
+          -right-2
+          -top-2
+
+          flex
+          h-5
+          min-w-[20px]
+
+          items-center
+          justify-center
+
+          rounded-full
+
+          bg-red-600
+
+          px-1
+
+          text-[10px]
+          font-bold
+          text-white
+        "
+      >
+        {cartCount > 99
+          ? "99+"
+          : cartCount}
+      </span>
+
+  )}
+
+</div>
 
               <span
                 className="text-[11px] font-medium"
