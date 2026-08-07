@@ -37,15 +37,51 @@ export default function LoginPage() {
 
     await loginCustomer(emailOrPhone, password);
 
-    alert("Login Success");
+const redirect =
+  localStorage.getItem(
+    "login-redirect"
+  );
 
-    console.log("Before router.push");
-    alert("Before router.push");
+localStorage.removeItem(
+  "login-redirect"
+);
+
+switch (redirect) {
+
+  case "cart":
+
+    localStorage.setItem(
+      "open-cart-after-login",
+      "true"
+    );
+
+    router.push("/");
+
+    break;
+
+  case "checkout":
+
+    router.push("/checkout");
+
+    break;
+
+  case "account":
 
     router.push("/account");
 
-    console.log("After router.push");
-    alert("After router.push");
+    break;
+
+  case "wishlist":
+
+    router.push("/account/wishlist");
+
+    break;
+
+  default:
+
+    router.push("/account");
+
+}
 
   } catch (err) {
     if (err instanceof Error) {
