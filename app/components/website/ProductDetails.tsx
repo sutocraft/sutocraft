@@ -11,6 +11,7 @@ import {
 } from "@/lib/products";
 
 import { addToCart } from "@/lib/cart";
+import { getCurrentUser } from "@/lib/auth";
 
 import ProductDetailsContent from "./ProductDetailsContent";
 
@@ -106,6 +107,19 @@ export default function ProductDetails({
   }
 
   async function handleAddToCart() {
+
+  const user =
+    await getCurrentUser();
+
+  if (!user) {
+
+    window.location.href =
+      "/login?redirect=cart";
+
+    return;
+
+  }
+
   if (!product) return;
 
   if (product.stock <= 0) {
@@ -160,11 +174,26 @@ export default function ProductDetails({
   );
 }
 
-    function handleBuyNow() {
-    handleAddToCart().then(() => {
-      window.location.href = "/checkout";
-    });
+    async function handleBuyNow() {
+
+  const user =
+    await getCurrentUser();
+
+  if (!user) {
+
+    window.location.href =
+      "/login?redirect=checkout";
+
+    return;
+
   }
+
+  await handleAddToCart();
+
+  window.location.href =
+    "/checkout";
+
+}
 
   function handleWishlist() {
     setWishlist((prev) => !prev);
