@@ -113,8 +113,13 @@ export default function ProductDetails({
 
   if (!user) {
 
-    window.location.href =
-      "/login?redirect=cart";
+    localStorage.setItem(
+  "login-redirect",
+  "cart"
+);
+
+window.location.href =
+  "/login";
 
     return;
 
@@ -181,8 +186,13 @@ export default function ProductDetails({
 
   if (!user) {
 
-    window.location.href =
-      "/login?redirect=checkout";
+    localStorage.setItem(
+  "login-redirect",
+  "checkout"
+);
+
+window.location.href =
+  "/login";
 
     return;
 
