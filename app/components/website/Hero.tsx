@@ -706,11 +706,11 @@ lg:gap-14
   className="
     absolute
 
-    bottom-5
+    bottom-14
     left-1/2
     flex
     -translate-x-1/2
-    gap-3
+    gap-4
 
     lg:bottom-8
   "
