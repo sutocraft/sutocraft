@@ -24,27 +24,32 @@ export default function ProductsGrid({
           sm:gap-4
           md:grid-cols-3
           xl:grid-cols-4
-          2xl:grid-cols-5
         "
       >
-        {Array.from({ length: 10 }).map((_, index) => (
-          <ProductsSkeleton key={index} />
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ProductsSkeleton
+            key={index}
+            products={products}
+            loading={loading}
+          />
         ))}
       </div>
     );
   }
 
-  if (!products.length) {
+  if (products.length === 0) {
     return (
       <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-[#E8E1CE] bg-white px-6 text-center">
         <div>
-          <div className="text-5xl">🛍️</div>
+          <div className="text-5xl">
+            🛍️
+          </div>
 
           <h2 className="mt-4 text-xl font-bold text-[#2B2B2B]">
             No Products Found
           </h2>
 
-          <p className="mt-2 text-sm text-[#6B7280]">
+          <p className="mt-2 text-sm text-gray-500">
             We couldn't find any products at the moment.
           </p>
         </div>
@@ -61,7 +66,6 @@ export default function ProductsGrid({
         sm:gap-4
         md:grid-cols-3
         xl:grid-cols-4
-        2xl:grid-cols-5
       "
     >
       {products.map((product) => (
