@@ -6,13 +6,31 @@ import { useTheme } from "@/app/components/website/settings.theme_color";
 import ProductsSort from "./ProductsSort";
 import Container from "@/app/components/website/Container";
 
+type SortOption =
+  | "Newest"
+  | "Price: Low to High"
+  | "Price: High to Low"
+  | "Name: A to Z"
+  | "Name: Z to A";
+
 type Props = {
   total: number;
+  search: string;
+  onSearchChange: (value: string) => void;
+  sort: SortOption;
+  onSortChange: (value: SortOption) => void;
+  onMobileFilter: () => void;
 };
 
 export default function ProductsHeader({
   total,
+  search,
+  onSearchChange,
+  sort,
+  onSortChange,
+  onMobileFilter,
 }: Props) {
+
   const { themeColor } = useTheme();
 
   return (
@@ -98,8 +116,10 @@ export default function ProductsHeader({
             />
 
             <input
-              type="text"
-              placeholder="Search products..."
+  type="text"
+  value={search}
+  onChange={(e) => onSearchChange(e.target.value)}
+  placeholder="Search products..."
               className="
                 h-12
                 w-full
@@ -156,7 +176,8 @@ export default function ProductsHeader({
 
             {/* Mobile Filter */}
             <button
-              type="button"
+  type="button"
+  onClick={onMobileFilter}
               className="
                 flex
                 h-12
@@ -187,7 +208,10 @@ export default function ProductsHeader({
             </button>
 
             {/* Sort */}
-            <ProductsSort />
+            <ProductsSort
+  selected={sort}
+  onChange={onSortChange}
+/>
 
           </div>
         </div>
