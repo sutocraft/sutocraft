@@ -209,15 +209,19 @@ export default function ProductsPage() {
         <Container>
           <div
             className="
-              grid
-              grid-cols-1
-              gap-6
-              py-6
-              sm:gap-8
-              sm:py-8
-              lg:grid-cols-[260px_minmax(0,1fr)]
-              xl:grid-cols-[280px_minmax(0,1fr)]
-            "
+  grid
+  grid-cols-1
+  gap-4
+  py-4
+  sm:gap-6
+  sm:py-6
+  lg:gap-5
+  lg:py-5
+  lg:grid-cols-[240px_minmax(0,1fr)]
+  xl:gap-8
+  xl:py-8
+  xl:grid-cols-[280px_minmax(0,1fr)]
+"
           >
             {/* Desktop Filter */}
             <div className="hidden lg:block">
