@@ -362,139 +362,116 @@ export default function ProductsHeader({
           
 
           {/* MOBILE CONTROLS */}
-          <div
-            className="
-              flex
-              w-full
-              items-center
-              gap-3
-              lg:hidden
-            "
-          >
-            {/* Filters */}
-            <button
-              type="button"
-              onClick={onMobileFilter}
-              className="
-                flex
-                h-11
-                min-w-0
-                flex-1
-                items-center
-                justify-center
-                gap-2
-                rounded-2xl
-                border
-                border-[#E8E1CE]
-                bg-white
-                px-3
-                text-sm
-                font-semibold
-                text-[#98691D]
-                transition
-                hover:bg-[#98691D]/5
-              "
-            >
-              <SlidersHorizontal size={17} />
+<div className="flex w-full items-center gap-3 lg:hidden">
 
-              <span>Filters</span>
-            </button>
+  {/* Filters */}
+  <button
+    type="button"
+    onClick={onMobileFilter}
+    className="
+      flex
+      h-11
+      min-w-0
+      flex-1
+      items-center
+      justify-center
+      gap-2
+      rounded-2xl
+      border
+      border-[#E8E1CE]
+      bg-white
+      px-2
+      text-sm
+      font-semibold
+      text-[#98691D]
+      transition
+      hover:bg-[#98691D]/5
+    "
+  >
+    <SlidersHorizontal size={17} />
+    <span>Filters</span>
+  </button>
 
-{/* MOBILE COUNT */}
-<p
-  className="
-    text-sm
-    text-[#64748B]
-    lg:hidden
-  "
->
-  Showing{" "}
-  <span className="font-semibold text-[#2B2B2B]">
-    {total}
-  </span>{" "}
-  products
-</p>
+  {/* Newest / Sort */}
+  <div className="relative flex-1">
+    <ArrowUpDown
+      size={17}
+      className="
+        pointer-events-none
+        absolute
+        left-3
+        top-1/2
+        -translate-y-1/2
+        text-[#98691D]
+      "
+    />
 
-            {/* Mobile Sort */}
-            <div
-              className="
-                relative
-                w-[150px]
-                shrink-0
-                sm:w-[170px]
-              "
-            >
-              <ArrowUpDown
-                size={17}
-                className="
-                  pointer-events-none
-                  absolute
-                  left-3
-                  top-1/2
-                  -translate-y-1/2
-                  text-[#98691D]
-                "
-              />
+    <select
+      value={sort}
+      onChange={(e) =>
+        onSortChange(e.target.value as SortOption)
+      }
+      className="
+        h-11
+        w-full
+        appearance-none
+        rounded-2xl
+        border
+        border-[#E8E1CE]
+        bg-white
+        pl-9
+        pr-8
+        text-sm
+        font-medium
+        text-[#2B2B2B]
+        outline-none
+        focus:border-[#98691D]
+        focus:ring-2
+        focus:ring-[#98691D]/10
+      "
+    >
+      <option value="Newest">Newest</option>
 
-              <select
-                value={sort}
-                onChange={(e) =>
-                  onSortChange(
-                    e.target.value as SortOption
-                  )
-                }
-                className="
-                  h-11
-                  w-full
-                  appearance-none
-                  rounded-2xl
-                  border
-                  border-[#E8E1CE]
-                  bg-white
-                  pl-9
-                  pr-9
-                  text-sm
-                  font-medium
-                  text-[#2B2B2B]
-                  outline-none
-                  focus:border-[#98691D]
-                  focus:ring-2
-                  focus:ring-[#98691D]/10
-                "
-              >
-                <option value="Newest">
-                  Newest
-                </option>
+      <option value="Price: Low to High">
+        Price: Low to High
+      </option>
 
-                <option value="Price: Low to High">
-                  Price: Low to High
-                </option>
+      <option value="Price: High to Low">
+        Price: High to Low
+      </option>
 
-                <option value="Price: High to Low">
-                  Price: High to Low
-                </option>
+      <option value="Name: A to Z">
+        Name: A to Z
+      </option>
 
-                <option value="Name: A to Z">
-                  Name: A to Z
-                </option>
+      <option value="Name: Z to A">
+        Name: Z to A
+      </option>
+    </select>
 
-                <option value="Name: Z to A">
-                  Name: Z to A
-                </option>
-              </select>
+    <ChevronDown
+      size={16}
+      className="
+        pointer-events-none
+        absolute
+        right-3
+        top-1/2
+        -translate-y-1/2
+        text-[#94A3B8]
+      "
+    />
+  </div>
 
-              <ChevronDown
-                size={16}
-                className="
-                  pointer-events-none
-                  absolute
-                  right-3
-                  top-1/2
-                  -translate-y-1/2
-                  text-[#94A3B8]
-                "
-              />
-            </div>
+  {/* Showing Count */}
+  <p className="shrink-0 whitespace-nowrap text-xs text-[#64748B]">
+    Showing{" "}
+    <span className="font-semibold text-[#2B2B2B]">
+      {total}
+    </span>{" "}
+    products
+  </p>
+
+
           </div>
         </div>
 
