@@ -588,11 +588,11 @@ h-[70px]
     py-1
     shadow-xl
 
-    lg:-bottom-6
-    lg:right-8
+    lg:-bottom-2
+    lg:right-2
     lg:rounded-2xl
-    lg:px-6
-    lg:py-4
+    lg:px-4
+    lg:py-2
   "
 >
 
@@ -608,8 +608,8 @@ h-[70px]
     rounded-full
     text-white
 
-    lg:h-8
-    lg:w-8
+    lg:h-6
+    lg:w-6
   "
 
                     style={{
@@ -623,7 +623,7 @@ h-[70px]
 
                     <p
   className="
-    text-[11px]
+    text-[10px]
     font-bold
     text-[#1E293B]
 
@@ -635,18 +635,7 @@ h-[70px]
 
                     </p>
 
-                    <p
-  className="
-    text-[8px]
-    text-[#64748B]
-
-    lg:text-sm
-  "
->
-
-                      Customer Rating
-
-                    </p>
+                    
 
                   </div>
 
