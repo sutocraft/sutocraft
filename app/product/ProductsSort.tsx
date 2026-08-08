@@ -1,9 +1,14 @@
 "use client";
 
-import { ArrowDownUp, ChevronDown } from "lucide-react";
+import {
+  ArrowDownUp,
+  ChevronDown,
+} from "lucide-react";
 import { useState } from "react";
 
-import { useTheme } from "@/app/components/website/settings.theme_color";
+import {
+  useTheme,
+} from "@/app/components/website/settings.theme_color";
 
 const sortOptions = [
   "Newest",
@@ -11,17 +16,26 @@ const sortOptions = [
   "Price: High to Low",
   "Name: A to Z",
   "Name: Z to A",
-];
+] as const;
 
-export default function ProductsSort() {
+type SortOption =
+  (typeof sortOptions)[number];
+
+type Props = {
+  selected: SortOption;
+  onChange: (value: SortOption) => void;
+};
+
+export default function ProductsSort({
+  selected,
+  onChange,
+}: Props) {
   const { themeColor } = useTheme();
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] =
-    useState("Newest");
 
-  function handleSelect(option: string) {
-    setSelected(option);
+  function handleSelect(option: SortOption) {
+    onChange(option);
     setOpen(false);
   }
 
@@ -29,7 +43,9 @@ export default function ProductsSort() {
     <div className="relative">
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() =>
+          setOpen((value) => !value)
+        }
         className="
           flex
           h-12
@@ -59,7 +75,9 @@ export default function ProductsSort() {
             }}
           />
 
-          <span>{selected}</span>
+          <span>
+            {selected}
+          </span>
         </span>
 
         <ChevronDown
