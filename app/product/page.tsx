@@ -38,7 +38,8 @@ export default function ProductsPage() {
     "all" | "in-stock" | "out-of-stock"
   >("all");
 
-  const [sort, setSort] = useState<SortOption>("Newest");
+  const [sort, setSort] =
+    useState<SortOption>("Newest");
 
   const [mobileFilterOpen, setMobileFilterOpen] =
     useState(false);
@@ -192,9 +193,15 @@ export default function ProductsPage() {
 
   return (
     <>
+      {/* =========================
+          WEBSITE HEADER
+      ========================= */}
       <Header />
 
-      <main className="min-h-screen bg-[#F8F5EE]">
+      <main className="relative z-0 min-h-screen bg-[#F8F5EE]">
+        {/* =========================
+            PRODUCTS HEADER
+        ========================= */}
         <ProductsHeader
           total={filteredProducts.length}
           search={search}
@@ -206,24 +213,25 @@ export default function ProductsPage() {
           }
         />
 
+        {/* =========================
+            PRODUCTS CONTENT
+        ========================= */}
         <Container>
           <div
             className="
-  grid
-  grid-cols-1
-  gap-4
-  py-4
-  sm:gap-6
-  sm:py-6
-  lg:gap-5
-  lg:py-5
-  lg:grid-cols-[240px_minmax(0,1fr)]
-  xl:gap-8
-  xl:py-8
-  xl:grid-cols-[280px_minmax(0,1fr)]
-"
+              grid
+              grid-cols-1
+              gap-6
+              py-6
+              sm:gap-8
+              sm:py-8
+              lg:grid-cols-[260px_minmax(0,1fr)]
+              xl:grid-cols-[280px_minmax(0,1fr)]
+            "
           >
-            {/* Desktop Filter */}
+            {/* =========================
+                DESKTOP FILTER
+            ========================= */}
             <div className="hidden lg:block">
               <ProductsFilter
                 products={products}
@@ -241,7 +249,9 @@ export default function ProductsPage() {
               />
             </div>
 
-            {/* Products */}
+            {/* =========================
+                PRODUCTS GRID
+            ========================= */}
             <ProductsGrid
               products={filteredProducts}
               loading={loading}
@@ -249,10 +259,14 @@ export default function ProductsPage() {
           </div>
         </Container>
 
-        {/* Mobile Filter */}
+        {/* =========================
+            MOBILE FILTER DRAWER
+        ========================= */}
         <MobileFilterDrawer
           open={mobileFilterOpen}
-          onClose={() => setMobileFilterOpen(false)}
+          onClose={() =>
+            setMobileFilterOpen(false)
+          }
           products={products}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
@@ -268,6 +282,9 @@ export default function ProductsPage() {
         />
       </main>
 
+      {/* =========================
+          FOOTER
+      ========================= */}
       <Footer />
     </>
   );
