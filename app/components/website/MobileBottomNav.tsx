@@ -197,8 +197,8 @@ const [user, setUser] =
     },
 
     {
-      title: "Products",
-      href: "/products",
+      title: "Product",
+      href: "/product",
       icon: FiGrid,
     },
 
