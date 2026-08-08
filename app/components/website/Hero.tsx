@@ -189,14 +189,14 @@ gap-8
 pt-6
 pb-20
 
-lg:pt-10
-lg:pb-20
+lg:pt-4
+lg:pb-10
 
 items-center
 
-lg:grid-cols-[1fr_520px]
-lg:min-h-[620px]
-lg:gap-10
+lg:grid-cols-[1fr_460px]
+lg:min-h-[540px]
+lg:gap-8
 "
 >
 
@@ -269,11 +269,11 @@ lg:gap-10
 
     lg:mx-0
     lg:max-w-[650px]
-    lg:text-7xl
+    lg:text-6xl
 
     min-h-[58px]
     sm:min-h-[70px]
-    lg:min-h-[150px]
+    lg:min-h-[120px]
 
     flex
     items-center
@@ -285,13 +285,13 @@ lg:gap-10
     break-words
   "
   style={{
-    fontSize:
-      product.name.length > 40
-        ? "2rem"
-        : product.name.length > 28
-        ? "2.3rem"
-        : undefined,
-  }}
+  fontSize:
+    product.name.length > 40
+      ? "1.75rem"
+      : product.name.length > 28
+      ? "2rem"
+      : undefined,
+}}
 >
   {product.name}
 </h1>
@@ -315,7 +315,7 @@ lg:gap-10
 
     min-h-[36px]
     sm:min-h-[40px]
-    lg:min-h-[55px]
+    lg:min-h-[40px]
 
     flex
     items-center
@@ -339,11 +339,10 @@ lg:gap-10
     sm:flex-row
     sm:justify-center
 
-    lg:mt-5
-    lg:justify-start
+    lg:mt-4
+lg:justify-start
 
-    h-[124px]
-    sm:h-[60px]
+h-[60px]
 
     flex-shrink-0
   "
@@ -423,10 +422,10 @@ lg:gap-10
     flex
     justify-center
 
-    lg:mt-8
-    lg:justify-start
+    lg:mt-4
+lg:justify-start
 
-    h-[86px]
+h-[70px]
 
     flex-shrink-0
   "
@@ -512,7 +511,7 @@ lg:gap-10
     sm:max-w-[420px]
 
     lg:order-2
-    lg:max-w-[520px]
+    lg:max-w-[460px]
   "
   initial={{
     opacity: 0,
@@ -667,13 +666,13 @@ lg:gap-10
   className="
     absolute
 
-    bottom-10
+    bottom-6
 left-1/2
 flex
 -translate-x-1/2
 gap-4
 
-lg:bottom-5
+lg:bottom-2
   "
 >
 
