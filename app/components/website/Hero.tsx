@@ -113,7 +113,7 @@ export default function Hero({
 
         <Container>
 
-          <div className="grid min-h-[720px] animate-pulse items-center gap-16 lg:grid-cols-2">
+          <div className="grid min-h-[620px] animate-pulse items-center gap-10 lg:grid-cols-2">
 
             <div>
 
@@ -135,7 +135,10 @@ export default function Hero({
 
             </div>
 
-            <div className="mx-auto aspect-square w-full max-w-[560px] rounded-[40px] bg-gray-200" />
+            <div className="grid min-h-[620px] animate-pulse items-center gap-10 lg:grid-cols-2">
+  ...
+  <div className="mx-auto aspect-square w-full max-w-[520px] rounded-[40px] bg-gray-200" />
+</div>
 
           </div>
 
@@ -191,9 +194,9 @@ lg:pb-20
 
 items-center
 
-lg:grid-cols-[1fr_560px]
-lg:min-h-[760px]
-lg:gap-14
+lg:grid-cols-[1fr_520px]
+lg:min-h-[620px]
+lg:gap-10
 "
 >
 
@@ -509,7 +512,7 @@ lg:gap-14
     sm:max-w-[420px]
 
     lg:order-2
-    lg:max-w-[560px]
+    lg:max-w-[520px]
   "
   initial={{
     opacity: 0,
@@ -664,13 +667,13 @@ lg:gap-14
   className="
     absolute
 
-    bottom-14
-    left-1/2
-    flex
-    -translate-x-1/2
-    gap-4
+    bottom-10
+left-1/2
+flex
+-translate-x-1/2
+gap-4
 
-    lg:bottom-8
+lg:bottom-5
   "
 >
 
