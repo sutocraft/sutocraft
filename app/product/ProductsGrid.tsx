@@ -55,19 +55,17 @@ xl:grid-cols-4
 
   return (
   <div
-    className="
-      grid
-      w-full
-      grid-cols-2
-      items-start
-      justify-items-stretch
-      gap-3
+  className="
+    grid
+    w-full
+    items-start
+    justify-items-stretch
+    gap-3
+    sm:gap-4
 
-      sm:gap-4
-      md:grid-cols-3
-      xl:grid-cols-4
-    "
-  >
+    lg:[grid-template-columns:repeat(auto-fit,minmax(210px,1fr))]
+  "
+>
     {products.map((product) => (
       <ProductCard
         key={product.id}
