@@ -133,7 +133,7 @@ async function loadOrders() {
             </p>
 
             <Link
-              href="/product"
+              href="/products"
               className="inline-block mt-8 bg-[#A8741A] text-white px-8 py-3 rounded-xl hover:opacity-90 transition"
             >
               Start Shopping
