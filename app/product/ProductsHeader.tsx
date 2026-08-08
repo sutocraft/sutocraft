@@ -6,29 +6,12 @@ import { useTheme } from "@/app/components/website/settings.theme_color";
 import ProductsSort from "./ProductsSort";
 import Container from "@/app/components/website/Container";
 
-type SortOption =
-  | "Newest"
-  | "Price: Low to High"
-  | "Price: High to Low"
-  | "Name: A to Z"
-  | "Name: Z to A";
-
 type Props = {
   total: number;
-  search: string;
-  onSearchChange: (value: string) => void;
-  sort: SortOption;
-  onSortChange: (value: SortOption) => void;
-  onMobileFilter: () => void;
 };
 
 export default function ProductsHeader({
   total,
-  search,
-  onSearchChange,
-  sort,
-  onSortChange,
-  onMobileFilter,
 }: Props) {
   const { themeColor } = useTheme();
 
@@ -37,23 +20,7 @@ export default function ProductsHeader({
       <Container>
 
         {/* Breadcrumb */}
-        <div
-          className="
-            mb-4
-            pt-5
-            text-sm
-            text-gray-500
-
-            sm:mb-5
-            sm:pt-6
-
-            lg:mb-4
-            lg:pt-5
-
-            xl:mb-6
-            xl:pt-8
-          "
-        >
+        <div className="mb-6 pt-8 text-sm text-gray-500 sm:pt-10">
           <span>Home</span>
 
           <span className="mx-2 text-gray-300">
@@ -70,29 +37,19 @@ export default function ProductsHeader({
           </span>
         </div>
 
-        {/* Responsive Header Layout */}
+        {/* Main Header */}
         <div
           className="
-            grid
-            grid-cols-1
-            gap-0
-
-            lg:grid-cols-[minmax(0,1fr)_320px]
-            lg:gap-x-6
-
-            xl:grid-cols-[minmax(0,1fr)_360px]
-            xl:gap-x-8
+            flex
+            flex-col
+            gap-6
+            lg:flex-row
+            lg:items-end
+            lg:justify-between
           "
         >
-
-          {/* OUR COLLECTION + TITLE */}
-          <div
-            className="
-              order-1
-              lg:col-start-1
-              lg:row-start-1
-            "
-          >
+          {/* Title */}
+          <div>
             <p
               className="
                 text-xs
@@ -110,40 +67,25 @@ export default function ProductsHeader({
 
             <h1
               className="
-                mt-1.5
+                mt-2
                 text-3xl
                 font-bold
                 leading-tight
                 text-[#2B2B2B]
-
-                sm:mt-2
                 sm:text-4xl
-
-                lg:text-4xl
-
-                xl:text-5xl
+                lg:text-5xl
               "
             >
               Premium Collection
             </h1>
+
+            <p className="mt-3 text-sm text-[#6B7280] sm:text-base">
+              Discover our latest collection of premium products.
+            </p>
           </div>
 
-          {/* SEARCH */}
-          <div
-            className="
-              relative
-              order-2
-              mt-4
-              w-full
-
-              lg:col-start-2
-              lg:row-start-1
-              lg:mt-0
-              lg:self-start
-
-              xl:mt-0
-            "
-          >
+          {/* Search */}
+          <div className="relative w-full lg:max-w-[360px]">
             <Search
               size={18}
               className="
@@ -157,11 +99,9 @@ export default function ProductsHeader({
 
             <input
               type="text"
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search products..."
               className="
-                h-11
+                h-12
                 w-full
                 rounded-2xl
                 border
@@ -176,8 +116,6 @@ export default function ProductsHeader({
                 duration-200
                 placeholder:text-gray-400
                 focus:shadow-sm
-
-                sm:h-12
               "
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = themeColor;
@@ -187,104 +125,41 @@ export default function ProductsHeader({
               }}
             />
           </div>
+        </div>
 
-          {/* DESCRIPTION */}
-          <p
-            className="
-              order-3
-              mt-3
-              text-sm
-              text-[#6B7280]
-
-              sm:text-base
-
-              lg:col-start-1
-              lg:row-start-5
-              lg:mt-2
-
-              xl:row-start-2
-              xl:mt-2
-            "
-          >
-            Discover our latest collection of premium products.
+        {/* Bottom Controls */}
+        <div
+          className="
+            mt-7
+            flex
+            flex-col
+            gap-3
+            border-t
+            border-[#F0EBE0]
+            py-5
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+          "
+        >
+          {/* Product Count */}
+          <p className="text-sm text-[#6B7280]">
+            Showing{" "}
+            <span className="font-semibold text-[#2B2B2B]">
+              {total}
+            </span>{" "}
+            products
           </p>
 
-          {/* SORT */}
-          <div
-            className="
-              order-5
-              mt-4
-              flex
-              justify-start
+          {/* Controls */}
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
 
-              lg:col-start-2
-              lg:row-start-3
-              lg:mt-3
-              lg:justify-end
-
-              xl:row-start-3
-              xl:mt-5
-            "
-          >
-            <ProductsSort
-              selected={sort}
-              onChange={onSortChange}
-            />
-          </div>
-
-          {/* PRODUCT COUNT */}
-          <div
-            className="
-              order-4
-              mt-5
-              border-t
-              border-[#F0EBE0]
-              pt-4
-
-              lg:col-start-2
-              lg:row-start-4
-              lg:mt-3
-              lg:border-t-0
-              lg:pt-0
-
-              xl:col-start-1
-              xl:row-start-3
-              xl:mt-5
-              xl:pt-4
-            "
-          >
-            <p className="text-sm text-[#6B7280]">
-              Showing{" "}
-              <span className="font-semibold text-[#2B2B2B]">
-                {total}
-              </span>{" "}
-              products
-            </p>
-          </div>
-
-          {/* MOBILE FILTER + SORT */}
-          <div
-            className="
-              order-6
-              mt-4
-              flex
-              w-full
-              flex-row
-              gap-2
-              pb-4
-
-              lg:hidden
-            "
-          >
-
-            {/* Filter */}
+            {/* Mobile Filter */}
             <button
               type="button"
-              onClick={onMobileFilter}
               className="
                 flex
-                h-11
-                flex-1
+                h-12
                 items-center
                 justify-center
                 gap-2
@@ -292,12 +167,13 @@ export default function ProductsHeader({
                 border
                 border-[#E8E1CE]
                 bg-white
-                px-4
+                px-5
                 text-sm
                 font-semibold
                 transition-all
                 duration-200
                 hover:shadow-md
+                lg:hidden
               "
               style={{
                 color: themeColor,
@@ -310,16 +186,10 @@ export default function ProductsHeader({
               </span>
             </button>
 
-            {/* Mobile Newest */}
-            <div className="flex-1">
-              <ProductsSort
-                selected={sort}
-                onChange={onSortChange}
-              />
-            </div>
+            {/* Sort */}
+            <ProductsSort />
 
           </div>
-
         </div>
 
       </Container>
