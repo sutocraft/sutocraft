@@ -5,12 +5,29 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useTheme } from "@/app/components/website/settings.theme_color";
 import ProductsSort from "./ProductsSort";
 
+type SortOption =
+  | "Newest"
+  | "Price: Low to High"
+  | "Price: High to Low"
+  | "Name: A to Z"
+  | "Name: Z to A";
+
 type Props = {
   total: number;
+  search: string;
+  onSearchChange: (value: string) => void;
+  sort: SortOption;
+  onSortChange: (value: SortOption) => void;
+  onMobileFilter: () => void;
 };
 
 export default function ProductsHeader({
   total,
+  search,
+  onSearchChange,
+  sort,
+  onSortChange,
+  onMobileFilter,
 }: Props) {
   const { themeColor } = useTheme();
 
@@ -19,7 +36,6 @@ export default function ProductsHeader({
       <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
 
         {/* Breadcrumb */}
-
         <div className="mb-6 text-sm text-gray-500">
           <span>Home</span>
 
@@ -38,13 +54,10 @@ export default function ProductsHeader({
         </div>
 
         {/* Main Header */}
-
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
 
           {/* Title */}
-
           <div>
-
             <p
               className="
                 text-xs
@@ -77,13 +90,10 @@ export default function ProductsHeader({
             <p className="mt-3 text-sm text-[#6B7280] sm:text-base">
               Discover our latest collection of premium products.
             </p>
-
           </div>
 
           {/* Search */}
-
           <div className="relative w-full lg:max-w-[360px]">
-
             <Search
               size={18}
               className="
@@ -97,6 +107,10 @@ export default function ProductsHeader({
 
             <input
               type="text"
+              value={search}
+              onChange={(e) =>
+                onSearchChange(e.target.value)
+              }
               placeholder="Search products..."
               className="
                 h-12
@@ -115,9 +129,6 @@ export default function ProductsHeader({
                 placeholder:text-gray-400
                 focus:shadow-sm
               "
-              style={{
-                borderColor: undefined,
-              }}
               onFocus={(e) => {
                 e.currentTarget.style.borderColor =
                   themeColor;
@@ -127,13 +138,10 @@ export default function ProductsHeader({
                   "#E8E1CE";
               }}
             />
-
           </div>
-
         </div>
 
         {/* Bottom Controls */}
-
         <div
           className="
             mt-7
@@ -148,9 +156,7 @@ export default function ProductsHeader({
             sm:justify-between
           "
         >
-
           {/* Product Count */}
-
           <p className="text-sm text-[#6B7280]">
             Showing{" "}
             <span className="font-semibold text-[#2B2B2B]">
@@ -160,13 +166,12 @@ export default function ProductsHeader({
           </p>
 
           {/* Controls */}
-
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
 
             {/* Mobile Filter Button */}
-
             <button
               type="button"
+              onClick={onMobileFilter}
               className="
                 flex
                 h-12
@@ -197,13 +202,12 @@ export default function ProductsHeader({
             </button>
 
             {/* Sort */}
-
-            <ProductsSort />
-
+            <ProductsSort
+              selected={sort}
+              onChange={onSortChange}
+            />
           </div>
-
         </div>
-
       </div>
     </section>
   );
