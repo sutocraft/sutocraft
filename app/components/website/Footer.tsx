@@ -41,7 +41,7 @@ export default function Footer() {
 
               <li>
                 <a
-                  href="/products"
+                  href="/product"
                   className="transition hover:text-[#D9A441]"
                 >
                   Products
