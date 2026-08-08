@@ -15,6 +15,7 @@ import ProductsHeader from "./ProductsHeader";
 import ProductsFilter from "./ProductsFilter";
 import ProductsGrid from "./ProductsGrid";
 import MobileFilterDrawer from "./MobileFilterDrawer";
+import MobileBottomNav from "@/app/components/website/MobileBottomNav";
 
 type SortOption =
   | "Newest"
@@ -286,6 +287,7 @@ export default function ProductsPage() {
           FOOTER
       ========================= */}
       <Footer />
+      <MobileBottomNav />
     </>
   );
 }
