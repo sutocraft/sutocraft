@@ -219,47 +219,42 @@ export default function ProductsPage() {
             PRODUCTS CONTENT
         ========================= */}
         <Container>
-          <div
-            className="
-              grid
-              grid-cols-1
-              gap-6
-              py-6
-              sm:gap-8
-              sm:py-8
-              lg:grid-cols-[260px_minmax(0,1fr)]
-              xl:grid-cols-[280px_minmax(0,1fr)]
-            "
-          >
-            {/* =========================
-                DESKTOP FILTER
-            ========================= */}
-            <div className="hidden lg:block">
-              <ProductsFilter
-                products={products}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-                selectedBrand={selectedBrand}
-                onBrandChange={setSelectedBrand}
-                minPrice={minPrice}
-                maxPrice={maxPrice}
-                onMinPriceChange={setMinPrice}
-                onMaxPriceChange={setMaxPrice}
-                availability={availability}
-                onAvailabilityChange={setAvailability}
-                onReset={resetFilters}
-              />
-            </div>
+  <div
+    className="
+      py-6
+      sm:py-8
+    "
+  >
+    {/* =========================
+        DESKTOP FILTER
+        PC ONLY: HORIZONTAL
+    ========================= */}
+    <div className="hidden lg:block mb-6">
+      <ProductsFilter
+        products={products}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        selectedBrand={selectedBrand}
+        onBrandChange={setSelectedBrand}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        onMinPriceChange={setMinPrice}
+        onMaxPriceChange={setMaxPrice}
+        availability={availability}
+        onAvailabilityChange={setAvailability}
+        onReset={resetFilters}
+      />
+    </div>
 
-            {/* =========================
-                PRODUCTS GRID
-            ========================= */}
-            <ProductsGrid
-              products={filteredProducts}
-              loading={loading}
-            />
-          </div>
-        </Container>
+    {/* =========================
+        PRODUCTS GRID
+    ========================= */}
+    <ProductsGrid
+      products={filteredProducts}
+      loading={loading}
+    />
+  </div>
+</Container>
 
         {/* =========================
             MOBILE FILTER DRAWER
