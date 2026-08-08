@@ -37,14 +37,18 @@ export default function ProductsHeader({
         className="
           mx-auto
           w-full
-          max-w-[1440px]
+          max-w-[1280px]
           px-4
           sm:px-6
           lg:px-8
-          xl:px-10
         "
       >
-        {/* TOP */}
+        {/* =====================================================
+            TOP SECTION
+            Desktop:
+            Left  = Collection + Title + Description
+            Right = Search + Sort
+           ===================================================== */}
         <div
           className="
             pt-6
@@ -68,30 +72,29 @@ export default function ProductsHeader({
           >
             <span>Home</span>
 
-            <span className="text-[#CBD5E1]">
-              /
-            </span>
+            <span className="text-[#CBD5E1]">/</span>
 
             <span className="font-semibold text-[#98691D]">
               Products
             </span>
           </div>
 
-          {/* TITLE + SEARCH */}
+          {/* =================================================
+              DESKTOP MAIN HEADER
+             ================================================= */}
           <div
-            className="
-              grid
-              grid-cols-1
-              gap-4
-
-              lg:grid-cols-[minmax(0,1fr)_340px]
-              lg:items-end
-
-              xl:grid-cols-[minmax(0,1fr)_380px]
-            "
-          >
-            {/* Title */}
-            <div>
+  className="
+    relative
+    grid
+    grid-cols-1
+    gap-4
+    lg:grid-cols-[minmax(0,1fr)_520px]
+    lg:items-start
+  "
+>
+            {/* LEFT CONTENT */}
+            <div className="min-w-0">
+              {/* Collection Label */}
               <p
                 className="
                   text-xs
@@ -99,33 +102,199 @@ export default function ProductsHeader({
                   uppercase
                   tracking-[0.32em]
                   text-[#98691D]
-
                   sm:text-sm
                 "
               >
                 OUR COLLECTION
               </p>
 
-              <h1
+              {/* Title + Count */}
+<div className="flex items-end justify-between gap-4">
+  <h1
+    className="
+      mt-1
+      min-w-0
+      text-3xl
+      font-bold
+      leading-tight
+      tracking-tight
+      text-[#2B2B2B]
+      sm:text-4xl
+      lg:text-[42px]
+      xl:text-5xl
+    "
+  >
+    Premium Collection
+  </h1>
+
+  {/* Desktop Count */}
+<p
+  className="
+    hidden
+    lg:block
+    absolute
+    right-0
+    top-[88px]
+    text-right
+    text-sm
+    text-[#64748B]
+  "
+>
+  Showing{" "}
+  <span className="font-semibold text-[#2B2B2B]">
+    {total}
+  </span>{" "}
+  products
+</p>
+</div>
+
+              {/* Description */}
+              <p
                 className="
-                  mt-1
-                  text-3xl
-                  font-bold
-                  leading-tight
-                  tracking-tight
-                  text-[#2B2B2B]
-
-                  sm:text-4xl
-
-                  lg:text-[42px]
-                  xl:text-5xl
+                  mt-3
+                  text-sm
+                  leading-6
+                  text-[#64748B]
+                  sm:text-base
                 "
               >
-                Premium Collection
-              </h1>
+                Discover our latest collection of premium products.
+              </p>
             </div>
 
-            {/* Search */}
+            {/* RIGHT CONTROLS */}
+            <div
+              className="
+                hidden
+                w-full
+                items-start
+                justify-end
+                gap-3
+                lg:flex
+              "
+            >
+              {/* Search */}
+              <div className="relative min-w-0 flex-1">
+                <Search
+                  size={18}
+                  className="
+                    pointer-events-none
+                    absolute
+                    left-4
+                    top-1/2
+                    -translate-y-1/2
+                    text-[#94A3B8]
+                  "
+                />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) =>
+                    onSearchChange(e.target.value)
+                  }
+                  placeholder="Search products..."
+                  className="
+                    h-12
+                    w-full
+                    rounded-2xl
+                    border
+                    border-[#E8E1CE]
+                    bg-white
+                    pl-11
+                    pr-4
+                    text-sm
+                    text-[#2B2B2B]
+                    outline-none
+                    transition
+                    placeholder:text-[#94A3B8]
+                    focus:border-[#98691D]
+                    focus:ring-2
+                    focus:ring-[#98691D]/10
+                  "
+                />
+              </div>
+
+              {/* Sort */}
+              <div className="relative w-[180px] shrink-0">
+                <ArrowUpDown
+                  size={17}
+                  className="
+                    pointer-events-none
+                    absolute
+                    left-3
+                    top-1/2
+                    -translate-y-1/2
+                    text-[#98691D]
+                  "
+                />
+
+                <select
+                  value={sort}
+                  onChange={(e) =>
+                    onSortChange(
+                      e.target.value as SortOption
+                    )
+                  }
+                  className="
+                    h-12
+                    w-full
+                    appearance-none
+                    rounded-2xl
+                    border
+                    border-[#E8E1CE]
+                    bg-white
+                    pl-9
+                    pr-9
+                    text-sm
+                    font-medium
+                    text-[#2B2B2B]
+                    outline-none
+                    focus:border-[#98691D]
+                    focus:ring-2
+                    focus:ring-[#98691D]/10
+                  "
+                >
+                  <option value="Newest">
+                    Newest
+                  </option>
+
+                  <option value="Price: Low to High">
+                    Price: Low to High
+                  </option>
+
+                  <option value="Price: High to Low">
+                    Price: High to Low
+                  </option>
+
+                  <option value="Name: A to Z">
+                    Name: A to Z
+                  </option>
+
+                  <option value="Name: Z to A">
+                    Name: Z to A
+                  </option>
+                </select>
+
+                <ChevronDown
+                  size={16}
+                  className="
+                    pointer-events-none
+                    absolute
+                    right-3
+                    top-1/2
+                    -translate-y-1/2
+                    text-[#94A3B8]
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* =================================================
+              MOBILE SEARCH
+             ================================================= */}
+          <div className="mt-4 lg:hidden">
             <div className="relative w-full">
               <Search
                 size={18}
@@ -143,9 +312,7 @@ export default function ProductsHeader({
                 type="text"
                 value={search}
                 onChange={(e) =>
-                  onSearchChange(
-                    e.target.value
-                  )
+                  onSearchChange(e.target.value)
                 }
                 placeholder="Search products..."
                 className="
@@ -161,9 +328,7 @@ export default function ProductsHeader({
                   text-[#2B2B2B]
                   outline-none
                   transition
-
                   placeholder:text-[#94A3B8]
-
                   focus:border-[#98691D]
                   focus:ring-2
                   focus:ring-[#98691D]/10
@@ -171,61 +336,42 @@ export default function ProductsHeader({
               />
             </div>
           </div>
-
-          {/* DESCRIPTION */}
-          <p
-            className="
-              mt-3
-              text-sm
-              leading-6
-              text-[#64748B]
-
-              sm:text-base
-            "
-          >
-            Discover our latest collection of premium products.
-          </p>
         </div>
 
-        {/* DIVIDER */}
-        <div className="border-t border-[#EEE8DD]" />
+        {/* =====================================================
+            COUNT ROW
+            Desktop:
+            Premium Collection        Showing 10 products
 
-        {/* BOTTOM */}
+            Mobile:
+            Showing 10 products
+            Filters + Newest
+           ===================================================== */}
         <div
           className="
             flex
             flex-col
             gap-4
-            py-4
-
-            sm:py-5
-
+            pb-4
+            sm:pb-5
             lg:flex-row
-            lg:items-center
+            lg:items-end
             lg:justify-between
           "
         >
-          {/* COUNT */}
-          <p className="text-sm text-[#64748B]">
-            Showing{" "}
-            <span className="font-semibold text-[#2B2B2B]">
-              {total}
-            </span>{" "}
-            products
-          </p>
+          
 
-          {/* CONTROLS */}
+          {/* MOBILE CONTROLS */}
           <div
             className="
               flex
               w-full
               items-center
               gap-3
-
-              lg:w-auto
+              lg:hidden
             "
           >
-            {/* MOBILE FILTER */}
+            {/* Filters */}
             <button
               type="button"
               onClick={onMobileFilter}
@@ -247,27 +393,35 @@ export default function ProductsHeader({
                 text-[#98691D]
                 transition
                 hover:bg-[#98691D]/5
-
-                lg:hidden
               "
             >
               <SlidersHorizontal size={17} />
 
-              <span>
-                Filters
-              </span>
+              <span>Filters</span>
             </button>
 
-            {/* SORT */}
+{/* MOBILE COUNT */}
+<p
+  className="
+    text-sm
+    text-[#64748B]
+    lg:hidden
+  "
+>
+  Showing{" "}
+  <span className="font-semibold text-[#2B2B2B]">
+    {total}
+  </span>{" "}
+  products
+</p>
+
+            {/* Mobile Sort */}
             <div
               className="
                 relative
                 w-[150px]
                 shrink-0
-
                 sm:w-[170px]
-
-                lg:w-[200px]
               "
             >
               <ArrowUpDown
@@ -303,7 +457,6 @@ export default function ProductsHeader({
                   font-medium
                   text-[#2B2B2B]
                   outline-none
-
                   focus:border-[#98691D]
                   focus:ring-2
                   focus:ring-[#98691D]/10
@@ -344,6 +497,9 @@ export default function ProductsHeader({
             </div>
           </div>
         </div>
+
+        {/* DIVIDER */}
+        <div className="border-t border-[#EEE8DD]" />
       </div>
     </section>
   );
