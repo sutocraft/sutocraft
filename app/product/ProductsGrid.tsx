@@ -54,22 +54,26 @@ export default function ProductsGrid({
   }
 
   return (
-    <div
-      className="
-        grid
-        grid-cols-2
-        gap-3
-        sm:gap-4
-        md:grid-cols-3
-        xl:grid-cols-4
-      "
-    >
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-        />
-      ))}
-    </div>
-  );
+  <div
+    className="
+      grid
+      w-full
+      grid-cols-2
+      items-start
+      justify-items-stretch
+      gap-3
+
+      sm:gap-4
+      md:grid-cols-3
+      xl:grid-cols-4
+    "
+  >
+    {products.map((product) => (
+      <ProductCard
+        key={product.id}
+        product={product}
+      />
+    ))}
+  </div>
+);
 }
