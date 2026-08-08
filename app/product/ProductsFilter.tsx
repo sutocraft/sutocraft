@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import Category from "./Filters/Category";
 import Brand from "./Filters/Brand";
@@ -45,22 +45,20 @@ export default function ProductsFilter({
   onAvailabilityChange,
   onReset,
 }: Props) {
-  const [categoryOpen, setCategoryOpen] =
-    useState(true);
-
-  const [brandOpen, setBrandOpen] =
-    useState(false);
-
-  const [priceOpen, setPriceOpen] =
-    useState(false);
-
+  // All sections collapsed by default
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [brandOpen, setBrandOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(false);
   const [availabilityOpen, setAvailabilityOpen] =
     useState(false);
 
   return (
     <aside className="w-full rounded-2xl border border-[#E8DFC9] bg-white p-5">
-      {/* Header */}
-      <div className="mb-5 flex items-center justify-between border-b border-[#E8DFC9] pb-4">
+
+      {/* =========================
+          FILTER HEADER
+      ========================= */}
+      <div className="mb-4 flex items-center justify-between border-b border-[#E8DFC9] pb-4">
         <div>
           <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#98691D]">
             Filter
@@ -80,68 +78,88 @@ export default function ProductsFilter({
         </button>
       </div>
 
-      {/* Category */}
-      <FilterSection
-        title="Category"
-        open={categoryOpen}
-        onToggle={() =>
-          setCategoryOpen((value) => !value)
-        }
-      >
-        <Category
-          products={products}
-          selectedCategory={selectedCategory}
-          onCategoryChange={onCategoryChange}
-        />
-      </FilterSection>
+      {/* =========================
+          DESKTOP FILTERS
+          Category | Brand | Price | Availability
+      ========================= */}
+      <div className="lg:grid lg:grid-cols-4 lg:divide-x lg:divide-[#E8DFC9]">
 
-      {/* Brand */}
-      <FilterSection
-        title="Brand"
-        open={brandOpen}
-        onToggle={() =>
-          setBrandOpen((value) => !value)
-        }
-      >
-        <Brand
-          products={products}
-          selectedBrand={selectedBrand}
-          onBrandChange={onBrandChange}
-        />
-      </FilterSection>
+        {/* CATEGORY */}
+        <div className="lg:px-4 lg:first:pl-0">
+          <FilterSection
+            title="Category"
+            open={categoryOpen}
+            onToggle={() =>
+              setCategoryOpen((value) => !value)
+            }
+          >
+            <Category
+              products={products}
+              selectedCategory={selectedCategory}
+              onCategoryChange={onCategoryChange}
+            />
+          </FilterSection>
+        </div>
 
-      {/* Price */}
-      <FilterSection
-        title="Price"
-        open={priceOpen}
-        onToggle={() =>
-          setPriceOpen((value) => !value)
-        }
-      >
-        <Price
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          onMinPriceChange={onMinPriceChange}
-          onMaxPriceChange={onMaxPriceChange}
-        />
-      </FilterSection>
+        {/* BRAND */}
+        <div className="lg:px-4">
+          <FilterSection
+            title="Brand"
+            open={brandOpen}
+            onToggle={() =>
+              setBrandOpen((value) => !value)
+            }
+          >
+            <Brand
+              products={products}
+              selectedBrand={selectedBrand}
+              onBrandChange={onBrandChange}
+            />
+          </FilterSection>
+        </div>
 
-      {/* Availability */}
-      <FilterSection
-        title="Availability"
-        open={availabilityOpen}
-        onToggle={() =>
-          setAvailabilityOpen((value) => !value)
-        }
-      >
-        <Availability
-          value={availability}
-          onChange={onAvailabilityChange}
-        />
-      </FilterSection>
+        {/* PRICE */}
+        <div className="lg:px-4">
+          <FilterSection
+            title="Price"
+            open={priceOpen}
+            onToggle={() =>
+              setPriceOpen((value) => !value)
+            }
+          >
+            <Price
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              onMinPriceChange={onMinPriceChange}
+              onMaxPriceChange={onMaxPriceChange}
+            />
+          </FilterSection>
+        </div>
+
+        {/* AVAILABILITY */}
+        <div className="lg:px-4 lg:last:pr-0">
+          <FilterSection
+            title="Availability"
+            open={availabilityOpen}
+            onToggle={() =>
+              setAvailabilityOpen((value) => !value)
+            }
+          >
+            <Availability
+              value={availability}
+              onChange={onAvailabilityChange}
+            />
+          </FilterSection>
+        </div>
+      </div>
     </aside>
   );
 }
+
+
+/* =========================
+   FILTER SECTION
+========================= */
 
 function FilterSection({
   title,
@@ -152,14 +170,34 @@ function FilterSection({
   title: string;
   open: boolean;
   onToggle: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <div className="border-t border-[#E8DFC9] pt-4 first:border-t-0 first:pt-0">
+    <div
+      className="
+        border-t
+        border-[#E8DFC9]
+        pt-4
+        first:border-t-0
+        first:pt-0
+
+        lg:border-t-0
+        lg:pt-0
+      "
+    >
       <button
         type="button"
         onClick={onToggle}
-        className="mb-3 flex w-full items-center justify-between text-sm font-semibold text-[#2B2B2B]"
+        className="
+          mb-0
+          flex
+          w-full
+          items-center
+          justify-between
+          text-sm
+          font-semibold
+          text-[#2B2B2B]
+        "
       >
         <span>{title}</span>
 
@@ -168,7 +206,11 @@ function FilterSection({
         </span>
       </button>
 
-      {open && children}
+      {open && (
+        <div className="mt-3">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
