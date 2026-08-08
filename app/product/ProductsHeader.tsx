@@ -56,177 +56,232 @@ export default function ProductsHeader({
         </div>
 
         {/* Main Header */}
-        <div
-          className="
-  flex
-  flex-col
-  gap-3
-  sm:gap-4
-  lg:flex-row
-  lg:items-end
-  lg:justify-between
-  lg:gap-5
-  xl:gap-6
-"
-          
-        >
-          {/* Title */}
-          <div>
-            <p
-              className="
-                text-xs
-                font-semibold
-                uppercase
-                tracking-[0.35em]
-                sm:text-sm
-              "
-              style={{
-                color: themeColor,
-              }}
-            >
-              OUR COLLECTION
-            </p>
+<div
+  className="
+    grid
+    grid-cols-1
+    gap-4
+    lg:grid-cols-[minmax(0,1fr)_320px]
+    lg:items-start
+    lg:gap-6
+    xl:grid-cols-[minmax(0,1fr)_360px]
+    xl:gap-8
+  "
+>
+  {/* Title */}
+  <div className="lg:contents">
+    <div className="lg:order-1">
+      <p
+        className="
+          text-xs
+          font-semibold
+          uppercase
+          tracking-[0.35em]
+          sm:text-sm
+        "
+        style={{
+          color: themeColor,
+        }}
+      >
+        OUR COLLECTION
+      </p>
 
-            <h1
-              className="
-  mt-1.5
-  text-3xl
-  font-bold
-  leading-tight
-  text-[#2B2B2B]
-  sm:mt-2
-  sm:text-4xl
-  lg:text-4xl
-  xl:text-5xl
-"
-            >
-              Premium Collection
-            </h1>
+      <h1
+        className="
+          mt-1.5
+          text-3xl
+          font-bold
+          leading-tight
+          text-[#2B2B2B]
+          sm:mt-2
+          sm:text-4xl
+          lg:text-4xl
+          xl:text-5xl
+        "
+      >
+        Premium Collection
+      </h1>
+    </div>
 
-            <p className="mt-2 text-sm text-[#6B7280] sm:mt-3 sm:text-base">
-              Discover our latest collection of premium products.
-            </p>
-          </div>
+    {/* Search */}
+    <div
+      className="
+        relative
+        w-full
+        lg:order-2
+        lg:row-span-2
+        lg:self-start
+      "
+    >
+      <Search
+        size={18}
+        className="
+          absolute
+          left-4
+          top-1/2
+          -translate-y-1/2
+          text-gray-400
+        "
+      />
 
-          {/* Search */}
-          <div className="relative w-full lg:max-w-[320px] xl:max-w-[360px]">
-            <Search
-              size={18}
-              className="
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                text-gray-400
-              "
-            />
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => onSearchChange(e.target.value)}
+        placeholder="Search products..."
+        className="
+          h-11
+          w-full
+          rounded-2xl
+          border
+          border-[#E8E1CE]
+          bg-white
+          pl-11
+          pr-4
+          text-sm
+          text-[#2B2B2B]
+          outline-none
+          transition-all
+          duration-200
+          placeholder:text-gray-400
+          focus:shadow-sm
+          sm:h-12
+        "
+        onFocus={(e) => {
+          e.currentTarget.style.borderColor = themeColor;
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.borderColor = "#E8E1CE";
+        }}
+      />
+    </div>
 
-            <input
-  type="text"
-  value={search}
-  onChange={(e) => onSearchChange(e.target.value)}
-  placeholder="Search products..."
-              className="
-                h-12
-                w-full
-                rounded-2xl
-                border
-                border-[#E8E1CE]
-                bg-white
-                pl-11
-                pr-4
-                text-sm
-                text-[#2B2B2B]
-                outline-none
-                transition-all
-                duration-200
-                placeholder:text-gray-400
-                focus:shadow-sm
-              "
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = themeColor;
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = "#E8E1CE";
-              }}
-            />
-          </div>
-        </div>
+    {/* Description */}
+    <p
+      className="
+        mt-1
+        text-sm
+        text-[#6B7280]
+        sm:text-base
+        lg:order-5
+        lg:mt-0
+      "
+    >
+      Discover our latest collection of premium products.
+    </p>
+  </div>
+</div>
 
         {/* Bottom Controls */}
-        <div
-          className="
-  mt-4
-  flex
-  flex-col
-  gap-3
-  border-t
-  border-[#F0EBE0]
-  py-4
-  sm:mt-5
-  sm:flex-row
-  sm:items-center
-  sm:justify-between
-  sm:py-4
-  lg:mt-4
-  lg:py-3
-  xl:mt-7
-  xl:py-5
-"
-        >
-          {/* Product Count */}
-          <p className="text-sm text-[#6B7280]">
-            Showing{" "}
-            <span className="font-semibold text-[#2B2B2B]">
-              {total}
-            </span>{" "}
-            products
-          </p>
+<div
+  className="
+    mt-4
+    flex
+    flex-col
+    gap-3
+    border-t
+    border-[#F0EBE0]
+    py-4
 
-          {/* Controls */}
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+    sm:mt-5
 
-            {/* Mobile Filter */}
-            <button
-  type="button"
-  onClick={onMobileFilter}
-              className="
-  flex
-  h-11
-  items-center
-  justify-center
-  gap-2
-  rounded-2xl
-                border
-                border-[#E8E1CE]
-                bg-white
-                px-5
-                text-sm
-                font-semibold
-                transition-all
-                duration-200
-                hover:shadow-md
-                lg:hidden
-              "
-              style={{
-                color: themeColor,
-              }}
-            >
-              <SlidersHorizontal size={17} />
+    lg:mt-3
+    lg:items-start
 
-              <span>
-                Filters
-              </span>
-            </button>
+    xl:mt-6
+    xl:flex-row
+    xl:items-center
+    xl:justify-between
+  "
+>
+  {/* Product Count */}
+  <p
+    className="
+      order-3
+      text-sm
+      text-[#6B7280]
 
-            {/* Sort */}
-            <ProductsSort
-  selected={sort}
-  onChange={onSortChange}
-/>
+      lg:order-2
+      xl:order-1
+    "
+  >
+    Showing{" "}
+    <span className="font-semibold text-[#2B2B2B]">
+      {total}
+    </span>{" "}
+    products
+  </p>
 
-          </div>
-        </div>
+  {/* Controls */}
+  <div
+    className="
+      order-1
+      flex
+      w-full
+      flex-row
+      gap-2
+
+      lg:order-1
+      lg:w-full
+      lg:flex-col
+      lg:gap-2
+
+      xl:order-2
+      xl:w-auto
+      xl:flex-row
+      xl:gap-3
+    "
+  >
+    {/* Mobile Filter */}
+    <button
+      type="button"
+      onClick={onMobileFilter}
+      className="
+        flex
+        h-11
+        flex-1
+        items-center
+        justify-center
+        gap-2
+        rounded-2xl
+        border
+        border-[#E8E1CE]
+        bg-white
+        px-4
+        text-sm
+        font-semibold
+        transition-all
+        duration-200
+        hover:shadow-md
+
+        lg:hidden
+      "
+      style={{
+        color: themeColor,
+      }}
+    >
+      <SlidersHorizontal size={17} />
+
+      <span>Filters</span>
+    </button>
+
+    {/* Sort */}
+    <div
+      className="
+        flex-1
+
+        lg:w-full
+
+        xl:flex-none
+      "
+    >
+      <ProductsSort
+        selected={sort}
+        onChange={onSortChange}
+      />
+    </div>
+  </div>
+</div>
 
       </Container>
     </section>
