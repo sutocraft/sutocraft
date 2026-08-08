@@ -1,75 +1,28 @@
-"use client";
-
-import ProductCard from "@/app/components/website/ProductCard";
-import ProductsSkeleton from "./ProductsSkeleton";
-
-import type { WebsiteProduct } from "@/lib/products";
-
-type Props = {
-  products: WebsiteProduct[];
-  loading: boolean;
-};
-
-export default function ProductsGrid({
-  products,
-  loading,
-}: Props) {
-  if (loading) {
-    return (
-      <div
-        className="
-          grid
-          grid-cols-2
-          gap-3
-          sm:gap-4
-          md:grid-cols-3
-          xl:grid-cols-4
-          2xl:grid-cols-5
-        "
-      >
-        {Array.from({ length: 10 }).map((_, index) => (
-          <ProductsSkeleton key={index} />
-        ))}
-      </div>
-    );
-  }
-
-  if (!products.length) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-[#E8E1CE] bg-white px-6 text-center">
-        <div>
-          <div className="text-5xl">🛍️</div>
-
-          <h2 className="mt-4 text-xl font-bold text-[#2B2B2B]">
-            No Products Found
-          </h2>
-
-          <p className="mt-2 text-sm text-[#6B7280]">
-            We couldn't find any products at the moment.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
+export default function ProductsSkeleton() {
   return (
-    <div
-      className="
-        grid
-        grid-cols-2
-        gap-3
-        sm:gap-4
-        md:grid-cols-3
-        xl:grid-cols-4
-        2xl:grid-cols-5
-      "
-    >
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-        />
-      ))}
-    </div>
+    <article className="overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm">
+      {/* Image Skeleton */}
+      <div className="aspect-[4/5] animate-pulse bg-[#F3EFE6]" />
+
+      {/* Content Skeleton */}
+      <div className="space-y-3 p-4 sm:p-5">
+
+        {/* Rating */}
+        <div className="h-4 w-20 animate-pulse rounded-full bg-gray-200" />
+
+        {/* Product Name */}
+        <div className="space-y-2">
+          <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+          <div className="h-4 w-2/3 animate-pulse rounded bg-gray-200" />
+        </div>
+
+        {/* Price */}
+        <div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
+
+        {/* Button */}
+        <div className="mt-4 h-11 w-full animate-pulse rounded-2xl bg-gray-200" />
+
+      </div>
+    </article>
   );
 }
