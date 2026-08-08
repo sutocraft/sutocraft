@@ -194,22 +194,23 @@ lg:rounded-[40px] bg-gray-200" />
   relative
   grid
   grid-cols-1
-  gap-5
-  pt-4
-  pb-14
+  gap-4
+pt-2
+pb-8
 
   sm:gap-6
   sm:pt-5
   sm:pb-16
 
-  lg:pt-10
-  lg:pb-20
+  lg:pt-2
+lg:pb-8
 
-  items-center
+items-center
 
-  lg:grid-cols-[1fr_560px]
-  lg:min-h-[760px]
-  lg:gap-14
+lg:grid-cols-[1fr_560px]
+lg:min-h-[calc(100vh-140px)]
+lg:max-h-[680px]
+lg:gap-10
 "
 >
 
@@ -522,7 +523,7 @@ sm:max-w-[440px]
 
 lg:order-2
 lg:w-full
-lg:max-w-[460px]
+lg:max-w-[420px]
   "
   initial={{
     opacity: 0,
@@ -672,7 +673,7 @@ lg:py-2
 
     absolute
 
-bottom-3
+bottom-1
 left-1/2
 flex
 -translate-x-1/2
@@ -681,7 +682,7 @@ gap-2.5
 sm:bottom-4
 sm:gap-3
 
-lg:bottom-2
+lg:bottom-0
 lg:gap-4
   "
 >
