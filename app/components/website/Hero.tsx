@@ -137,7 +137,17 @@ export default function Hero({
 
             <div className="grid min-h-[620px] animate-pulse items-center gap-10 lg:grid-cols-2">
   ...
-  <div className="mx-auto aspect-square w-full max-w-[520px] rounded-[40px] bg-gray-200" />
+  <div className="mx-auto
+aspect-square
+w-[calc(100vw-32px)]
+max-w-[430px]
+
+sm:w-[calc(100vw-48px)]
+sm:max-w-[500px]
+
+lg:w-full
+lg:max-w-[560px] rounded-[28px]
+lg:rounded-[40px] bg-gray-200" />
 </div>
 
           </div>
@@ -183,20 +193,23 @@ export default function Hero({
   className="
 relative
 grid
+grid-cols-1
+gap-4
+pt-4
+pb-16
 
-gap-8
+sm:gap-6
+sm:pt-5
+sm:pb-20
 
-pt-6
-pb-20
-
-lg:pt-4
-lg:pb-10
+lg:pt-10
+lg:pb-20
 
 items-center
 
-lg:grid-cols-[1fr_460px]
-lg:min-h-[540px]
-lg:gap-8
+lg:grid-cols-[1fr_560px]
+lg:min-h-[760px]
+lg:gap-14
 "
 >
 
