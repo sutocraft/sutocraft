@@ -27,11 +27,7 @@ export default function ProductsGrid({
         "
       >
         {Array.from({ length: 8 }).map((_, index) => (
-          <ProductsSkeleton
-            key={index}
-            products={products}
-            loading={loading}
-          />
+          <ProductsSkeleton key={index} />
         ))}
       </div>
     );
