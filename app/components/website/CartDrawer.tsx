@@ -372,18 +372,7 @@ const [updatingId, setUpdatingId] =
     </span>
   </div>
 
-  {items.length > 0 && (
-    <button
-      onClick={handleClearCart}
-      className="mb-4 w-full rounded-xl border py-3 font-semibold transition-all duration-200 hover:bg-[#F8F5EF]"
-      style={{
-        borderColor: themeColor,
-        color: themeColor,
-      }}
-    >
-      Clear Cart
-    </button>
-  )}
+  
 
   <div className="grid gap-3">
     
