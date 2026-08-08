@@ -574,7 +574,7 @@ window.location.href =
               </Link>
 
               <Link
-                href="/products"
+                href="/product"
                 onClick={() => setMenuOpen(false)}
                 className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
               >
