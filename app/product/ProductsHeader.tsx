@@ -50,26 +50,26 @@ export default function ProductsHeader({
             Right = Search + Sort
            ===================================================== */}
         <div
-          className="
-            pt-6
-            pb-5
-            sm:pt-7
-            sm:pb-6
-            lg:pt-8
-            lg:pb-6
-          "
-        >
+  className="
+    pt-4
+    pb-3
+    sm:pt-5
+    sm:pb-4
+    lg:pt-8
+    lg:pb-6
+  "
+>
           {/* Breadcrumb */}
           <div
-            className="
-              mb-4
-              flex
-              items-center
-              gap-2
-              text-sm
-              text-[#64748B]
-            "
-          >
+  className="
+    mb-2
+    flex
+    items-center
+    gap-2
+    text-sm
+    text-[#64748B]
+  "
+>
             <span>Home</span>
 
             <span className="text-[#CBD5E1]">/</span>
@@ -150,14 +150,14 @@ export default function ProductsHeader({
 
               {/* Description */}
               <p
-                className="
-                  mt-3
-                  text-sm
-                  leading-6
-                  text-[#64748B]
-                  sm:text-base
-                "
-              >
+  className="
+    mt-1
+    text-sm
+    leading-5
+    text-[#64748B]
+    sm:text-base
+  "
+>
                 Discover our latest collection of premium products.
               </p>
             </div>
@@ -294,7 +294,7 @@ export default function ProductsHeader({
           {/* =================================================
               MOBILE SEARCH
              ================================================= */}
-          <div className="mt-4 lg:hidden">
+          <div className="mt-3 lg:hidden">
             <div className="relative w-full">
               <Search
                 size={18}
@@ -316,7 +316,7 @@ export default function ProductsHeader({
                 }
                 placeholder="Search products..."
                 className="
-                  h-12
+                  h-10
                   w-full
                   rounded-2xl
                   border
@@ -349,15 +349,15 @@ export default function ProductsHeader({
            ===================================================== */}
         <div
           className="
-            flex
-            flex-col
-            gap-4
-            pb-4
-            sm:pb-5
-            lg:flex-row
-            lg:items-end
-            lg:justify-between
-          "
+  flex
+  flex-col
+  gap-2
+  pb-2
+  sm:pb-3
+  lg:flex-row
+  lg:items-end
+  lg:justify-between
+"
         >
           
 
@@ -370,7 +370,7 @@ export default function ProductsHeader({
     onClick={onMobileFilter}
     className="
       flex
-      h-11
+      h-9
       min-w-0
       flex-1
       items-center
@@ -412,7 +412,7 @@ export default function ProductsHeader({
         onSortChange(e.target.value as SortOption)
       }
       className="
-        h-11
+        h-9
         w-full
         appearance-none
         rounded-2xl
