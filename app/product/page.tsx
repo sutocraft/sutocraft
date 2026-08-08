@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "@/app/components/website/Header";
 import Footer from "@/app/components/website/Footer";
 import Container from "@/app/components/website/Container";
+import MobileBottomNav from "@/app/components/website/MobileBottomNav";
 
 import {
   getAllProducts,
@@ -15,8 +16,6 @@ import ProductsHeader from "./ProductsHeader";
 import ProductsFilter from "./ProductsFilter";
 import ProductsGrid from "./ProductsGrid";
 import MobileFilterDrawer from "./MobileFilterDrawer";
-import MobileBottomNav from "@/app/components/website/MobileBottomNav";
-
 
 type SortOption =
   | "Newest"
@@ -26,37 +25,84 @@ type SortOption =
   | "Name: Z to A";
 
 export default function ProductsPage() {
+  /* =========================================================
+     PRODUCTS
+     ========================================================= */
+
   const [products, setProducts] = useState<WebsiteProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
+  /* =========================================================
+     SEARCH
+     ========================================================= */
+
   const [search, setSearch] = useState("");
+
+  /* =========================================================
+     CATEGORY / BRAND
+     ========================================================= */
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
 
+  /* =========================================================
+     PRICE
+     ========================================================= */
+
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+
+  /* =========================================================
+     AVAILABILITY
+     ========================================================= */
 
   const [availability, setAvailability] = useState<
     "all" | "in-stock" | "out-of-stock"
   >("all");
 
+  /* =========================================================
+     SORT
+     ========================================================= */
+
   const [sort, setSort] =
     useState<SortOption>("Newest");
 
+  /* =========================================================
+     MOBILE FILTER
+     ========================================================= */
+
   const [mobileFilterOpen, setMobileFilterOpen] =
     useState(false);
+
+  /* =========================================================
+     LOAD PRODUCTS
+     ========================================================= */
 
   useEffect(() => {
     let mounted = true;
 
     async function loadProducts() {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const data = await getAllProducts();
+        const data = await getAllProducts();
 
-      if (mounted) {
-        setProducts(data);
-        setLoading(false);
+        if (mounted) {
+          setProducts(data);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load products:",
+          error
+        );
+
+        if (mounted) {
+          setProducts([]);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
@@ -66,6 +112,10 @@ export default function ProductsPage() {
       mounted = false;
     };
   }, []);
+
+  /* =========================================================
+     FILTER + SEARCH + SORT
+     ========================================================= */
 
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -83,7 +133,10 @@ export default function ProductsPage() {
       const brand =
         product.brand?.name?.toLowerCase() || "";
 
-      // Search
+      /* -------------------------------------------------------
+         SEARCH
+         ------------------------------------------------------- */
+
       if (
         query &&
         !productName.includes(query) &&
@@ -94,7 +147,10 @@ export default function ProductsPage() {
         return false;
       }
 
-      // Category
+      /* -------------------------------------------------------
+         CATEGORY
+         ------------------------------------------------------- */
+
       if (
         selectedCategory &&
         product.category?.name !== selectedCategory
@@ -102,7 +158,10 @@ export default function ProductsPage() {
         return false;
       }
 
-      // Brand
+      /* -------------------------------------------------------
+         BRAND
+         ------------------------------------------------------- */
+
       if (
         selectedBrand &&
         product.brand?.name !== selectedBrand
@@ -110,7 +169,10 @@ export default function ProductsPage() {
         return false;
       }
 
-      // Price
+      /* -------------------------------------------------------
+         PRICE
+         ------------------------------------------------------- */
+
       const productPrice =
         product.sale_price ?? product.price;
 
@@ -128,7 +190,10 @@ export default function ProductsPage() {
         return false;
       }
 
-      // Availability
+      /* -------------------------------------------------------
+         AVAILABILITY
+         ------------------------------------------------------- */
+
       if (
         availability === "in-stock" &&
         product.stock <= 0
@@ -146,7 +211,10 @@ export default function ProductsPage() {
       return true;
     });
 
-    // Sort
+    /* ---------------------------------------------------------
+       SORT
+       --------------------------------------------------------- */
+
     result.sort((a, b) => {
       switch (sort) {
         case "Price: Low to High":
@@ -185,6 +253,10 @@ export default function ProductsPage() {
     sort,
   ]);
 
+  /* =========================================================
+     RESET FILTERS
+     ========================================================= */
+
   function resetFilters() {
     setSelectedCategory("");
     setSelectedBrand("");
@@ -193,17 +265,37 @@ export default function ProductsPage() {
     setAvailability("all");
   }
 
+  /* =========================================================
+     PAGE
+     ========================================================= */
+
   return (
     <>
-      {/* =========================
-          WEBSITE HEADER
-      ========================= */}
+      {/* =====================================================
+          HEADER
+         ===================================================== */}
+
       <Header />
 
-      <main className="relative z-0 min-h-screen bg-[#F8F5EE]">
-        {/* =========================
-            PRODUCTS HEADER
-        ========================= */}
+      {/* =====================================================
+          MAIN
+         ===================================================== */}
+
+      <main className="min-h-screen bg-[#F8F5EE]">
+
+        {/* ===================================================
+            PRODUCTS HEADER + DESKTOP FILTER
+
+            ProductsHeader handles:
+            - Breadcrumb
+            - Collection title
+            - Search
+            - Sort
+            - Product count
+            - Desktop filter panel
+            - Mobile filter button
+           =================================================== */}
+
         <ProductsHeader
           total={filteredProducts.length}
           search={search}
@@ -213,76 +305,107 @@ export default function ProductsPage() {
           onMobileFilter={() =>
             setMobileFilterOpen(true)
           }
+          desktopFilter={
+            <ProductsFilter
+              products={products}
+
+              selectedCategory={selectedCategory}
+              onCategoryChange={
+                setSelectedCategory
+              }
+
+              selectedBrand={selectedBrand}
+              onBrandChange={
+                setSelectedBrand
+              }
+
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+
+              onMinPriceChange={setMinPrice}
+              onMaxPriceChange={setMaxPrice}
+
+              availability={availability}
+              onAvailabilityChange={
+                setAvailability
+              }
+
+              onReset={resetFilters}
+            />
+          }
         />
 
-        {/* =========================
-            PRODUCTS CONTENT
-        ========================= */}
+        {/* ===================================================
+            PRODUCTS GRID
+           =================================================== */}
+
         <Container>
-  <div
-    className="
-      py-6
-      sm:py-8
-    "
-  >
-    {/* =========================
-        DESKTOP FILTER
-        PC ONLY: HORIZONTAL
-    ========================= */}
-    <div className="hidden lg:block mb-6">
-      <ProductsFilter
-        products={products}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        selectedBrand={selectedBrand}
-        onBrandChange={setSelectedBrand}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        onMinPriceChange={setMinPrice}
-        onMaxPriceChange={setMaxPrice}
-        availability={availability}
-        onAvailabilityChange={setAvailability}
-        onReset={resetFilters}
-      />
-    </div>
+          <div
+            className="
+              py-4
+              sm:py-5
+              lg:py-5
+            "
+          >
+            <ProductsGrid
+              products={filteredProducts}
+              loading={loading}
+            />
+          </div>
+        </Container>
 
-    {/* =========================
-        PRODUCTS GRID
-    ========================= */}
-    <ProductsGrid
-      products={filteredProducts}
-      loading={loading}
-    />
-  </div>
-</Container>
-
-        {/* =========================
+        {/* ===================================================
             MOBILE FILTER DRAWER
-        ========================= */}
+           =================================================== */}
+
         <MobileFilterDrawer
           open={mobileFilterOpen}
           onClose={() =>
             setMobileFilterOpen(false)
           }
+
           products={products}
+
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={
+            setSelectedCategory
+          }
+
           selectedBrand={selectedBrand}
-          onBrandChange={setSelectedBrand}
+          onBrandChange={
+            setSelectedBrand
+          }
+
           minPrice={minPrice}
           maxPrice={maxPrice}
+
           onMinPriceChange={setMinPrice}
           onMaxPriceChange={setMaxPrice}
+
           availability={availability}
-          onAvailabilityChange={setAvailability}
+          onAvailabilityChange={
+            setAvailability
+          }
+
           onReset={resetFilters}
         />
+
       </main>
 
-      {/* =========================
+      {/* =====================================================
           FOOTER
-      ========================= */}
+         ===================================================== */}
+
       <Footer />
+
+      {/* =====================================================
+          MOBILE BOTTOM NAVIGATION
+
+          IMPORTANT:
+          This was missing from the current uploaded file.
+          It is required for mobile/tablet navigation.
+         ===================================================== */}
+
       <MobileBottomNav />
     </>
   );
