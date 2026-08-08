@@ -19,11 +19,10 @@ export default function ProductsGrid({
       <div
         className="
           grid
-grid-cols-2
-gap-3
-sm:gap-4
-md:grid-cols-3
-xl:grid-cols-4
+          w-full
+          gap-3
+          sm:gap-4
+          [grid-template-columns:repeat(auto-fit,minmax(170px,1fr))]
         "
       >
         {Array.from({ length: 8 }).map((_, index) => (
@@ -54,24 +53,23 @@ xl:grid-cols-4
   }
 
   return (
-  <div
-  className="
-    grid
-    w-full
-    items-start
-    justify-items-stretch
-    gap-3
-    sm:gap-4
-
-    lg:[grid-template-columns:repeat(auto-fit,minmax(210px,1fr))]
-  "
->
-    {products.map((product) => (
-      <ProductCard
-        key={product.id}
-        product={product}
-      />
-    ))}
-  </div>
-);
+    <div
+      className="
+        grid
+        w-full
+        items-start
+        justify-items-stretch
+        gap-3
+        sm:gap-4
+        [grid-template-columns:repeat(auto-fit,minmax(170px,1fr))]
+      "
+    >
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+        />
+      ))}
+    </div>
+  );
 }
