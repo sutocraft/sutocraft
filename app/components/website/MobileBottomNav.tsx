@@ -24,32 +24,53 @@ import {
 } from "react-icons/fi";
 
 export default function MobileBottomNav() {
+  const pathname = usePathname();
 
-  const pathname =
-    usePathname();
-
-  const router =
-    useRouter();
+  const router = useRouter();
 
   const {
-  isOpen,
-  openCart,
-  cartCount,
-} = useCart();
+    isOpen,
+    openCart,
+    cartCount,
+  } = useCart();
 
-const [user, setUser] =
-  useState<any>(null);
+  const [user, setUser] =
+    useState<any>(null);
 
   const [showNav, setShowNav] =
     useState(true);
 
+  /*
+   * Search/Product active state.
+   *
+   * This is stored in sessionStorage because navigating
+   * to /product can remount this component.
+   */
+  const [activeMenu, setActiveMenu] =
+    useState<string | null>(() => {
+      if (
+        typeof window !== "undefined"
+      ) {
+        return (
+          sessionStorage.getItem(
+            "mobile-nav-active"
+          ) || null
+        );
+      }
+
+      return null;
+    });
+
   const lastScrollY =
     useRef(0);
 
+
+  /* =========================================================
+     SCROLL / NAV VISIBILITY
+     ========================================================= */
+
   useEffect(() => {
-
     function handleScroll() {
-
       if (
         document.body.classList.contains(
           "product-modal-open"
@@ -90,32 +111,122 @@ const [user, setUser] =
         "scroll",
         handleScroll
       );
-
   }, []);
 
+
+  /* =========================================================
+     LOAD USER
+     ========================================================= */
+
   useEffect(() => {
+    async function loadUser() {
+      const currentUser =
+        await getCurrentUser();
 
-  async function loadUser() {
+      setUser(currentUser);
+    }
 
-    const currentUser =
-      await getCurrentUser();
+    loadUser();
+  }, []);
 
-    setUser(currentUser);
 
+  /* =========================================================
+     KEEP ACTIVE STATE IN SYNC WITH ROUTE
+     ========================================================= */
+
+  useEffect(() => {
+    const savedActive =
+      sessionStorage.getItem(
+        "mobile-nav-active"
+      );
+
+    /*
+     * Search is special.
+     *
+     * Search button uses the /product page,
+     * so when saved state is Search and pathname
+     * is /product, Search must remain active.
+     */
+    if (
+      pathname === "/product" &&
+      savedActive === "Search"
+    ) {
+      setActiveMenu("Search");
+      return;
+    }
+
+    /*
+     * If Product was selected, keep Product active.
+     */
+    if (
+      pathname === "/product" &&
+      savedActive === "Product"
+    ) {
+      setActiveMenu("Product");
+      return;
+    }
+
+    /*
+     * Normal pathname based routes.
+     */
+    if (pathname === "/") {
+      setActiveMenu("Home");
+      return;
+    }
+
+    if (
+      pathname.startsWith("/account") ||
+      pathname === "/login"
+    ) {
+      setActiveMenu("Account");
+      return;
+    }
+
+    /*
+     * For other pages, don't force Search/Product.
+     */
+    if (pathname !== "/product") {
+      sessionStorage.removeItem(
+        "mobile-nav-active"
+      );
+
+      setActiveMenu(null);
+    }
+  }, [pathname]);
+
+
+  /* =========================================================
+     SET ACTIVE MENU
+     ========================================================= */
+
+  function setActiveNavigation(
+    menu: string | null
+  ) {
+    setActiveMenu(menu);
+
+    if (menu) {
+      sessionStorage.setItem(
+        "mobile-nav-active",
+        menu
+      );
+    } else {
+      sessionStorage.removeItem(
+        "mobile-nav-active"
+      );
+    }
   }
 
-  loadUser();
 
-}, []);
+  /* =========================================================
+     CLOSE PRODUCT MODAL
+     ========================================================= */
 
   function closeModal() {
-
     if (
       document.body.classList.contains(
         "product-modal-open"
       )
     ) {
-
       if (
         window.history.state
           ?.productModal
@@ -127,69 +238,70 @@ const [user, setUser] =
     }
 
     return false;
-
   }
+
+
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
 
   function navigate(
     href: string
   ) {
+    const closed =
+      closeModal();
+
+    if (closed) {
+      setTimeout(() => {
+        router.push(href);
+      }, 180);
+
+      return;
+    }
+
+    router.push(href);
+  }
+
+
+  /* =========================================================
+     CART DRAWER
+     ========================================================= */
+
+  async function openCartDrawer() {
+    const currentUser =
+      user ||
+      await getCurrentUser();
+
+    if (!currentUser) {
+      setActiveNavigation(null);
+
+      navigate(
+        "/login?redirect=cart"
+      );
+
+      return;
+    }
 
     const closed =
       closeModal();
 
     if (closed) {
-
       setTimeout(() => {
-
-        router.push(href);
-
+        openCart();
       }, 180);
 
       return;
-
     }
 
-    router.push(href);
-
+    openCart();
   }
 
-  async function openCartDrawer() {
 
-  const currentUser =
-    user ||
-    await getCurrentUser();
-
-  if (!currentUser) {
-
-    navigate(
-      "/login?redirect=cart"
-    );
-
-    return;
-
-  }
-
-  const closed =
-    closeModal();
-
-  if (closed) {
-
-    setTimeout(() => {
-
-      openCart();
-
-    }, 180);
-
-    return;
-
-  }
-
-  openCart();
-
-}
+  /* =========================================================
+     MENU
+     ========================================================= */
 
   const menus = [
-
     {
       title: "Home",
       href: "/",
@@ -219,189 +331,340 @@ const [user, setUser] =
       href: "/login",
       icon: FiUser,
     },
-
   ];
 
+
+  /* =========================================================
+     PAGE
+     ========================================================= */
+
   return (
+    <div
+      className={`
+        fixed
+        bottom-0
+        left-0
+        right-0
+        z-[999]
+        transition-transform
+        duration-300
+        lg:hidden
 
-  <div
-    className={`fixed bottom-0 left-0 right-0 z-[999] transition-transform duration-300 lg:hidden ${
-      showNav && !isOpen
-        ? "translate-y-0"
-        : "translate-y-full"
-    }`}
-  >
+        ${
+          showNav && !isOpen
+            ? "translate-y-0"
+            : "translate-y-full"
+        }
+      `}
+    >
 
-    <div className="mx-2 mb-2 rounded-2xl border border-[#E8E1CE] bg-white shadow-2xl">
-
-      <div className="grid grid-cols-5">
-
-        {menus.map((menu) => {
-
-          const Icon =
-            menu.icon;
-
-          const active =
-            pathname === menu.href ||
-            (
-              menu.href !== "/" &&
-              pathname.startsWith(menu.href)
-            );
-
-          const handleClick = async () => {
-
-            switch (menu.title) {
-
-              case "Home":
-                navigate("/");
-                break;
-
-              case "Product":
-  navigate("/product");
-  break;
-
-              case "Search":
-                navigate("/search");
-                break;
-
-              case "Cart":
-                openCartDrawer();
-                break;
-
-              case "Account": {
-
-  const currentUser =
-    user ??
-    await getCurrentUser();
-
-  if (currentUser) {
-
-    navigate("/account");
-
-  } else {
-
-    localStorage.setItem(
-      "login-redirect",
-      "account"
-    );
-
-    navigate("/login");
-
-  }
-
-  break;
-
-}
-
-            }
-
-          };
-
-          return (
-
-            <button
-              key={menu.title}
-              id={
-                menu.title === "Cart"
-                  ? "bottom-cart"
-                  : undefined
-              }
-              onClick={handleClick}
-              className="
-                relative
-                flex
-                flex-col
-                items-center
-                justify-center
-                gap-1
-                py-3
-                transition-all
-                duration-300
-              "
-            >
-
-              {active && (
-
-                <span
-                  className="absolute left-1/2 top-0 h-1 w-8 -translate-x-1/2 rounded-full"
-                  style={{
-                    backgroundColor:
-                      "#98691D",
-                  }}
-                />
-
-              )}
-
-              <div className="relative">
-
-  <Icon
-    size={22}
-    style={{
-      color: active
-        ? "#98691D"
-        : "#6B7280",
-    }}
-  />
-
-  {menu.title === "Cart" &&
-    cartCount > 0 && (
-
-      <span
+      <div
         className="
-          absolute
-          -right-2
-          -top-2
-
-          flex
-          h-5
-          min-w-[20px]
-
-          items-center
-          justify-center
-
-          rounded-full
-
-          bg-red-600
-
-          px-1
-
-          text-[10px]
-          font-bold
-          text-white
+          mx-2
+          mb-2
+          rounded-2xl
+          border
+          border-[#E8E1CE]
+          bg-white
+          shadow-2xl
         "
       >
-        {cartCount > 99
-          ? "99+"
-          : cartCount}
-      </span>
 
-  )}
+        <div className="grid grid-cols-5">
 
-</div>
+          {menus.map((menu) => {
+            const Icon =
+              menu.icon;
 
-              <span
-                className="text-[11px] font-medium"
-                style={{
-                  color: active
-                    ? "#98691D"
-                    : "#6B7280",
-                }}
+
+            /* =================================================
+               ACTIVE STATE
+               ================================================= */
+
+            const active =
+              activeMenu === menu.title ||
+              (
+                activeMenu === null &&
+                (
+                  pathname === menu.href ||
+                  (
+                    menu.href !== "/" &&
+                    pathname.startsWith(
+                      menu.href
+                    )
+                  )
+                )
+              );
+
+
+            /* =================================================
+               CLICK
+               ================================================= */
+
+            const handleClick =
+              async () => {
+
+                switch (menu.title) {
+
+                  /* =========================================
+                     HOME
+                     ========================================= */
+
+                  case "Home": {
+                    setActiveNavigation(
+                      "Home"
+                    );
+
+                    navigate("/");
+
+                    break;
+                  }
+
+
+                  /* =========================================
+                     PRODUCT
+                     ========================================= */
+
+                  case "Product": {
+                    /*
+                     * Explicitly change active state
+                     * before navigation.
+                     */
+                    setActiveNavigation(
+                      "Product"
+                    );
+
+                    navigate(
+                      "/product"
+                    );
+
+                    break;
+                  }
+
+
+                  /* =========================================
+                     SEARCH
+                     ========================================= */
+
+                  case "Search": {
+                    /*
+                     * IMPORTANT:
+                     *
+                     * Save Search BEFORE navigation.
+                     *
+                     * When /product loads, this component
+                     * can remount. sessionStorage makes sure
+                     * Search remains active on the FIRST click.
+                     */
+                    setActiveNavigation(
+                      "Search"
+                    );
+
+                    navigate(
+                      "/product"
+                    );
+
+                    /*
+                     * Wait for Product page/search input
+                     * to render.
+                     */
+                    setTimeout(() => {
+                      const searchInput =
+                        document.querySelector<HTMLInputElement>(
+                          'input[placeholder="Search products..."]'
+                        );
+
+                      if (searchInput) {
+                        searchInput.scrollIntoView(
+                          {
+                            behavior:
+                              "smooth",
+                            block:
+                              "center",
+                          }
+                        );
+
+                        searchInput.focus();
+                      }
+                    }, 500);
+
+                    break;
+                  }
+
+
+                  /* =========================================
+                     CART
+                     ========================================= */
+
+                  case "Cart": {
+                    /*
+                     * Cart is an action, not a page.
+                     */
+                    setActiveNavigation(
+                      null
+                    );
+
+                    await openCartDrawer();
+
+                    break;
+                  }
+
+
+                  /* =========================================
+                     ACCOUNT
+                     ========================================= */
+
+                  case "Account": {
+                    const currentUser =
+                      user ??
+                      await getCurrentUser();
+
+                    setActiveNavigation(
+                      "Account"
+                    );
+
+                    if (currentUser) {
+                      navigate(
+                        "/account"
+                      );
+                    } else {
+                      localStorage.setItem(
+                        "login-redirect",
+                        "account"
+                      );
+
+                      navigate(
+                        "/login"
+                      );
+                    }
+
+                    break;
+                  }
+
+                }
+              };
+
+
+            /* =================================================
+               BUTTON
+               ================================================= */
+
+            return (
+              <button
+                key={menu.title}
+                id={
+                  menu.title === "Cart"
+                    ? "bottom-cart"
+                    : undefined
+                }
+                onClick={handleClick}
+                className="
+                  relative
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  gap-1
+                  py-3
+                  transition-all
+                  duration-300
+                "
               >
-                {menu.title}
-              </span>
 
-            </button>
+                {/* ===========================================
+                   ACTIVE INDICATOR
+                   =========================================== */}
 
-          );
+                {active && (
+                  <span
+                    className="
+                      absolute
+                      left-1/2
+                      top-0
+                      h-1
+                      w-8
+                      -translate-x-1/2
+                      rounded-full
+                    "
+                    style={{
+                      backgroundColor:
+                        "#98691D",
+                    }}
+                  />
+                )}
 
-        })}
 
+                {/* ===========================================
+                   ICON
+                   =========================================== */}
+
+                <div className="relative">
+
+                  <Icon
+                    size={22}
+                    style={{
+                      color: active
+                        ? "#98691D"
+                        : "#6B7280",
+                    }}
+                  />
+
+
+                  {/* Cart Count */}
+                  {menu.title ===
+                    "Cart" &&
+                    cartCount > 0 && (
+                      <span
+                        className="
+                          absolute
+                          -right-2
+                          -top-2
+                          flex
+                          h-5
+                          min-w-[20px]
+                          items-center
+                          justify-center
+                          rounded-full
+                          bg-red-600
+                          px-1
+                          text-[10px]
+                          font-bold
+                          text-white
+                        "
+                      >
+                        {cartCount > 99
+                          ? "99+"
+                          : cartCount}
+                      </span>
+                    )}
+
+                </div>
+
+
+                {/* ===========================================
+                   LABEL
+                   =========================================== */}
+
+                <span
+                  className="
+                    text-[11px]
+                    font-medium
+                  "
+                  style={{
+                    color: active
+                      ? "#98691D"
+                      : "#6B7280",
+                  }}
+                >
+                  {menu.title}
+                </span>
+
+              </button>
+            );
+          })}
+
+        </div>
       </div>
-
     </div>
-
-  </div>
-
-);
-
+  );
 }
