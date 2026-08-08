@@ -256,9 +256,9 @@ const [user, setUser] =
                 navigate("/");
                 break;
 
-              case "Products":
-                navigate("/products");
-                break;
+              case "Product":
+  navigate("/product");
+  break;
 
               case "Search":
                 navigate("/search");
