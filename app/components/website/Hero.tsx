@@ -588,8 +588,8 @@ h-[70px]
     py-1
     shadow-xl
 
-    lg:-bottom-2
-    lg:right-2
+    lg:-bottom-0
+    lg:right-0
     lg:rounded-2xl
     lg:px-4
     lg:py-2
