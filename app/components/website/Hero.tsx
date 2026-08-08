@@ -191,25 +191,25 @@ lg:rounded-[40px] bg-gray-200" />
 
         <div
   className="
-relative
-grid
-grid-cols-1
-gap-4
-pt-4
-pb-16
+  relative
+  grid
+  grid-cols-1
+  gap-5
+  pt-4
+  pb-14
 
-sm:gap-6
-sm:pt-5
-sm:pb-20
+  sm:gap-6
+  sm:pt-5
+  sm:pb-16
 
-lg:pt-10
-lg:pb-20
+  lg:pt-10
+  lg:pb-20
 
-items-center
+  items-center
 
-lg:grid-cols-[1fr_560px]
-lg:min-h-[760px]
-lg:gap-14
+  lg:grid-cols-[1fr_560px]
+  lg:min-h-[760px]
+  lg:gap-14
 "
 >
 
@@ -275,10 +275,10 @@ lg:gap-14
     font-black
     text-[#1E293B]
 
-    text-[38px]
-    leading-[1.05]
+    text-[30px]
+leading-[1.08]
 
-    sm:text-5xl
+sm:text-4xl
 
     lg:mx-0
     lg:max-w-[650px]
@@ -300,9 +300,9 @@ lg:gap-14
   style={{
   fontSize:
     product.name.length > 40
-      ? "1.75rem"
+      ? "1.6rem"
       : product.name.length > 28
-      ? "2rem"
+      ? "1.8rem"
       : undefined,
 }}
 >
@@ -326,9 +326,9 @@ lg:gap-14
     lg:text-lg
     lg:leading-8
 
-    min-h-[36px]
-    sm:min-h-[40px]
-    lg:min-h-[40px]
+    min-h-[32px]
+sm:min-h-[36px]
+lg:min-h-[40px]
 
     flex
     items-center
@@ -344,20 +344,17 @@ lg:gap-14
               <div
   className="
     mt-3
+flex
+flex-col
+gap-2
 
-    flex
-    flex-col
-    gap-3
+sm:flex-row
+sm:justify-center
 
-    sm:flex-row
-    sm:justify-center
-
-    lg:mt-4
+lg:mt-4
 lg:justify-start
 
-h-[60px]
-
-    flex-shrink-0
+flex-shrink-0
   "
 >
 
@@ -430,17 +427,16 @@ h-[60px]
 
                             <div
   className="
-    mt-4
+    mt-3
+flex
+justify-center
 
-    flex
-    justify-center
-
-    lg:mt-4
+lg:mt-4
 lg:justify-start
 
-h-[70px]
+min-h-[64px]
 
-    flex-shrink-0
+flex-shrink-0
   "
 >
 
@@ -516,15 +512,17 @@ h-[70px]
   key={product.image_url}
   className="
     order-1
-    relative
-    mx-auto
-    w-full
-    max-w-[340px]
+relative
+mx-auto
+w-[calc(100vw-32px)]
+max-w-[360px]
 
-    sm:max-w-[420px]
+sm:w-[calc(100vw-48px)]
+sm:max-w-[440px]
 
-    lg:order-2
-    lg:max-w-[460px]
+lg:order-2
+lg:w-full
+lg:max-w-[460px]
   "
   initial={{
     opacity: 0,
@@ -546,27 +544,28 @@ h-[70px]
 
               <div
   className="
-    rounded-[26px]
-    bg-white
-    p-4
-    shadow-[0_18px_50px_rgba(0,0,0,.10)]
+    rounded-[24px]
+bg-white
+p-3
+shadow-[0_18px_50px_rgba(0,0,0,.10)]
 
-    sm:p-5
+sm:rounded-[28px]
+sm:p-4
 
-    lg:rounded-[42px]
-    lg:p-7
-    lg:shadow-[0_25px_80px_rgba(0,0,0,.10)]
+lg:rounded-[42px]
+lg:p-7
+lg:shadow-[0_25px_80px_rgba(0,0,0,.10)]
   "
 >
 
                 <div
   className="
     relative
-    aspect-square
-    overflow-hidden
-    rounded-[20px]
+aspect-square
+overflow-hidden
+rounded-[18px]
 
-    lg:rounded-[30px]
+lg:rounded-[30px]
   "
 >
 
@@ -594,18 +593,21 @@ h-[70px]
   className="
     absolute
     bottom-2
-    right-2
-    rounded-xl
-    bg-white
-    px-1
-    py-1
-    shadow-xl
+right-2
+rounded-xl
+bg-white
+px-2
+py-1
+shadow-xl
 
-    lg:-bottom-0
-    lg:right-0
-    lg:rounded-2xl
-    lg:px-4
-    lg:py-2
+sm:bottom-3
+sm:right-3
+
+lg:-bottom-0
+lg:right-0
+lg:rounded-2xl
+lg:px-4
+lg:py-2
   "
 >
 
@@ -668,13 +670,19 @@ h-[70px]
   className="
     absolute
 
-    bottom-6
+    absolute
+
+bottom-3
 left-1/2
 flex
 -translate-x-1/2
-gap-4
+gap-2.5
+
+sm:bottom-4
+sm:gap-3
 
 lg:bottom-2
+lg:gap-4
   "
 >
 
