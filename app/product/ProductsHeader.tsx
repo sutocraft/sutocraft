@@ -7,6 +7,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+import type { ReactNode } from "react";
+
 type SortOption =
   | "Newest"
   | "Price: Low to High"
@@ -21,6 +23,8 @@ type Props = {
   sort: SortOption;
   onSortChange: (value: SortOption) => void;
   onMobileFilter: () => void;
+
+  desktopFilter?: ReactNode;
 };
 
 export default function ProductsHeader({
@@ -30,6 +34,7 @@ export default function ProductsHeader({
   sort,
   onSortChange,
   onMobileFilter,
+  desktopFilter,
 }: Props) {
   return (
     <section className="bg-white">
@@ -50,26 +55,26 @@ export default function ProductsHeader({
             Right = Search + Sort
            ===================================================== */}
         <div
-  className="
-    pt-4
-    pb-3
-    sm:pt-5
-    sm:pb-4
-    lg:pt-8
-    lg:pb-6
-  "
->
+          className="
+            pt-6
+            pb-5
+            sm:pt-7
+            sm:pb-6
+            lg:pt-8
+            lg:pb-6
+          "
+        >
           {/* Breadcrumb */}
           <div
-  className="
-    mb-2
-    flex
-    items-center
-    gap-2
-    text-sm
-    text-[#64748B]
-  "
->
+            className="
+              mb-4
+              flex
+              items-center
+              gap-2
+              text-sm
+              text-[#64748B]
+            "
+          >
             <span>Home</span>
 
             <span className="text-[#CBD5E1]">/</span>
@@ -83,15 +88,15 @@ export default function ProductsHeader({
               DESKTOP MAIN HEADER
              ================================================= */}
           <div
-  className="
-    relative
-    grid
-    grid-cols-1
-    gap-4
-    lg:grid-cols-[minmax(0,1fr)_520px]
-    lg:items-start
-  "
->
+            className="
+              relative
+              grid
+              grid-cols-1
+              gap-4
+              lg:grid-cols-[minmax(0,1fr)_520px]
+              lg:items-start
+            "
+          >
             {/* LEFT CONTENT */}
             <div className="min-w-0">
               {/* Collection Label */}
@@ -109,55 +114,55 @@ export default function ProductsHeader({
               </p>
 
               {/* Title + Count */}
-<div className="flex items-end justify-between gap-4">
-  <h1
-    className="
-      mt-1
-      min-w-0
-      text-3xl
-      font-bold
-      leading-tight
-      tracking-tight
-      text-[#2B2B2B]
-      sm:text-4xl
-      lg:text-[42px]
-      xl:text-5xl
-    "
-  >
-    Premium Collection
-  </h1>
+              <div className="flex items-end justify-between gap-4">
+                <h1
+                  className="
+                    mt-1
+                    min-w-0
+                    text-3xl
+                    font-bold
+                    leading-tight
+                    tracking-tight
+                    text-[#2B2B2B]
+                    sm:text-4xl
+                    lg:text-[42px]
+                    xl:text-5xl
+                  "
+                >
+                  Premium Collection
+                </h1>
 
-  {/* Desktop Count */}
-<p
-  className="
-    hidden
-    lg:block
-    absolute
-    right-0
-    top-[88px]
-    text-right
-    text-sm
-    text-[#64748B]
-  "
->
-  Showing{" "}
-  <span className="font-semibold text-[#2B2B2B]">
-    {total}
-  </span>{" "}
-  products
-</p>
-</div>
+                {/* Desktop Count */}
+                <p
+                  className="
+                    hidden
+                    lg:block
+                    absolute
+                    right-0
+                    top-[88px]
+                    text-right
+                    text-sm
+                    text-[#64748B]
+                  "
+                >
+                  Showing{" "}
+                  <span className="font-semibold text-[#2B2B2B]">
+                    {total}
+                  </span>{" "}
+                  products
+                </p>
+              </div>
 
               {/* Description */}
               <p
-  className="
-    mt-1
-    text-sm
-    leading-5
-    text-[#64748B]
-    sm:text-base
-  "
->
+                className="
+                  mt-3
+                  text-sm
+                  leading-6
+                  text-[#64748B]
+                  sm:text-base
+                "
+              >
                 Discover our latest collection of premium products.
               </p>
             </div>
@@ -294,7 +299,7 @@ export default function ProductsHeader({
           {/* =================================================
               MOBILE SEARCH
              ================================================= */}
-          <div className="mt-3 lg:hidden">
+          <div className="mt-4 lg:hidden">
             <div className="relative w-full">
               <Search
                 size={18}
@@ -316,7 +321,7 @@ export default function ProductsHeader({
                 }
                 placeholder="Search products..."
                 className="
-                  h-10
+                  h-12
                   w-full
                   rounded-2xl
                   border
@@ -339,141 +344,141 @@ export default function ProductsHeader({
         </div>
 
         {/* =====================================================
-            COUNT ROW
-            Desktop:
-            Premium Collection        Showing 10 products
-
-            Mobile:
-            Showing 10 products
-            Filters + Newest
+            MOBILE CONTROLS
            ===================================================== */}
         <div
           className="
-  flex
-  flex-col
-  gap-2
-  pb-2
-  sm:pb-3
-  lg:flex-row
-  lg:items-end
-  lg:justify-between
-"
+            flex
+            flex-col
+            gap-4
+            pb-4
+            sm:pb-5
+            lg:hidden
+          "
         >
-          
+          <div className="flex w-full items-center gap-3">
+            {/* Filters */}
+            <button
+              type="button"
+              onClick={onMobileFilter}
+              className="
+                flex
+                h-11
+                min-w-0
+                flex-1
+                items-center
+                justify-center
+                gap-2
+                rounded-2xl
+                border
+                border-[#E8E1CE]
+                bg-white
+                px-2
+                text-sm
+                font-semibold
+                text-[#98691D]
+                transition
+                hover:bg-[#98691D]/5
+              "
+            >
+              <SlidersHorizontal size={17} />
+              <span>Filters</span>
+            </button>
 
-          {/* MOBILE CONTROLS */}
-<div className="flex w-full items-center gap-3 lg:hidden">
+            {/* Newest / Sort */}
+            <div className="relative flex-1">
+              <ArrowUpDown
+                size={17}
+                className="
+                  pointer-events-none
+                  absolute
+                  left-3
+                  top-1/2
+                  -translate-y-1/2
+                  text-[#98691D]
+                "
+              />
 
-  {/* Filters */}
-  <button
-    type="button"
-    onClick={onMobileFilter}
-    className="
-      flex
-      h-9
-      min-w-0
-      flex-1
-      items-center
-      justify-center
-      gap-2
-      rounded-2xl
-      border
-      border-[#E8E1CE]
-      bg-white
-      px-2
-      text-sm
-      font-semibold
-      text-[#98691D]
-      transition
-      hover:bg-[#98691D]/5
-    "
-  >
-    <SlidersHorizontal size={17} />
-    <span>Filters</span>
-  </button>
+              <select
+                value={sort}
+                onChange={(e) =>
+                  onSortChange(
+                    e.target.value as SortOption
+                  )
+                }
+                className="
+                  h-11
+                  w-full
+                  appearance-none
+                  rounded-2xl
+                  border
+                  border-[#E8E1CE]
+                  bg-white
+                  pl-9
+                  pr-8
+                  text-sm
+                  font-medium
+                  text-[#2B2B2B]
+                  outline-none
+                  focus:border-[#98691D]
+                  focus:ring-2
+                  focus:ring-[#98691D]/10
+                "
+              >
+                <option value="Newest">
+                  Newest
+                </option>
 
-  {/* Newest / Sort */}
-  <div className="relative flex-1">
-    <ArrowUpDown
-      size={17}
-      className="
-        pointer-events-none
-        absolute
-        left-3
-        top-1/2
-        -translate-y-1/2
-        text-[#98691D]
-      "
-    />
+                <option value="Price: Low to High">
+                  Price: Low to High
+                </option>
 
-    <select
-      value={sort}
-      onChange={(e) =>
-        onSortChange(e.target.value as SortOption)
-      }
-      className="
-        h-9
-        w-full
-        appearance-none
-        rounded-2xl
-        border
-        border-[#E8E1CE]
-        bg-white
-        pl-9
-        pr-8
-        text-sm
-        font-medium
-        text-[#2B2B2B]
-        outline-none
-        focus:border-[#98691D]
-        focus:ring-2
-        focus:ring-[#98691D]/10
-      "
-    >
-      <option value="Newest">Newest</option>
+                <option value="Price: High to Low">
+                  Price: High to Low
+                </option>
 
-      <option value="Price: Low to High">
-        Price: Low to High
-      </option>
+                <option value="Name: A to Z">
+                  Name: A to Z
+                </option>
 
-      <option value="Price: High to Low">
-        Price: High to Low
-      </option>
+                <option value="Name: Z to A">
+                  Name: Z to A
+                </option>
+              </select>
 
-      <option value="Name: A to Z">
-        Name: A to Z
-      </option>
+              <ChevronDown
+                size={16}
+                className="
+                  pointer-events-none
+                  absolute
+                  right-3
+                  top-1/2
+                  -translate-y-1/2
+                  text-[#94A3B8]
+                "
+              />
+            </div>
 
-      <option value="Name: Z to A">
-        Name: Z to A
-      </option>
-    </select>
-
-    <ChevronDown
-      size={16}
-      className="
-        pointer-events-none
-        absolute
-        right-3
-        top-1/2
-        -translate-y-1/2
-        text-[#94A3B8]
-      "
-    />
-  </div>
-
-  {/* Showing Count */}
-  <p className="shrink-0 whitespace-nowrap text-xs text-[#64748B]">
-    Showing{" "}
-    <span className="font-semibold text-[#2B2B2B]">
-      {total}
-    </span>{" "}
-    products
-  </p>
-
-
+            {/* Showing Count */}
+            <p className="shrink-0 whitespace-nowrap text-xs text-[#64748B]">
+              Showing{" "}
+              <span className="font-semibold text-[#2B2B2B]">
+                {total}
+              </span>{" "}
+              products
+            </p>
           </div>
         </div>
+
+        {/* =====================================================
+            DESKTOP FILTER
+            Filter will appear inside this same white panel
+           ===================================================== */}
+        {desktopFilter && (
+  <div className="hidden border-t border-[#EEE8DD] pb-2 pt-2 lg:block">
+    {desktopFilter}
+  </div>
+)}
 
         {/* DIVIDER */}
         <div className="border-t border-[#EEE8DD]" />
