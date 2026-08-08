@@ -30,11 +30,7 @@ export default function Loading() {
         "
       >
         {Array.from({ length: 8 }).map((_, index) => (
-          <ProductsSkeleton
-            key={index}
-            products={[]}
-            loading={true}
-          />
+          <ProductsSkeleton key={index} />
         ))}
       </div>
     </main>
