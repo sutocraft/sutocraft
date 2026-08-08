@@ -14,25 +14,23 @@ export default function Loading() {
       </div>
 
       <div
-        className="
-          mx-auto
-          grid
-          max-w-[1600px]
-          grid-cols-2
-          gap-3
-          px-4
-          py-6
-          sm:gap-4
-          sm:px-6
-          lg:grid-cols-3
-          lg:px-8
-          xl:grid-cols-4
-        "
-      >
-        {Array.from({ length: 8 }).map((_, index) => (
-          <ProductsSkeleton key={index} />
-        ))}
-      </div>
+  className="
+    grid
+    w-full
+    grid-cols-2
+    items-start
+    justify-items-stretch
+    gap-3
+
+    sm:gap-4
+    md:grid-cols-3
+    xl:grid-cols-4
+  "
+>
+  {Array.from({ length: 8 }).map((_, index) => (
+    <ProductsSkeleton key={index} />
+  ))}
+</div>
     </main>
   );
 }
