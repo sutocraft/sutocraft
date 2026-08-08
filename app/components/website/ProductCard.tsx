@@ -20,7 +20,9 @@ export default function ProductCard({
 }: Props) {
   const [open, setOpen] = useState(false);
 
-  const { themeColor } = useTheme();
+  const {
+    themeColor,
+  } = useTheme();
 
   const hoverColor = themeColor;
 
@@ -46,36 +48,40 @@ export default function ProductCard({
           group
           flex
           h-full
-          min-h-0
+          min-w-0
           cursor-pointer
           flex-col
           overflow-hidden
-          rounded-2xl
+          rounded-3xl
           border
           shadow-sm
           transition-all
           duration-300
 
           hover:-translate-y-1
-          hover:shadow-xl
-
-          sm:rounded-3xl
+          hover:shadow-2xl
         "
         style={{
           borderColor: cardBorder,
           background: cardBackground,
         }}
       >
-        {/* IMAGE */}
+
+        {/* =====================================================
+            IMAGE
+           ===================================================== */}
+
         <div
           className="
             relative
+            min-w-0
             overflow-hidden
           "
           style={{
             background: imageBackground,
           }}
         >
+
           {/* BADGES */}
           <div
             className="
@@ -83,32 +89,33 @@ export default function ProductCard({
               right-2
               top-2
               z-20
-
               flex
               flex-col
               items-end
               gap-1.5
 
-              sm:right-4
-              sm:top-4
+              sm:right-3
+              sm:top-3
               sm:gap-2
             "
           >
             {product.new_arrival && (
               <span
                 className="
+                  whitespace-nowrap
                   rounded-full
-                  px-2.5
-                  py-1
-                  text-[9px]
+                  px-2
+                  py-0.5
+                  text-[8px]
                   font-bold
                   uppercase
-                  tracking-[0.08em]
+                  tracking-wide
                   text-white
-                  shadow-lg
+                  shadow-md
 
-                  sm:px-3
-                  sm:text-[11px]
+                  sm:px-2.5
+                  sm:py-1
+                  sm:text-[10px]
                 "
                 style={{
                   background: badgeColor,
@@ -121,16 +128,18 @@ export default function ProductCard({
             {product.discount_percentage > 0 && (
               <span
                 className="
+                  whitespace-nowrap
                   rounded-full
-                  px-2.5
-                  py-1
-                  text-[9px]
+                  px-2
+                  py-0.5
+                  text-[8px]
                   font-bold
                   text-white
-                  shadow-lg
+                  shadow-md
 
-                  sm:px-3
-                  sm:text-[11px]
+                  sm:px-2.5
+                  sm:py-1
+                  sm:text-[10px]
                 "
                 style={{
                   background: dangerColor,
@@ -141,17 +150,20 @@ export default function ProductCard({
             )}
           </div>
 
+
           {/* WISHLIST */}
           <div
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) =>
+              e.stopPropagation()
+            }
             className="
               absolute
               bottom-2
               right-2
               z-20
 
-              sm:bottom-4
-              sm:right-4
+              sm:bottom-3
+              sm:right-3
             "
           >
             <WishlistButton
@@ -159,11 +171,13 @@ export default function ProductCard({
             />
           </div>
 
+
           {/* PRODUCT IMAGE */}
           <div
             className="
               relative
               aspect-[4/5]
+              min-w-0
               overflow-hidden
             "
           >
@@ -175,7 +189,7 @@ export default function ProductCard({
                   h-full
                   w-full
                   object-contain
-                  transition-transform
+                  transition-all
                   duration-500
                   group-hover:scale-105
                   ${imagePadding}
@@ -197,22 +211,49 @@ export default function ProductCard({
           </div>
         </div>
 
-        {/* CONTENT */}
+
+        {/* =====================================================
+            CONTENT
+           ===================================================== */}
+
         <div
           className="
             flex
+            min-w-0
             flex-1
             flex-col
 
-            p-3
-            sm:p-4
-            lg:p-5
+            p-2
+
+            sm:p-3
+
+            lg:p-4
           "
         >
-          {/* Rating */}
-          <div className="mb-2 flex items-center gap-2">
+
+          {/* ===================================================
+              RATING
+             =================================================== */}
+
+          <div
+            className="
+              mb-1.5
+              flex
+              min-w-0
+              items-center
+              gap-1.5
+
+              sm:mb-2
+              sm:gap-2
+            "
+          >
             <span
-              className="text-xs sm:text-sm"
+              className="
+                shrink-0
+                text-[10px]
+
+                sm:text-xs
+              "
               style={{
                 color: themeColor,
               }}
@@ -222,9 +263,11 @@ export default function ProductCard({
 
             <span
               className="
-                text-[10px]
+                shrink-0
+                text-[9px]
                 font-medium
-                sm:text-xs
+
+                sm:text-[11px]
               "
               style={{
                 color: textColor,
@@ -234,23 +277,30 @@ export default function ProductCard({
             </span>
           </div>
 
-          {/* Product Name */}
+
+          {/* ===================================================
+              PRODUCT NAME
+             =================================================== */}
+
           <div
             className="
-              min-h-[42px]
-              sm:min-h-[54px]
-              lg:min-h-[58px]
+              min-w-0
+              min-h-[40px]
+
+              sm:min-h-[48px]
             "
           >
             <h3
               className="
                 line-clamp-2
+                break-words
                 font-semibold
-                leading-5
+                leading-[1.2]
+                text-[11px]
 
-                text-[13px]
-                sm:text-[15px]
-                lg:text-base
+                sm:text-[13px]
+
+                lg:text-[15px]
               "
               style={{
                 color: titleColor,
@@ -264,12 +314,13 @@ export default function ProductCard({
               <p
                 className="
                   mt-1
-                  line-clamp-1
-                  text-[9px]
+                  min-w-0
+                  truncate
+                  text-[8px]
                   uppercase
-                  tracking-[0.08em]
+                  tracking-[0.05em]
 
-                  sm:text-[11px]
+                  sm:text-[10px]
                 "
                 style={{
                   color: textColor,
@@ -286,22 +337,31 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* PRICE */}
+
+          {/* ===================================================
+              PRICE
+             =================================================== */}
+
           <div
             className="
-              mt-3
+              mt-2
               flex
-              items-end
-              gap-2
+              min-w-0
+              items-baseline
+              gap-1.5
+              overflow-hidden
+
+              sm:mt-3
+              sm:gap-2
             "
           >
             <span
               className="
-                text-lg
+                min-w-0
+                truncate
+                whitespace-nowrap
                 font-extrabold
-
-                sm:text-xl
-                lg:text-2xl
+                text-[clamp(0.9rem,1.45vw,1.5rem)]
               "
               style={{
                 color: themeColor,
@@ -315,10 +375,14 @@ export default function ProductCard({
             {product.sale_price && (
               <span
                 className="
-                  pb-1
-                  text-xs
+                  min-w-0
+                  truncate
+                  whitespace-nowrap
+                  pb-0.5
+                  text-[9px]
                   line-through
-                  sm:text-sm
+
+                  sm:text-[11px]
                 "
                 style={{
                   color: textColor,
@@ -330,8 +394,12 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Divider */}
-          <div className="mt-auto pt-4">
+
+          {/* ===================================================
+              DIVIDER
+             =================================================== */}
+
+          <div className="mt-auto pt-3 sm:pt-4">
             <div
               className="border-t"
               style={{
@@ -340,92 +408,122 @@ export default function ProductCard({
             />
           </div>
 
-          {/* Footer */}
-          <div className="pt-4">
+
+          {/* ===================================================
+              FOOTER / VIEW DETAILS
+             =================================================== */}
+
+          <div className="pt-2.5 sm:pt-3">
+
             <button
-  onClick={(e) => {
-    e.stopPropagation();
-    setOpen(true);
-  }}
-  className="
-    group/button
-    flex
-    h-10
-    w-full
-    min-w-0
-    items-center
-    justify-between
-    rounded-xl
-    border
-    px-3
-    transition-all
-    duration-300
-    hover:shadow-lg
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(true);
+              }}
+              className="
+                group/button
+                flex
+                min-w-0
+                h-9
+                w-full
+                items-center
+                justify-between
+                gap-1
+                overflow-hidden
+                rounded-xl
+                border
+                px-2
 
-    sm:h-12
-    sm:rounded-2xl
-    sm:px-4
-  "
-  style={{
-    borderColor: themeColor,
-  }}
->
-  <span
-    className="
-      shrink-0
-      whitespace-nowrap
-      text-[9px]
-      font-bold
-      uppercase
-      tracking-[0.05em]
+                transition-all
+                duration-300
 
-      sm:text-[13px]
-      sm:tracking-[0.08em]
-    "
-    style={{
-      color: themeColor,
-    }}
-  >
-    View Details
-  </span>
+                hover:shadow-lg
 
-  <div
-    className="
-      ml-1
-      flex
-      h-7
-      w-7
-      shrink-0
-      items-center
-      justify-center
-      rounded-full
-      text-white
-      transition-all
-      duration-300
+                sm:h-10
+                sm:rounded-2xl
+                sm:px-3
+              "
+              style={{
+                borderColor: themeColor,
+              }}
+            >
 
-      group-hover/button:translate-x-1
-      group-hover/button:scale-110
+              {/* Text */}
+              <span
+                className="
+                  min-w-0
+                  flex-1
+                  truncate
+                  whitespace-nowrap
+                  text-left
+                  text-[8px]
+                  font-bold
+                  uppercase
+                  tracking-[0.04em]
 
-      sm:ml-2
-      sm:h-9
-      sm:w-9
-    "
-    style={{
-      background: themeColor,
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.background = hoverColor;
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.background = themeColor;
-    }}
-  >
-    →
-  </div>
-</button>
+                  sm:text-[10px]
+                  sm:tracking-[0.06em]
+
+                  lg:text-[11px]
+                "
+                style={{
+                  color: themeColor,
+                }}
+              >
+                View Details
+              </span>
+
+
+              {/* Arrow */}
+              <span
+                className="
+                  flex
+                  h-7
+                  w-7
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-sm
+                  leading-none
+                  text-white
+
+                  transition-all
+                  duration-300
+
+                  group-hover/button:translate-x-0.5
+                  group-hover/button:scale-105
+
+                  sm:h-8
+                  sm:w-8
+                  sm:text-base
+                "
+                style={{
+                  background: themeColor,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background =
+                    hoverColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background =
+                    themeColor;
+                }}
+              >
+                →
+              </span>
+
+            </button>
+
           </div>
+
         </div>
       </article>
+
+
+      {/* =======================================================
+          PRODUCT DETAILS MODAL
+         ======================================================= */}
 
       <ProductDetailsModal
         open={open}
