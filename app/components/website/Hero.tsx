@@ -352,7 +352,7 @@ h-[60px]
   href={`/product/${product.slug}`}
   className="
     inline-flex
-    h-12
+    h-14
     w-full
     items-center
     justify-center
@@ -383,7 +383,7 @@ h-[60px]
                 <button
   className="
     inline-flex
-    h-12
+    h-14
     w-full
     items-center
     justify-center
