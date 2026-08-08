@@ -312,19 +312,12 @@ window.location.href =
             </Link>
 
             <Link
-              href="/products"
-              className="font-semibold text-[#2B2B2B] transition"
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color =
-                  themeColor)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color =
-                  "#2B2B2B")
-              }
-            >
-              Shop
-            </Link>
+  href="/product"
+  onClick={() => setMenuOpen(false)}
+  className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
+>
+  Shop
+</Link>
 
             <Link
               href="/about"
