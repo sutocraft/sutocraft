@@ -4,39 +4,23 @@ import { Search, SlidersHorizontal } from "lucide-react";
 
 import { useTheme } from "@/app/components/website/settings.theme_color";
 import ProductsSort from "./ProductsSort";
-
-type SortOption =
-  | "Newest"
-  | "Price: Low to High"
-  | "Price: High to Low"
-  | "Name: A to Z"
-  | "Name: Z to A";
+import Container from "@/app/components/website/Container";
 
 type Props = {
   total: number;
-  search: string;
-  onSearchChange: (value: string) => void;
-  sort: SortOption;
-  onSortChange: (value: SortOption) => void;
-  onMobileFilter: () => void;
 };
 
 export default function ProductsHeader({
   total,
-  search,
-  onSearchChange,
-  sort,
-  onSortChange,
-  onMobileFilter,
 }: Props) {
   const { themeColor } = useTheme();
 
   return (
     <section className="border-b border-[#E8E1CE] bg-white">
-      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 lg:px-8">
+      <Container>
 
         {/* Breadcrumb */}
-        <div className="mb-6 text-sm text-gray-500">
+        <div className="mb-6 pt-8 text-sm text-gray-500 sm:pt-10">
           <span>Home</span>
 
           <span className="mx-2 text-gray-300">
@@ -54,8 +38,16 @@ export default function ProductsHeader({
         </div>
 
         {/* Main Header */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-
+        <div
+          className="
+            flex
+            flex-col
+            gap-6
+            lg:flex-row
+            lg:items-end
+            lg:justify-between
+          "
+        >
           {/* Title */}
           <div>
             <p
@@ -107,10 +99,6 @@ export default function ProductsHeader({
 
             <input
               type="text"
-              value={search}
-              onChange={(e) =>
-                onSearchChange(e.target.value)
-              }
               placeholder="Search products..."
               className="
                 h-12
@@ -130,12 +118,10 @@ export default function ProductsHeader({
                 focus:shadow-sm
               "
               onFocus={(e) => {
-                e.currentTarget.style.borderColor =
-                  themeColor;
+                e.currentTarget.style.borderColor = themeColor;
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor =
-                  "#E8E1CE";
+                e.currentTarget.style.borderColor = "#E8E1CE";
               }}
             />
           </div>
@@ -150,7 +136,7 @@ export default function ProductsHeader({
             gap-3
             border-t
             border-[#F0EBE0]
-            pt-5
+            py-5
             sm:flex-row
             sm:items-center
             sm:justify-between
@@ -168,10 +154,9 @@ export default function ProductsHeader({
           {/* Controls */}
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
 
-            {/* Mobile Filter Button */}
+            {/* Mobile Filter */}
             <button
               type="button"
-              onClick={onMobileFilter}
               className="
                 flex
                 h-12
@@ -202,13 +187,12 @@ export default function ProductsHeader({
             </button>
 
             {/* Sort */}
-            <ProductsSort
-              selected={sort}
-              onChange={onSortChange}
-            />
+            <ProductsSort />
+
           </div>
         </div>
-      </div>
+
+      </Container>
     </section>
   );
 }
