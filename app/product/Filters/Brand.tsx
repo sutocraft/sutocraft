@@ -44,7 +44,11 @@ export default function Brand({
             type="radio"
             name="brand"
             checked={selectedBrand === brand}
-            onChange={() => onBrandChange(brand)}
+            onChange={() => {
+  if (brand) {
+    onBrandChange(brand);
+  }
+}}
             className="h-4 w-4 accent-[#98691D]"
           />
 
