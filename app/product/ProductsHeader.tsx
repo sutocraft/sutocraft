@@ -38,7 +38,7 @@ export default function ProductsHeader({
       <Container>
 
         {/* Breadcrumb */}
-        <div className="mb-6 pt-8 text-sm text-gray-500 sm:pt-10">
+        <div className="mb-3 pt-4 text-sm text-gray-500 sm:mb-4 sm:pt-6 lg:mb-4 lg:pt-5 xl:mb-6 xl:pt-8">
           <span>Home</span>
 
           <span className="mx-2 text-gray-300">
@@ -58,13 +58,17 @@ export default function ProductsHeader({
         {/* Main Header */}
         <div
           className="
-            flex
-            flex-col
-            gap-6
-            lg:flex-row
-            lg:items-end
-            lg:justify-between
-          "
+  flex
+  flex-col
+  gap-3
+  sm:gap-4
+  lg:flex-row
+  lg:items-end
+  lg:justify-between
+  lg:gap-5
+  xl:gap-6
+"
+          
         >
           {/* Title */}
           <div>
@@ -85,25 +89,27 @@ export default function ProductsHeader({
 
             <h1
               className="
-                mt-2
-                text-3xl
-                font-bold
-                leading-tight
-                text-[#2B2B2B]
-                sm:text-4xl
-                lg:text-5xl
-              "
+  mt-1.5
+  text-3xl
+  font-bold
+  leading-tight
+  text-[#2B2B2B]
+  sm:mt-2
+  sm:text-4xl
+  lg:text-4xl
+  xl:text-5xl
+"
             >
               Premium Collection
             </h1>
 
-            <p className="mt-3 text-sm text-[#6B7280] sm:text-base">
+            <p className="mt-2 text-sm text-[#6B7280] sm:mt-3 sm:text-base">
               Discover our latest collection of premium products.
             </p>
           </div>
 
           {/* Search */}
-          <div className="relative w-full lg:max-w-[360px]">
+          <div className="relative w-full lg:max-w-[320px] xl:max-w-[360px]">
             <Search
               size={18}
               className="
@@ -150,17 +156,23 @@ export default function ProductsHeader({
         {/* Bottom Controls */}
         <div
           className="
-            mt-7
-            flex
-            flex-col
-            gap-3
-            border-t
-            border-[#F0EBE0]
-            py-5
-            sm:flex-row
-            sm:items-center
-            sm:justify-between
-          "
+  mt-4
+  flex
+  flex-col
+  gap-3
+  border-t
+  border-[#F0EBE0]
+  py-4
+  sm:mt-5
+  sm:flex-row
+  sm:items-center
+  sm:justify-between
+  sm:py-4
+  lg:mt-4
+  lg:py-3
+  xl:mt-7
+  xl:py-5
+"
         >
           {/* Product Count */}
           <p className="text-sm text-[#6B7280]">
@@ -179,12 +191,12 @@ export default function ProductsHeader({
   type="button"
   onClick={onMobileFilter}
               className="
-                flex
-                h-12
-                items-center
-                justify-center
-                gap-2
-                rounded-2xl
+  flex
+  h-11
+  items-center
+  justify-center
+  gap-2
+  rounded-2xl
                 border
                 border-[#E8E1CE]
                 bg-white
