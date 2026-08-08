@@ -185,11 +185,11 @@ export async function getHeroProducts(
   const { data, error } = await supabase
     .from("products")
     .select(`
-      *,
-      brand:brands(name),
-      category:categories(name),
-      sub_category:sub_categories(name)
-    `)
+  *,
+  brand:brands(name),
+  category:categories(name),
+  sub_category:sub_categories(name)
+`)
     .eq("active", true)
     .eq("show_hero", true)
     .order("hero_order", {
