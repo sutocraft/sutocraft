@@ -44,9 +44,11 @@ export default function Category({
             type="radio"
             name="category"
             checked={selectedCategory === category}
-            onChange={() =>
-              onCategoryChange(category)
-            }
+            onChange={() => {
+  if (category) {
+    onCategoryChange(category);
+  }
+}}
             className="h-4 w-4 accent-[#98691D]"
           />
 
