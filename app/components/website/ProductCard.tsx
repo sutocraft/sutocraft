@@ -343,81 +343,86 @@ export default function ProductCard({
           {/* Footer */}
           <div className="pt-4">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(true);
-              }}
-              className="
-                group/button
-                flex
-                h-10
-                w-full
-                items-center
-                justify-between
-                rounded-xl
-                border
-                px-3
-                transition-all
-                duration-300
-                hover:shadow-lg
+  onClick={(e) => {
+    e.stopPropagation();
+    setOpen(true);
+  }}
+  className="
+    group/button
+    flex
+    h-10
+    w-full
+    min-w-0
+    items-center
+    justify-between
+    rounded-xl
+    border
+    px-3
+    transition-all
+    duration-300
+    hover:shadow-lg
 
-                sm:h-12
-                sm:rounded-2xl
-                sm:px-4
-              "
-              style={{
-                borderColor: themeColor,
-              }}
-            >
-              <span
-                className="
-                  text-[10px]
-                  font-bold
-                  uppercase
-                  tracking-[0.08em]
+    sm:h-12
+    sm:rounded-2xl
+    sm:px-4
+  "
+  style={{
+    borderColor: themeColor,
+  }}
+>
+  <span
+    className="
+      shrink-0
+      whitespace-nowrap
+      text-[9px]
+      font-bold
+      uppercase
+      tracking-[0.05em]
 
-                  sm:text-[13px]
-                "
-                style={{
-                  color: themeColor,
-                }}
-              >
-                View Details
-              </span>
+      sm:text-[13px]
+      sm:tracking-[0.08em]
+    "
+    style={{
+      color: themeColor,
+    }}
+  >
+    View Details
+  </span>
 
-              <div
-                className="
-                  flex
-                  h-7
-                  w-7
-                  items-center
-                  justify-center
-                  rounded-full
-                  text-white
-                  transition-all
-                  duration-300
+  <div
+    className="
+      ml-1
+      flex
+      h-7
+      w-7
+      shrink-0
+      items-center
+      justify-center
+      rounded-full
+      text-white
+      transition-all
+      duration-300
 
-                  group-hover/button:translate-x-1
-                  group-hover/button:scale-110
+      group-hover/button:translate-x-1
+      group-hover/button:scale-110
 
-                  sm:h-9
-                  sm:w-9
-                "
-                style={{
-                  background: themeColor,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background =
-                    hoverColor;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background =
-                    themeColor;
-                }}
-              >
-                →
-              </div>
-            </button>
+      sm:ml-2
+      sm:h-9
+      sm:w-9
+    "
+    style={{
+      background: themeColor,
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = hoverColor;
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = themeColor;
+    }}
+  >
+    →
+  </div>
+</button>
           </div>
         </div>
       </article>
