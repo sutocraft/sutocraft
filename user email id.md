@@ -4,11 +4,7 @@ shafaabidautomation.bd@gmail.com
 
 Shafa@2026
 
-{/* Sort */}
-            <ProductsSort
-              selected={sort}
-              onChange={onSortChange}
-            />
+
 
 arekta bishoy full website er thems color use korte bollam tmk r tumi blue use kortecho, tahole akdom new code korer r lab ki holo? tumi onek bashi natok or bugs ecche kore kortecho, ecche kore kortecho karon agulo simple subject k tumi pechaccho, 
 
