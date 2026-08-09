@@ -48,9 +48,6 @@ export default function ProductDetails({
   const [selectedSize, setSelectedSize] =
     useState("");
 
-  const [selectedColor, setSelectedColor] =
-    useState("");
-
   useEffect(() => {
     loadProduct();
   }, [slug]);
@@ -82,11 +79,7 @@ export default function ProductDetails({
         );
       }
 
-      if (data.colors?.length) {
-        setSelectedColor(
-          data.colors[0].id
-        );
-      }
+      
     } finally {
       setLoading(false);
     }
@@ -140,13 +133,7 @@ window.location.href =
     return;
   }
 
-  if (
-    (product.colors?.length ?? 0) > 0 &&
-    !selectedColor
-  ) {
-    alert("Select color.");
-    return;
-  }
+
 
   const image = document.getElementById(
     "product-main-image"
@@ -163,12 +150,7 @@ window.location.href =
     });
   }
 
-  await addToCart({
-    productId: product.id,
-    quantity,
-    sizeId: selectedSize || null,
-    colorId: selectedColor || null,
-  });
+ 
 
   window.dispatchEvent(
     new Event("cart-updated")
@@ -298,16 +280,14 @@ window.location.href =
       product={product}
       gallery={galleryImages}
       sizes={product.sizes ?? []}
-      colors={product.colors ?? []}
+
       selectedSize={selectedSize}
-      selectedColor={selectedColor}
       quantity={quantity}
       wishlist={wishlist}
       loading={loading}
       onIncrease={increaseQuantity}
       onDecrease={decreaseQuantity}
       onSizeChange={setSelectedSize}
-      onColorChange={setSelectedColor}
       onAddToCart={handleAddToCart}
       onBuyNow={handleBuyNow}
       onWishlist={handleWishlist}
