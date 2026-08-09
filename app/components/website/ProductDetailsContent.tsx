@@ -94,7 +94,7 @@ export default function ProductDetailsContent({
   ].filter(Boolean) as string[];
 
   return (
-    <section className="bg-[#F8F5EE]">
+    <section className="bg-[var(--theme-background)]">
 
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
 
