@@ -29,10 +29,7 @@ type Brand = {
   name: string;
 };
 
-type Color = {
-  id: string;
-  name: string;
-};
+
 
 type Size = {
   id: string;
@@ -48,17 +45,13 @@ export default function NewProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
 const [brands, setBrands] = useState<Brand[]>([]);
-const [colors, setColors] = useState<Color[]>([]);
 const [sizes, setSizes] = useState<Size[]>([]);
 const [stockStatuses, setStockStatuses] = useState<StockStatus[]>([]);
 
   const [categoryId, setCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
 const [brandId, setBrandId] = useState("");
-const [colorId, setColorId] = useState("");
 const [sizeId, setSizeId] = useState("");
-
-const [colorIds, setColorIds] = useState<string[]>([]);
 const [sizeIds, setSizeIds] = useState<string[]>([]);
 
 const [stockStatusId, setStockStatusId] = useState("");
@@ -116,8 +109,7 @@ const [uploadStatus, setUploadStatus] = useState("");
   loadCategories();
   loadSubCategories();
   loadBrands();
-  loadColors();
-  loadSizes();
+loadSizes();
   loadStockStatuses();
 }, []);
 
@@ -172,14 +164,6 @@ async function loadBrands() {
   setBrands(data || []);
 }
 
-async function loadColors() {
-  const { data } = await supabase
-    .from("colors")
-    .select("id,name")
-    .order("name");
-
-  setColors(data || []);
-}
 
 async function loadSizes() {
   const { data } = await supabase
@@ -197,14 +181,6 @@ async function loadStockStatuses() {
     .order("name");
 
   setStockStatuses(data || []);
-}
-
-function toggleColor(id: string) {
-  setColorIds((prev) =>
-    prev.includes(id)
-      ? prev.filter((x) => x !== id)
-      : [...prev, id]
-  );
 }
 
 function toggleSize(id: string) {
@@ -310,7 +286,6 @@ async function uploadGalleryImages(productId: string) {
   !categoryId ||
   !subCategoryId ||
   !brandId ||
-  colorIds.length === 0 ||
   sizeIds.length === 0 ||
   !stockStatusId ||
   !name.trim() ||
@@ -378,10 +353,7 @@ const { data, error } = await supabase
     category_id: categoryId,
     sub_category_id: subCategoryId || null,
     brand_id: brandId || null,
-    color_id: colorIds[0] || null,
 size_id: sizeIds[0] || null,
-
-color_ids: colorIds,
 size_ids: sizeIds,
     stock_status_id: stockStatusId || null,
 
@@ -432,10 +404,10 @@ alert("Product Added Successfully");
     setCategoryId("");
     setSubCategoryId("");
     setBrandId("");
-    setColorId("");
+   
 setSizeId("");
 
-setColorIds([]);
+
 setSizeIds([]);
     setStockStatusId("");
     setName("");
@@ -544,36 +516,7 @@ setUploading(false);
   ))}
 </select>
 
-<div className="border border-gray-600 rounded p-3">
-
-  <p className="font-medium mb-2">
-    Available Colors
-  </p>
-
-  <div className="grid grid-cols-2 gap-2">
-
-    {colors.map((item) => (
-
-      <label
-        key={item.id}
-        className="flex items-center gap-2 cursor-pointer"
-      >
-
-        <input
-          type="checkbox"
-          checked={colorIds.includes(item.id)}
-          onChange={() => toggleColor(item.id)}
-        />
-
-        {item.name}
-
-      </label>
-
-    ))}
-
-  </div>
-
-</div>
+/* Color selection removed */
 
 <div className="border border-gray-600 rounded p-3">
 
