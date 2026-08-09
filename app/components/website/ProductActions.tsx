@@ -105,8 +105,7 @@ onMouseLeave={(e) => {
           p-6
         "
         style={{
-          borderColor:
-            `${themeColor}25`,
+          borderColor: "var(--theme-color-15)",
         }}
       >
 
@@ -310,8 +309,7 @@ onMouseLeave={(e) => {
           p-6
         "
         style={{
-          borderColor:
-            `${themeColor}25`,
+          borderColor: "var(--theme-color-15)",
         }}
       >
 
