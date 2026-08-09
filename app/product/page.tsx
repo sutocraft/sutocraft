@@ -986,10 +986,11 @@ export default function ProductsPage() {
             <Footer />
 
       <ProductDetailsModal
-        open={Boolean(sidebarProductSlug)}
-        slug={sidebarProductSlug}
-        onClose={() => setSidebarProductSlug("")}
-      />
+  open={Boolean(sidebarProductSlug)}
+  slug={sidebarProductSlug}
+  onClose={() => setSidebarProductSlug("")}
+  useHistory={false}
+/>
 
       <MobileBottomNav />
     </>
