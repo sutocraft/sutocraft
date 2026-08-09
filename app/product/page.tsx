@@ -495,7 +495,7 @@ export default function ProductsPage() {
       <main
         className="
           min-h-screen
-          bg-[#F8F5EE]
+          bg-[var(--theme-background)]
         "
       >
         {/* ===================================================
