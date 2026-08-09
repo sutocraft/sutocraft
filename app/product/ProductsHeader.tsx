@@ -3,11 +3,11 @@
 import {
   Search,
   SlidersHorizontal,
-  ArrowUpDown,
-  ChevronDown,
 } from "lucide-react";
 
 import type { ReactNode } from "react";
+
+import ProductsSort from "./ProductsSort";
 
 type SortOption =
   | "Newest"
@@ -222,75 +222,9 @@ export default function ProductsHeader({
 
               {/* Sort */}
               <div className="relative w-[180px] shrink-0">
-                <ArrowUpDown
-                  size={17}
-                  className="
-                    pointer-events-none
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-[var(--theme-color)]
-                  "
-                />
-
-                <select
-                  value={sort}
-                  onChange={(e) =>
-                    onSortChange(
-                      e.target.value as SortOption
-                    )
-                  }
-                  className="
-                    h-12
-                    w-full
-                    appearance-none
-                    rounded-2xl
-                    border
-                    border-[var(--theme-primary-border)]
-                    bg-white
-                    pl-9
-                    pr-9
-                    text-sm
-                    font-medium
-                    text-[#2B2B2B]
-                    outline-none
-                    focus:border-[var(--theme-color)]
-                    focus:ring-2
-                    focus:ring-[var(--theme-color-10)]
-                  "
-                >
-                  <option value="Newest">
-                    Newest
-                  </option>
-
-                  <option value="Price: Low to High">
-                    Price: Low to High
-                  </option>
-
-                  <option value="Price: High to Low">
-                    Price: High to Low
-                  </option>
-
-                  <option value="Name: A to Z">
-                    Name: A to Z
-                  </option>
-
-                  <option value="Name: Z to A">
-                    Name: Z to A
-                  </option>
-                </select>
-
-                <ChevronDown
-                  size={16}
-                  className="
-                    pointer-events-none
-                    absolute
-                    right-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-[#94A3B8]
-                  "
+                <ProductsSort
+                  selected={sort}
+                  onChange={onSortChange}
                 />
               </div>
             </div>
@@ -386,76 +320,10 @@ export default function ProductsHeader({
             </button>
 
             {/* Newest / Sort */}
-            <div className="relative flex-1">
-              <ArrowUpDown
-                size={17}
-                className="
-                  pointer-events-none
-                  absolute
-                  left-3
-                  top-1/2
-                  -translate-y-1/2
-                  text-[var(--theme-color)]
-                "
-              />
-
-              <select
-                value={sort}
-                onChange={(e) =>
-                  onSortChange(
-                    e.target.value as SortOption
-                  )
-                }
-                className="
-                  h-11
-                  w-full
-                  appearance-none
-                  rounded-2xl
-                  border
-                  border-[var(--theme-primary-border)]
-                  bg-white
-                  pl-9
-                  pr-8
-                  text-sm
-                  font-medium
-                  text-[#2B2B2B]
-                  outline-none
-                  focus:border-[var(--theme-color)]
-                  focus:ring-2
-                  focus:ring-[var(--theme-color-10)]
-                "
-              >
-                <option value="Newest">
-                  Newest
-                </option>
-
-                <option value="Price: Low to High">
-                  Price: Low to High
-                </option>
-
-                <option value="Price: High to Low">
-                  Price: High to Low
-                </option>
-
-                <option value="Name: A to Z">
-                  Name: A to Z
-                </option>
-
-                <option value="Name: Z to A">
-                  Name: Z to A
-                </option>
-              </select>
-
-              <ChevronDown
-                size={16}
-                className="
-                  pointer-events-none
-                  absolute
-                  right-3
-                  top-1/2
-                  -translate-y-1/2
-                  text-[#94A3B8]
-                "
+            <div className="relative flex-1 min-w-0">
+              <ProductsSort
+                selected={sort}
+                onChange={onSortChange}
               />
             </div>
 
