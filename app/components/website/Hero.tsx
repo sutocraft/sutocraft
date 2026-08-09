@@ -111,7 +111,7 @@ export default function Hero({
 
       <section className="bg-[#F8F5EE]">
 
-        <Container>
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16">
 
           <div className="grid min-h-[620px] animate-pulse items-center gap-10 lg:grid-cols-2">
 
@@ -152,7 +152,7 @@ lg:rounded-[40px] bg-gray-200" />
 
           </div>
 
-        </Container>
+        </div>
 
       </section>
 
@@ -187,8 +187,7 @@ lg:rounded-[40px] bg-gray-200" />
 
       </div>
 
-      <Container>
-
+      <div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8">
         <div
   className="
   relative
@@ -207,10 +206,10 @@ lg:pb-8
 
 items-center
 
-lg:grid-cols-[1fr_560px]
-lg:min-h-[calc(100vh-140px)]
-lg:max-h-[680px]
-lg:gap-10
+lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]
+lg:min-h-[clamp(560px,calc(100vh-140px),760px)]
+lg:max-h-none
+lg:gap-[clamp(24px,4vw,72px)]
 "
 >
 
@@ -512,19 +511,20 @@ flex-shrink-0
             <motion.div
   key={product.image_url}
   className="
-    order-1
-relative
-mx-auto
-w-[calc(100vw-32px)]
-max-w-[360px]
+  order-1
+  relative
+  mx-auto
+  w-[calc(100vw-32px)]
+  max-w-[360px]
 
-sm:w-[calc(100vw-48px)]
-sm:max-w-[440px]
+  sm:w-[calc(100vw-48px)]
+  sm:max-w-[440px]
 
-lg:order-2
-lg:w-full
-lg:max-w-[420px]
-  "
+  lg:order-2
+  lg:w-full
+  lg:max-w-[560px]
+  lg:justify-self-end
+"
   initial={{
     opacity: 0,
     scale: 0.92,
@@ -553,8 +553,8 @@ shadow-[0_18px_50px_rgba(0,0,0,.10)]
 sm:rounded-[28px]
 sm:p-4
 
-lg:rounded-[42px]
-lg:p-7
+lg:rounded-[clamp(28px,2.2vw,42px)]
+lg:p-[clamp(16px,1.4vw,28px)]
 lg:shadow-[0_25px_80px_rgba(0,0,0,.10)]
   "
 >
@@ -578,7 +578,7 @@ lg:rounded-[30px]
   alt={product.name}
   fill
   priority
-  sizes="(max-width:640px) 90vw,(max-width:1024px) 60vw,560px"
+  sizes="(max-width:640px) 90vw,(max-width:1024px) 60vw,42vw"
   className="object-contain transition-transform duration-500"
                   />
 
@@ -715,7 +715,7 @@ lg:gap-4
 
         </div>
 
-      </Container>
+      </div>
 
     </section>
 
