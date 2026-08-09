@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 
@@ -8,11 +8,13 @@ import {
   Menu,
   X,
   Search,
+  ChevronDown,
   Heart,
   ShoppingBag,
 } from "lucide-react";
 
 import Container from "./Container";
+import { supabase } from "@/lib/supabase";
 import UserMenu from "./UserMenu";
 
 import {
@@ -63,14 +65,120 @@ export default function Header() {
   const [menuOpen, setMenuOpen] =
     useState(false);
 
-  const [showHeader, setShowHeader] =
-    useState(true);
-
   const [isScrolled, setIsScrolled] =
     useState(false);
 
-  const lastScrollY =
-    useRef(0);
+  /* =========================================================
+     DESKTOP CATEGORY NAVIGATION
+     ========================================================= */
+
+  type HeaderCategory = {
+    id: string;
+    name: string;
+    slug: string;
+  };
+
+  type HeaderSubCategory = {
+    id: string;
+    name: string;
+  };
+
+  const [categories, setCategories] =
+    useState<HeaderCategory[]>([]);
+
+  const [subCategoriesByCategory, setSubCategoriesByCategory] =
+    useState<Record<string, HeaderSubCategory[]>>({});
+
+  const [openCategoryId, setOpenCategoryId] =
+    useState<string | null>(null);
+
+  const [categoryLoading, setCategoryLoading] =
+    useState(true);
+
+  useEffect(() => {
+    loadHeaderCategories();
+  }, []);
+
+  async function loadHeaderCategories() {
+    try {
+      setCategoryLoading(true);
+
+      const { data: categoryData, error: categoryError } =
+        await supabase
+          .from("categories")
+          .select("id,name,slug")
+          .order("name", { ascending: true });
+
+      if (categoryError) {
+        console.error(categoryError);
+        return;
+      }
+
+      const loadedCategories =
+        (categoryData ?? []) as HeaderCategory[];
+
+      setCategories(loadedCategories);
+
+      /*
+       * The current sub_categories table stores the subcategory
+       * name/id, while products carry both category_id and
+       * sub_category_id. We therefore build the relationship
+       * safely from active products instead of assuming a
+       * category_id column exists on sub_categories.
+       */
+      const { data: productRelations, error: relationError } =
+        await supabase
+          .from("products")
+          .select("category_id,sub_category:sub_categories(id,name)")
+          .eq("active", true);
+
+      if (relationError) {
+        console.error(relationError);
+        return;
+      }
+
+      const grouped: Record<string, HeaderSubCategory[]> = {};
+
+      for (const row of productRelations ?? []) {
+        const categoryId = row.category_id as string | null;
+        const subCategory = row.sub_category as
+          | HeaderSubCategory
+          | HeaderSubCategory[]
+          | null;
+
+        if (!categoryId || !subCategory) continue;
+
+        const item = Array.isArray(subCategory)
+          ? subCategory[0]
+          : subCategory;
+
+        if (!item?.id || !item?.name) continue;
+
+        if (!grouped[categoryId]) {
+          grouped[categoryId] = [];
+        }
+
+        if (!grouped[categoryId].some((sub) => sub.id === item.id)) {
+          grouped[categoryId].push({
+            id: item.id,
+            name: item.name,
+          });
+        }
+      }
+
+      Object.values(grouped).forEach((items) => {
+        items.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      });
+
+      setSubCategoriesByCategory(grouped);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCategoryLoading(false);
+    }
+  }
 
   useEffect(() => {
     checkLogin();
@@ -124,42 +232,13 @@ export default function Header() {
   useEffect(() => {
 
     function handleScroll() {
-
-      const current =
-        window.scrollY;
-
-      setIsScrolled(
-        current > 10
-      );
-
-      if (current < 20) {
-
-        setShowHeader(true);
-
-      } else if (
-        current >
-        lastScrollY.current
-      ) {
-
-        setShowHeader(false);
-
-      } else {
-
-        setShowHeader(true);
-
-      }
-
-      lastScrollY.current =
-        current;
-
+      setIsScrolled(window.scrollY > 10);
     }
 
     window.addEventListener(
       "scroll",
       handleScroll,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     return () =>
@@ -238,11 +317,7 @@ export default function Header() {
   return (
 
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        showHeader
-          ? "translate-y-0"
-          : "-translate-y-full"
-      }`}
+      className="sticky top-0 z-50 transition-all duration-300"
       style={{
         background: "#ffffff",
         backdropFilter:
@@ -256,7 +331,7 @@ export default function Header() {
 
       <Container>
 
-        <div className="flex h-[66px] items-center justify-between lg:h-[76px]">
+        <div className="flex h-[62px] items-center justify-between sm:h-[66px] lg:h-[70px]">
 
                     {/* ===========================
               Logo
@@ -264,7 +339,7 @@ export default function Header() {
 
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-3"
+            className="flex shrink-0 items-center"
           >
             {!themeLoading && logoUrl?.trim() ? (
               <img
@@ -288,7 +363,7 @@ export default function Header() {
               Desktop Menu
           =========================== */}
 
-          <nav className="hidden items-center gap-8 xl:gap-10 lg:flex">
+          <nav className="hidden items-center gap-7 xl:gap-9 lg:flex">
 
             <Link
               href="/"
@@ -311,7 +386,7 @@ export default function Header() {
             <Link
   href="/product"
   onClick={() => setMenuOpen(false)}
-  className="px-5 py-3 font-semibold text-[#2B2B2B] transition"
+  className="px-3 py-2 font-semibold text-[#2B2B2B] transition"
 >
   Shop
 </Link>
@@ -352,10 +427,10 @@ export default function Header() {
               Desktop Actions
           =========================== */}
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center gap-1.5 lg:flex">
 
             <button
-              className="flex h-11 w-11 items-center justify-center rounded-xl border transition"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border transition"
               style={{
                 borderColor: `${themeColor}30`,
                 color: themeColor,
@@ -366,7 +441,7 @@ export default function Header() {
 
             <Link
               href="/wishlist"
-              className="flex h-11 w-11 items-center justify-center rounded-xl border transition"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border transition"
               style={{
                 borderColor: `${themeColor}30`,
                 color: themeColor,
@@ -394,7 +469,6 @@ export default function Header() {
     duration-300
 
     hover:-translate-y-0.5
-    hover:scale-105
 
     will-change-transform
   "
@@ -455,7 +529,7 @@ export default function Header() {
 
               <Link
                 href="/login"
-                className="rounded-xl border px-6 py-3 font-semibold transition-all duration-300 hover:text-white"
+                className="rounded-lg border px-5 py-2.5 text-sm font-semibold transition-all duration-300 hover:text-white"
                 style={{
                   borderColor: themeColor,
                   color: themeColor,
@@ -552,7 +626,123 @@ export default function Header() {
 
         </div>
 
-                {/* ===========================
+                {/* =====================================================
+            DESKTOP CATEGORY NAVIGATION
+            Hover opens dropdown. Mobile/tablet untouched.
+           ===================================================== */}
+
+        <div className="relative hidden border-t border-[#F0E9DC] lg:block">
+          <nav
+            className="flex items-center justify-center gap-0.5 overflow-visible"
+            onMouseLeave={() => setOpenCategoryId(null)}
+          >
+            {categoryLoading ? (
+              <div className="flex h-12 items-center justify-center px-4 text-xs font-medium text-gray-400">
+                Loading categories...
+              </div>
+            ) : categories.length > 0 ? (
+              categories.map((category) => {
+                const subCategories =
+                  subCategoriesByCategory[category.id] ?? [];
+
+                const hasDropdown =
+                  subCategories.length > 0;
+
+                const isOpen =
+                  openCategoryId === category.id;
+
+                return (
+                  <div
+                    key={category.id}
+                    className="relative"
+                    onMouseEnter={() =>
+                      setOpenCategoryId(
+                        hasDropdown ? category.id : null
+                      )
+                    }
+                  >
+                    <Link
+                      href={`/product?category=${encodeURIComponent(
+                        category.slug || category.name
+                      )}`}
+                      className="group flex h-10 items-center gap-1.5 px-3 text-[11px] font-semibold whitespace-nowrap text-[#2B2B2B] transition-colors duration-200"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = themeColor;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "#2B2B2B";
+                      }}
+                    >
+                      <span>{category.name}</span>
+
+                      {hasDropdown && (
+                        <ChevronDown
+                          size={13}
+                          className={`transition-transform duration-200 ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      )}
+                    </Link>
+
+                    {hasDropdown && isOpen && (
+                      <div
+                        className="absolute left-1/2 top-full z-[80] w-56 -translate-x-1/2 rounded-b-xl border border-[#E8E1CE] bg-white p-1.5 shadow-lg"
+                        onMouseEnter={() =>
+                          setOpenCategoryId(category.id)
+                        }
+                      >
+                        <Link
+                          href={`/product?category=${encodeURIComponent(
+                            category.slug || category.name
+                          )}`}
+                          className="mb-1 flex items-center rounded-lg px-3 py-2 text-[12px] font-bold text-[#2B2B2B] transition-colors hover:bg-[#FAF7F0]"
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = themeColor;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = "#2B2B2B";
+                          }}
+                        >
+                          View All {category.name}
+                        </Link>
+
+                        {subCategories.map((subCategory) => (
+                          <Link
+                            key={subCategory.id}
+                            href={`/product?category=${encodeURIComponent(
+                              category.slug || category.name
+                            )}&subcategory=${encodeURIComponent(
+                              subCategory.name
+                            )}`}
+                            className="flex items-center rounded-lg px-3 py-2 text-[12px] font-medium text-gray-600 transition-colors hover:bg-[#FAF7F0]"
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = themeColor;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = "#4B5563";
+                            }}
+                          >
+                            {subCategory.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <Link
+                href="/product"
+                className="flex h-10 items-center px-4 text-[11px] font-semibold text-[#2B2B2B]"
+              >
+                Shop All Products
+              </Link>
+            )}
+          </nav>
+        </div>
+
+        {/* ===========================
             Mobile Menu
         =========================== */}
 
