@@ -6,830 +6,804 @@ Shafa@2026
 
 
 
-arekta bishoy full website er thems color use korte bollam tmk r tumi blue use kortecho, tahole akdom new code korer r lab ki holo? tumi onek bashi natok or bugs ecche kore kortecho, ecche kore kortecho karon agulo simple subject k tumi pechaccho, 
+# 🔒 SutoCraft E-Commerce
 
+## FINAL LOCKED MASTER ROADMAP
 
-
-
-
-              <h3 className="mt-4 text-[#B6862C] text-xl font-semibold">
-                Your cart is empty
-              </h3>
-
-              check and next
-
-✅ Hero
-✅ Categories
-✅ Product Cards
-✅ New Arrivals
-✅ Featured Products
-🟡 Product Details (Functionality)
-⬜ Cart Drawer
-⬜ Checkout
-⬜ Wishlist
-⬜ Search
-⬜ Profile
-⬜ Orders
-
-আমি এখন যে ক্রমে কাজ করব
-Sprint 0.1
-Header Dynamic + Responsive
-Theme System Centralization
-Sprint 0.2
-Hero Dynamic (100% Admin Controlled)
-Sprint 0.3
-Product Card Responsive System
-Sprint 0.4
-Product Details (Desktop + Mobile Premium)
-Sprint 0.5
-Cart Drawer Premium Responsive
-Sprint 0.6
-Global Responsive Audit (320px → 1920px)
-
-এরপরই Search, Filter, Checkout-এর মতো নতুন module শুরু করা উচিত। এতে নতুন feature যোগ করার আগে পুরো UI, responsive behavior এবং theme system production quality-তে চলে আসবে।
-
-# 🚀 SutoCraft Official Development Roadmap
-
-## **LOCKED v1.0 (Final)**
-
-> **Status:** 🔒 **LOCKED**
->
-> এই roadmap অনুযায়ী development হবে।
-> কোনো Phase শেষ হওয়ার আগে পরের Phase শুরু হবে না।
-> Completed Phase পুনরায় redesign করা হবে না, শুধুমাত্র bug fix বা business requirement থাকলে touch করা হবে।
+এই roadmap-টাই এখন থেকে আমাদের **master roadmap**।
+একটা step **complete + tested + PASS** না হওয়া পর্যন্ত পরের step শুরু হবে না।
 
 ---
 
-# 🔒 PHASE 0
+# 0. GLOBAL PROJECT RULES 🔒
 
-# Foundation (Completed & Locked)
+* [ ] **Database/Supabase আগে, তারপর code**
+* [ ] Existing working feature নষ্ট করা যাবে না
+* [ ] অন্য section untouched থাকবে, dependency না থাকলে
+* [ ] একসাথে একটাই feature/step
+* [ ] প্রতিটি feature বাস্তবে test করতে হবে
+* [ ] Test result user-এর কাছ থেকে নিতে হবে
+* [ ] Result অনুযায়ী fix/update/add করতে হবে
+* [ ] Fix হলে আবার retest করতে হবে
+* [ ] PASS না হওয়া পর্যন্ত next step নয়
+* [ ] Start → Finish পর্যন্ত complete flow test করতে হবে
+* [ ] অনুমান করে কোনো feature PASS ধরা যাবে না
 
-## ✅ Admin
+### 🎨 Theme Rule
 
-* Product Management
-* Category Management
-* Brand Management
-* Theme Color Setting
-* Website Settings
-* Header Settings
+**প্রতিটি নতুন feature শুরু থেকেই theme-aware হবে।**
+
+* [ ] Hardcoded theme/primary/gold color নয়
+* [ ] Theme variables ব্যবহার
+* [ ] Theme-dependent background theme variable
+* [ ] Theme-dependent border theme variable
+* [ ] Theme-dependent button/accent/hover/focus color theme variable
+* [ ] Theme color-এর light/tint/alpha variation theme system থেকে
+* [ ] Neutral colors প্রয়োজন অনুযায়ী neutral থাকবে
+* [ ] Feature শেষে Color/Theme Audit
+* [ ] Theme change করে actual test
 
 ---
 
-## ✅ Customer Authentication
+# 1. SUPABASE EXISTING DATABASE AUDIT
 
-* Register
-* Login
-* Logout
-* Protected Routes
-* Login Redirect
-* Session
-* Customer Profile
+প্রথমে existing database পুরো check:
+
+* [ ] `profiles`
+* [x] `cart_items` working
+* [ ] `orders`
+* [ ] `order_items`
+* [ ] `order_status_history`
+* [ ] `order_notes`
+* [ ] Payment tables
+* [ ] Shipping tables
+* [ ] Customer address
+* [ ] Notifications
+* [ ] Existing RLS
+* [ ] Existing policies
+* [ ] Triggers
+* [ ] Functions
+* [ ] Relationships
+
+### Rule
+
+`cart_items` existing working system **অকারণে change করা যাবে না**।
 
 ---
 
-## ✅ Product Details Premium
+# 2. CUSTOMER AUTHENTICATION
 
-* Dynamic Theme
-* Gallery
-* Image Zoom
-* Product Information
-* Product Variant
-* Color
-* Size
-* Quantity
-* Share
+Customer authentication শুধু customer activity-এর জন্য:
+
+* [ ] Register
+* [ ] Login
+* [ ] Logout
+* [ ] Session
+* [ ] Forgot password
+* [ ] Reset password
+* [ ] Customer profile
+* [ ] Phone
+* [ ] Email
+* [ ] Address
+
+Customer auth ব্যবহার করবে:
+
+* Cart
 * Buy Now
-* Add To Cart
-* Stock Status
-* Product Tabs
-* Responsive
-* Mobile Premium
+* Order
+* Query
+* Get Quotation
+* Customer Dashboard
+
+### Admin
+
+* [ ] Admin authentication আলাদা
+* [ ] Admin workplace আলাদা
+* [ ] Customer auth দিয়ে Admin Panel access নয়
 
 ---
 
-## ✅ Cart
+# 3. CART SYSTEM
 
-* Add To Cart
-* Remove
-* Quantity
-* Badge
-* Fly Animation
-* Premium Drawer
-* Login Protection
+Existing:
 
----
+* [x] `cart_items` save
+* [x] Cart Drawer
+* [x] Existing cart functionality
 
-## ✅ Navigation
+Required:
 
-* Header
-* Bottom Navigation
-* Cart Navigation
-* Account Navigation
-* Login Protection
+* [ ] `user_id`
+* [ ] Customer phone reference/info
+* [ ] Product ID
+* [ ] Quantity
+* [ ] Existing relationship verify
 
----
+### Cart Checkout
 
-## ✅ Responsive
-
-* Desktop
-* Laptop
-* Tablet
-* Mobile
-
----
-
-## Status
-
-🔒 LOCKED
-
----
-
-# 🥇 PHASE 1
-
-# Products Page Premium ⭐⭐⭐⭐⭐
-
-## Highest Priority
-
-## Products Page
-
-* Premium Layout
-* Responsive Layout
-* Breadcrumb
-* Search
-* Product Count
-* Sort
-* Grid/List View
-
----
-
-## Desktop Filter
-
-* Category
-* Sub Category
-* Brand
-* Color
-* Size
-* Price Range
-* Discount
-* Availability
-* Reset Filter
-
----
-
-## Mobile Filter
-
-* Filter Drawer
-* Sort Drawer
-
----
-
-## Product Card
-
-* Hover Animation
-* Theme Color
-* Image Zoom
-* Discount Badge
-* New Badge
-* Featured Badge
-* Rating
-* Wishlist
-* Quick View
-* Add To Cart
-* Entry Animation
-* Loading Animation
-
----
-
-## Loading
-
-* Skeleton
-* Empty State
-* Pagination
-* Load More
-
----
-
-# 🥈 PHASE 2
-
-# Home Page Premium
-
-## Hero
-
-* Better Animation
-* Better CTA
-* Better Responsive
-
----
-
-## Categories
-
-* Theme Polish
-* Hover
-* Ripple
-* Better Animation
-
----
-
-## Featured Section
-
-* Better Layout
-* Better Responsive
-
----
-
-## Why Choose Us
-
-* Better Card
-* Better Hover
-* Better Shadow
-
----
-
-## Newsletter
-
-* Better Background
-* Better Button
-* Success Animation
-
----
-
-## Footer
-
-* Better Layout
-* Better Hover
-* Better Mobile
-
----
-
-# 🥉 PHASE 3
-
-# Global Theme Design System ⭐⭐⭐⭐⭐
-
-## Existing ThemeProvider Upgrade
-
-বর্তমান `ThemeProvider`-কেই Global Theme Engine-এ upgrade করা হবে। 
-
-নতুন ThemeProvider তৈরি করা হবে না।
-
----
-
-## Theme Engine
-
-```
-Theme
-
-├── Colors
-├── Background
-├── Surface
-├── Typography
-├── Border
-├── Button
-├── Card
-├── Drawer
-├── Navigation
-├── Badge
-├── Status
-├── Shadow
-├── Radius
-├── Animation
-├── Spacing
-└── Overlay
+```text
+Cart
+ ↓
+Order successfully created
+ ↓
+Order Items created
+ ↓
+Cart Items deleted
 ```
 
----
+### Buy Now
 
-## Background
-
-* Page Background
-* Section Background
-* Sub Section Background
-* Hero Background
-* Header Background
-* Footer Background
-* Card Background
-* Drawer Background
-* Popup Background
-
----
-
-## Typography
-
-* Display
-* H1
-* H2
-* H3
-* H4
-* Primary Text
-* Secondary Text
-* Muted Text
-* Caption
-* Label
-* Price
-* Discount Price
-
----
-
-## Border
-
-* Primary
-* Secondary
-* Divider
-* Hover
-* Active
-* Focus
-* Input
-* Card
-
----
-
-## Button
-
-* Primary
-* Secondary
-* Outline
-* Ghost
-* Success
-* Danger
-* Disabled
-
----
-
-## Card
-
-* Product Card
-* Category Card
-* Cart Card
-* Wishlist Card
-* Order Card
-* Profile Card
-
----
-
-## Drawer
-
-* Cart Drawer
-* Wishlist Drawer
-* Customer Drawer
-* Search Drawer
-* Filter Drawer
-
----
-
-## Navigation
-
-* Header
-* Bottom Navigation
-* Sidebar
-* Tabs
-
----
-
-## Status
-
-* Success
-* Warning
-* Error
-* Info
-* Sale
-* New
-* Featured
-* Out Of Stock
-
----
-
-## Animation
-
-* Hover
-* Scale
-* Fade
-* Ripple
-* Drawer
-* Modal
-* Fly
-* Loading
-* Skeleton
-
----
-
-## Goal
-
-Website-এর কোথাও hardcoded color থাকবে না।
-
-সব হবে
-
-```
-theme.background.page
-
-theme.background.section
-
-theme.surface.card
-
-theme.text.primary
-
-theme.text.secondary
-
-theme.border.default
-
-theme.button.primary
-
-theme.drawer.background
-
-theme.navigation.active
+```text
+Buy Now
+ ↓
+Checkout
+ ↓
+Order
 ```
 
-Admin থেকে শুধু
-
-```
-Primary Color
-```
-
-change করলেই
-
-পুরো Website
-
-* Background
-* Text
-* Border
-* Card
-* Drawer
-* Navigation
-* Hover
-* Button
-* Status
-* Theme
-
-একসাথে Update হবে।
+Buy Now-এর জন্য unrelated cart items delete হবে না।
 
 ---
 
-# 🏅 PHASE 4
-
-# Navigation Premium
-
-## Header
-
-* Better Sticky
-* Better Hover
-* Better Animation
-* Search Drawer
-
----
-
-## Bottom Navigation
-
-* Better Active State
-* Ripple
-* Badge Animation
-* Theme Polish
-
----
-
-# 🛍 PHASE 5
-
-# Customer Experience
-
-## Customer Drawer
-
-Dashboard Page থাকবে না।
-
-```
-Account
-
-↓
-
-Customer Drawer
-```
-
----
-
-Customer Drawer
-
-* Customer Profile
-* Avatar
-* Orders
-* Wishlist
-* Address
-* Settings
-* Password
-* Logout
-
----
-
-## Wishlist Drawer
-
-Wishlist Page থাকবে না।
-
-```
-Wishlist
-
-↓
-
-Wishlist Drawer
-```
-
-Features
-
-* Product
-* Price
-* Stock
-* Move To Cart
-* Remove
-
----
+# 4. ORDER DATABASE
 
 ## Orders
 
-Customer Drawer
+* [ ] Internal ID
+* [ ] Unique Order ID
+* [ ] Customer ID
+* [ ] Customer name snapshot
+* [ ] Customer phone snapshot
+* [ ] Customer email snapshot
+* [ ] Shipping address snapshot
+* [ ] Subtotal
+* [ ] Discount
+* [ ] Delivery charge
+* [ ] Grand total
+* [ ] Payment status
+* [ ] Order status
+* [ ] Estimated delivery date
+* [ ] Cancel reason
+* [ ] Created at
+* [ ] Updated at
 
-↓
+## Order Items
 
-Order History
+* [ ] Order ID
+* [ ] Product ID
+* [ ] Product name snapshot
+* [ ] SKU
+* [ ] Quantity
+* [ ] Unit price snapshot
+* [ ] Discount
+* [ ] Line total
 
-↓
+## Status History
 
-Order Details
+* [ ] Order ID
+* [ ] Status
+* [ ] Changed by
+* [ ] Date/time
+* [ ] Note
 
-↓
+## Order Notes
 
-Invoice
-
-↓
-
-Tracking
-
----
-
-# 🛒 PHASE 6
-
-# Cart Premium
-
-বর্তমান Cart Drawer Upgrade
-
-* Coupon
-* Shipping Estimate
-* Better Summary
-* Better Empty State
-* Better Animation
-* Checkout Summary
-
----
-
-# 💳 PHASE 7
-
-# Checkout Premium
-
-* Shipping Address
-* Delivery Option
-* Coupon
-* Payment Method
-* Order Review
-* Place Order
-* Success Page
+* [ ] Note
+* [ ] Author
+* [ ] Date/time
 
 ---
 
-# 📦 PHASE 8
+# 5. PAYMENT SYSTEM
 
-# Order Management
+## Payment Methods
 
-* Order History
-* Order Details
-* Invoice
-* Tracking
-* Cancel Order
-* Return Request
-* Reorder
+* [ ] Cash on Delivery
+* [ ] bKash
+* [ ] Nagad
+* [ ] Bank Transfer
+* [ ] Future payment method ready
 
----
+## Payment Status
 
-# 🚀 PHASE 9
-
-# Performance & Final Polish
-
-## Performance
-
-* Lazy Loading
-* Image Optimization
-* Memoization
-* Dynamic Import
-
----
-
-## SEO
-
-* Meta Tags
-* Open Graph
-* Sitemap
-* Robots
-* Structured Data
-
----
-
-## Accessibility
-
-* Keyboard Navigation
-* ARIA Labels
-* Focus States
-
----
-
-## Responsive Audit
-
-* Desktop
-* Laptop
-* Tablet
-* Mobile
-
----
-
-## Animation Audit
-
-* Consistent Timing
-* Consistent Hover
-* Consistent Transition
-
----
-
-## Theme Audit
-
-পুরো Website-এর প্রতিটি Section Global Theme Engine ব্যবহার করছে কিনা তা Verify করা হবে।
-
----
-
-# 📚 Global Development Rules
-
-## 1. Component First
-
-নতুন Component বানানোর আগে Existing Component reuse করা যাবে কিনা check করতে হবে।
-
----
-
-## 2. Theme First
-
-Hardcoded Color ব্যবহার করা যাবে না।
-
-সব Theme Engine থেকে আসবে।
-
----
-
-## 3. Responsive First
-
-Desktop, Tablet এবং Mobile একসাথে develop হবে।
-
----
-
-## 4. Mobile First UX
-
-সব Customer Flow Mobile Friendly হতে হবে।
-
----
-
-## 5. Reusable Architecture
-
-একই UI দুইবার বানানো যাবে না।
-
----
-
-## 6. API Rule
-
-সব Database Query থাকবে
-
-```
-lib/
+```text
+Pending
+Submitted
+Approved
+Rejected
+Refunded
 ```
 
-Component-এর ভিতরে সরাসরি database call করা হবে না।
+## Payment Data
+
+* [ ] Payment method
+* [ ] Transaction ID
+* [ ] Amount
+* [ ] Status
+* [ ] Submitted time
+* [ ] Approval/rejection time
+* [ ] Admin note
 
 ---
 
-## 7. Design System Rule
+# 6. SHIPPING & DELIVERY
 
-একই
-
-* Button
-* Card
-* Drawer
-* Badge
-* Modal
-* Skeleton
-* Empty State
-
-পুরো Website-এ reuse হবে।
+* [ ] Shipping address
+* [ ] Shipping zone
+* [ ] Shipping method
+* [ ] Delivery charge
+* [ ] Free delivery rule
+* [ ] Estimated delivery date
+* [ ] Delivery status
 
 ---
 
-## 8. Animation Rule
+# 7. CHECKOUT
 
-Animation এক জায়গা থেকে control হবে।
+দুই entry point:
 
----
-
-## 9. Typography Rule
-
-একই Typography System পুরো Website-এ ব্যবহার হবে।
-
----
-
-## 10. Testing Rule
-
-প্রতিটি Phase শেষে:
-
-* Desktop Test
-* Laptop Test
-* Tablet Test
-* Mobile Test
-* Theme Test
-* Responsive Test
-* Performance Test
-* Bug Fix
-
-এরপর Phase Lock হবে।
-
----
-
-# 🏆 Final Customer Flow
-
-```
-Home
-
-↓
-
-Products
-
-↓
-
-Product Details
-
-↓
-
+```text
 Cart Drawer
-
-↓
-
+    ↓
 Checkout
 
-↓
+Buy Now
+    ↓
+Checkout
+```
 
+### Logged Out
+
+```text
+Cart / Buy Now
+      ↓
+Login/Register
+      ↓
+Original intent preserved
+      ↓
+Checkout
+```
+
+### Logged In
+
+```text
+Cart / Buy Now
+      ↓
+Checkout
+```
+
+---
+
+# 8. CHECKOUT PAGE
+
+* [ ] Customer information
+* [ ] Shipping address
+* [ ] Product list
+* [ ] Quantity
+* [ ] Subtotal
+* [ ] Discount
+* [ ] Delivery charge
+* [ ] Grand total
+* [ ] Estimated delivery
+* [ ] Payment method
+* [ ] Payment instruction
+* [ ] Transaction ID
+* [ ] Place Order
+
+---
+
+# 9. PLACE ORDER ENGINE
+
+```text
+Checkout
+ ↓
+Customer validation
+ ↓
+Product validation
+ ↓
+Price validation
+ ↓
+Stock validation
+ ↓
+Calculate total
+ ↓
+Create Order
+ ↓
+Create Order Items
+ ↓
+Create Payment
+ ↓
+Create Status History
+ ↓
+Cart checkout হলে Cart Items delete
+ ↓
 Order Success
 ```
 
-Customer
+### Important
 
+* [ ] Atomic/transaction-safe
+* [ ] Duplicate order prevention
+* [ ] Server-side total validation
+* [ ] Price snapshot
+* [ ] Cart cleanup
+* [ ] Unique Order ID
+
+---
+
+# 10. STOCK
+
+* [ ] Stock validation
+* [ ] Stock reservation/deduction
+* [ ] Overselling prevention
+* [ ] Cancellation হলে stock release
+* [ ] Payment rejection handling
+
+---
+
+# 11. ORDER STATUS
+
+### Normal
+
+```text
+Order Placed
+ ↓
+Payment Submitted
+ ↓
+Payment Approved
+ ↓
+Confirmed
+ ↓
+Processing
+ ↓
+Shipped
+ ↓
+Delivered
 ```
-Account
 
-↓
+### Cancellation
 
-Customer Drawer
-
-├── Profile
-├── Orders
-├── Wishlist
-├── Address
-├── Settings
-├── Password
-└── Logout
+```text
+Order
+ ↓
+Cancelled
+ ↓
+Cancellation Reason
 ```
 
-Wishlist
+**Payment Status এবং Order Status আলাদা থাকবে।**
 
+---
+
+# 12. CUSTOMER PANEL
+
+## My Orders
+
+* [ ] Order list
+* [ ] Order ID
+* [ ] Date
+* [ ] Total
+* [ ] Payment status
+* [ ] Order status
+
+## Order Details
+
+* [ ] Products
+* [ ] Quantity
+* [ ] Price
+* [ ] Shipping address
+* [ ] Payment method
+* [ ] Transaction ID
+* [ ] Estimated delivery
+* [ ] Current status
+* [ ] Status timeline
+* [ ] Cancel reason
+* [ ] Invoice
+
+---
+
+# 13. ADMIN ORDER PANEL
+
+## Admin View
+
+* [ ] All orders
+* [ ] Customer
+* [ ] Phone
+* [ ] Email
+* [ ] Products
+* [ ] Quantity
+* [ ] Total
+* [ ] Payment method
+* [ ] Transaction ID
+* [ ] Payment status
+* [ ] Shipping address
+* [ ] Estimated delivery
+* [ ] Order status
+
+## Admin Actions
+
+* [ ] Approve payment
+* [ ] Reject payment
+* [ ] Confirm order
+* [ ] Processing
+* [ ] Shipped
+* [ ] Delivered
+* [ ] Cancel
+* [ ] Cancellation reason
+* [ ] Update estimated delivery
+* [ ] Add order note
+
+---
+
+# 14. CANCELLATION
+
+* [ ] Customer cancellation where allowed
+* [ ] Admin cancellation
+* [ ] Required cancellation reason
+* [ ] Cancelled by
+* [ ] Cancellation date/time
+* [ ] Customer Panel status
+* [ ] Admin Panel status
+* [ ] Stock release
+
+---
+
+# 15. INVOICE
+
+* [ ] Invoice ID
+* [ ] Order ID
+* [ ] Company information
+* [ ] Customer information
+* [ ] Products
+* [ ] Quantity
+* [ ] Unit price
+* [ ] Subtotal
+* [ ] Discount
+* [ ] Delivery charge
+* [ ] Grand total
+* [ ] Payment method
+* [ ] Payment status
+* [ ] Invoice date
+
+### Customer
+
+* [ ] View
+* [ ] Print
+* [ ] Download
+
+### Admin
+
+* [ ] View
+* [ ] Print
+* [ ] Download
+
+---
+
+# 16. WHATSAPP
+
+## Customer → Admin
+
+* [ ] New order notification
+* [ ] Order ID
+* [ ] Customer
+* [ ] Phone
+* [ ] Products
+* [ ] Total
+* [ ] Payment method
+* [ ] TXN ID
+
+## Admin → Customer
+
+* [ ] Order confirmation
+* [ ] Payment approved
+* [ ] Payment rejected
+* [ ] Processing
+* [ ] Shipped
+* [ ] Delivered
+* [ ] Cancelled
+* [ ] Cancel reason
+* [ ] Delivery update
+
+---
+
+# 17. DISCOUNT / COUPON READY
+
+* [ ] Coupon structure
+* [ ] Discount type
+* [ ] Discount amount
+* [ ] Coupon validation
+* [ ] Order discount snapshot
+
+---
+
+# 18. REFUND READY
+
+* [ ] Refund status
+* [ ] Refund amount
+* [ ] Refund reason
+* [ ] Refund date
+* [ ] Refund transaction reference
+
+---
+
+# 19. SECURITY
+
+### Customer
+
+* [ ] Own cart only
+* [ ] Own order only
+* [ ] Own invoice only
+* [ ] Own information only
+* [ ] Cannot approve payment
+* [ ] Cannot access Admin Panel
+* [ ] Cannot manipulate total
+
+### Admin
+
+* [ ] Admin-only order management
+* [ ] Payment approval protected
+* [ ] Status management protected
+* [ ] Customer information access
+
+### Supabase
+
+* [ ] RLS
+* [ ] Policies
+* [ ] Foreign keys
+* [ ] Server-side validation
+
+---
+
+# 20. REAL USER TESTING
+
+## Test 1: Logged Out Add to Cart
+
+আমি বলব:
+
+> Login করবেন না → Product খুলুন → Add to Cart দিন → Result বলুন।
+
+তারপর result অনুযায়ী fix/retest।
+
+---
+
+## Test 2: Logged Out Buy Now
+
+> Login ছাড়া Buy Now দিন → কোথায় গেলেন বলুন।
+
+---
+
+## Test 3: Register
+
+> Register করুন → Result বলুন।
+
+Check:
+
+* Account
+* Profile
+* Phone
+* Email
+* Session
+
+---
+
+## Test 4: Login
+
+> Logout → Login করুন → Result বলুন।
+
+---
+
+## Test 5: Logged-in Add to Cart
+
+> Product → Add to Cart → Cart Drawer check করুন।
+
+---
+
+## Test 6: Logged-in Buy Now
+
+> Buy Now দিন → Product/quantity/price check করুন।
+
+---
+
+## Test 7: Cart → Checkout
+
+> Cart খুলুন → Checkout দিন।
+
+Check:
+
+* Customer
+* Address
+* Product
+* Quantity
+* Subtotal
+* Delivery
+* Total
+* Estimated delivery
+* Payment
+
+---
+
+## Test 8: Place Order
+
+> Payment information দিন → Place Order করুন।
+
+তারপর Supabase check:
+
+* `orders`
+* `order_items`
+* `payments`
+* `transactions`
+* `order_status_history`
+* `cart_items`
+
+---
+
+## Test 9: Cart Cleanup
+
+> Order successful হওয়ার পরে Cart Drawer খুলুন।
+
+Expected:
+
+**Ordered items আর থাকবে না।**
+
+---
+
+## Test 10: Admin Order
+
+> Admin Panel → Orders → নতুন order খুলুন।
+
+Check:
+
+* Customer
+* Phone
+* Products
+* Total
+* Payment
+* TXN ID
+
+---
+
+## Test 11: Payment Approval
+
+> Admin → Payment verify → Approve করুন।
+
+তারপর Customer Panel check।
+
+---
+
+## Test 12: Order Status
+
+এক এক করে বাস্তবে test:
+
+```text
+Confirmed
+ ↓
+Processing
+ ↓
+Shipped
+ ↓
+Delivered
 ```
-Heart
 
-↓vai already productscard ache and feature, new arrival a jacche so oi card gulo k e tho
+প্রতিটি status-এর result দিতে হবে।
 
-Wishlist Drawer
+---
 
-↓
+## Test 13: Cancellation
 
-Move To Cart
+> Test order cancel করুন → reason দিন।
 
-↓
+Check:
 
-Checkout
+* Admin
+* Customer
+* Status
+* Reason
+* Stock
+
+---
+
+## Test 14: Invoice
+
+> Customer Panel → Order → Invoice খুলুন।
+
+Check:
+
+* Order ID
+* Customer
+* Products
+* Price
+* Total
+* Payment
+* Date
+
+তারপর Print/Download test।
+
+---
+
+## Test 15: WhatsApp
+
+প্রতিটি গুরুত্বপূর্ণ event-এর message বাস্তবে check:
+
+* New Order
+* Payment Approved
+* Payment Rejected
+* Processing
+* Shipped
+* Delivered
+* Cancelled
+
+---
+
+## Test 16: Security
+
+* Customer A → Customer B-এর order দেখতে পারবে না
+* অন্য customer's invoice access করতে পারবে না
+* Payment approve করতে পারবে না
+* Admin Panel access করতে পারবে না
+* Direct URL দিয়েও unauthorized data পাওয়া যাবে না
+
+---
+
+## Test 17: Responsive
+
+* [ ] Desktop
+* [ ] Tablet
+* [ ] Mobile
+* [ ] Cart
+* [ ] Checkout
+* [ ] Customer Panel
+* [ ] Admin Panel
+* [ ] Invoice
+
+---
+
+# 21. EVERY NEW FEATURE TEST RULE
+
+Checkout-এর পরেও **প্রতিটি নতুন feature-এর জন্য একই নিয়ম**:
+
+```text
+Feature Start
+     ↓
+Existing Code Check
+     ↓
+Database Check
+     ↓
+Implement
+     ↓
+Theme Audit
+     ↓
+Responsive Check
+     ↓
+User Test
+     ↓
+User Result
+     ↓
+Fix
+     ↓
+Retest
+     ↓
+PASS
+     ↓
+Next Feature
 ```
 
 ---
 
-# 🔒 Project Constitution (Permanent Rules)
+# 🔒 FINAL LOCK
 
-* No Duplicate UI
-* No Duplicate Logic
-* No Hardcoded Colors
-* No Breaking Existing Features
-* Component Reuse First
-* Theme Engine First
-* Mobile First
-* Performance First
-* Clean Architecture
-* Every Completed Phase Must Be Locked Before Moving Forward
+**SutoCraft-এর জন্য এখন এই rules + roadmap final এবং locked।**
 
----
+### আমরা কখনো:
 
-# 🔐 OFFICIAL STATUS
+❌ এক feature শেষ না করে অন্য feature-এ যাব না
+❌ test ছাড়া DONE বলব না
+❌ existing working section অকারণে touch করব না
+❌ theme color hardcode করে নতুন feature বানাব না
+❌ database না বুঝে Checkout code শুরু করব না
+❌ user test result ছাড়া আন্দাজ করে fix করব না
 
-**Roadmap Version:** **v1.0**
+### আমরা করব:
 
-**Status:** 🔒 **LOCKED**
+**Supabase → Database → Security → Code → Theme Audit → User Test → Result → Fix → Retest → PASS → Next**
 
-এখন থেকে আমরা **Phase 1 (Products Page Premium)** দিয়ে development শুরু করব। প্রতিটি phase সম্পূর্ণ, test, polish এবং lock করার পরই পরবর্তী phase-এ যাব।
+এবং **শেষ পর্যন্ত Start-to-Finish পুরো Customer ↔ Admin flow বাস্তবে test করে তারপরই final DONE** ধরা হবে। 🔒
