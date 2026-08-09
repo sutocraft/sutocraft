@@ -231,51 +231,7 @@ export default function ProductCard({
           "
         >
 
-          {/* ===================================================
-              RATING
-             =================================================== */}
-
-          <div
-            className="
-              mb-1.5
-              flex
-              min-w-0
-              items-center
-              gap-1.5
-
-              sm:mb-2
-              sm:gap-2
-            "
-          >
-            <span
-              className="
-                shrink-0
-                text-[10px]
-
-                sm:text-xs
-              "
-              style={{
-                color: themeColor,
-              }}
-            >
-              ★★★★★
-            </span>
-
-            <span
-              className="
-                shrink-0
-                text-[9px]
-                font-medium
-
-                sm:text-[11px]
-              "
-              style={{
-                color: textColor,
-              }}
-            >
-              4.9
-            </span>
-          </div>
+    
 
 
           {/* ===================================================
@@ -344,7 +300,7 @@ export default function ProductCard({
 
           <div
             className="
-              mt-2
+              mt-1
               flex
               min-w-0
               items-baseline
@@ -393,129 +349,10 @@ export default function ProductCard({
               </span>
             )}
           </div>
+         
 
 
-          {/* ===================================================
-              DIVIDER
-             =================================================== */}
-
-          <div className="mt-auto pt-3 sm:pt-4">
-            <div
-              className="border-t"
-              style={{
-                borderColor: cardBorder,
-              }}
-            />
-          </div>
-
-
-          {/* ===================================================
-              FOOTER / VIEW DETAILS
-             =================================================== */}
-
-          <div className="pt-2.5 sm:pt-3">
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(true);
-              }}
-              className="
-                group/button
-                flex
-                min-w-0
-                h-9
-                w-full
-                items-center
-                justify-between
-                gap-1
-                overflow-hidden
-                rounded-xl
-                border
-                px-2
-
-                transition-all
-                duration-300
-
-                hover:shadow-lg
-
-                sm:h-10
-                sm:rounded-2xl
-                sm:px-3
-              "
-              style={{
-                borderColor: themeColor,
-              }}
-            >
-
-              {/* Text */}
-              <span
-                className="
-                  min-w-0
-                  flex-1
-                  truncate
-                  whitespace-nowrap
-                  text-left
-                  text-[8px]
-                  font-bold
-                  uppercase
-                  tracking-[0.04em]
-
-                  sm:text-[10px]
-                  sm:tracking-[0.06em]
-
-                  lg:text-[11px]
-                "
-                style={{
-                  color: themeColor,
-                }}
-              >
-                View Details
-              </span>
-
-
-              {/* Arrow */}
-              <span
-                className="
-                  flex
-                  h-7
-                  w-7
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-full
-                  text-sm
-                  leading-none
-                  text-white
-
-                  transition-all
-                  duration-300
-
-                  group-hover/button:translate-x-0.5
-                  group-hover/button:scale-105
-
-                  sm:h-8
-                  sm:w-8
-                  sm:text-base
-                "
-                style={{
-                  background: themeColor,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background =
-                    hoverColor;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background =
-                    themeColor;
-                }}
-              >
-                →
-              </span>
-
-            </button>
-
-          </div>
+         
 
         </div>
       </article>
