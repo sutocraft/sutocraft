@@ -543,59 +543,64 @@ export default function ProductInfo({
 
           <div className="flex flex-wrap gap-3">
 
-            {sizes.map((size) => {
+           {sizes.map((size) => {
+  const active =
+    product.size_ids?.includes(size.id) ?? false;
 
-              const active =
-                selectedSize === size.id;
+  const selected =
+    selectedSize === size.id;
 
-              return (
+  return (
+    <button
+      key={size.id}
+      type="button"
+      disabled={!active}
+      onClick={() => {
+        if (active) {
+          onSizeChange(size.id);
+        }
+      }}
+      className="
+        min-w-[54px]
+        rounded-2xl
+        border
+        px-5
+        py-3
+        text-sm
+        font-semibold
+        transition-all
+        duration-300
+      "
+      style={{
+        borderColor: selected
+          ? themeColor
+          : active
+          ? `${themeColor}30`
+          : "#D1D5DB",
 
-                <button
-                  key={size.id}
-                  onClick={() =>
-                    onSizeChange(
-                      size.id
-                    )
-                  }
-                  className="
-                    min-w-[54px]
+        background: selected
+          ? themeColor
+          : active
+          ? "#FFFFFF"
+          : "#F3F4F6",
 
-                    rounded-2xl
+        color: selected
+          ? "#FFFFFF"
+          : active
+          ? "#2B2B2B"
+          : "#9CA3AF",
 
-                    border
+        opacity: active ? 1 : 0.45,
 
-                    px-5
-                    py-3
-
-                    text-sm
-                    font-semibold
-
-                    transition-all
-                    duration-300
-                  "
-                  style={{
-                    borderColor:
-                      active
-                        ? themeColor
-                        : `${themeColor}30`,
-
-                    background:
-                      active
-                        ? themeColor
-                        : "#FFFFFF",
-
-                    color:
-                      active
-                        ? "#FFFFFF"
-                        : "#2B2B2B",
-                  }}
-                >
-                  {size.name}
-                </button>
-
-              );
-
-            })}
+        cursor: active
+          ? "pointer"
+          : "not-allowed",
+      }}
+    >
+      {size.name}
+    </button>
+  );
+})}
 
           </div>
 
