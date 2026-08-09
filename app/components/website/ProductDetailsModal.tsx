@@ -129,7 +129,7 @@ className="
   h-screen
   w-full
   overflow-hidden
-  bg-[#F8F5EE]
+  bg-[var(--theme-background)]
 
   lg:h-[100vh]
   lg:max-w-5xl
@@ -156,7 +156,7 @@ className="
             text-[#2B2B2B]
             shadow-lg
             transition
-            hover:bg-[#98691D]
+            hover:bg-[var(--theme-color)]
             hover:text-white
           "
         >
