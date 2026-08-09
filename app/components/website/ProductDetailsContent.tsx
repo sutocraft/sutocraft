@@ -33,11 +33,11 @@ type Props = {
 
   sizes: Size[];
 
-  colors: Color[];
+
 
   selectedSize: string;
 
-  selectedColor: string;
+
 
   quantity: number;
 
@@ -51,7 +51,7 @@ type Props = {
 
   onSizeChange: (id: string) => void;
 
-  onColorChange: (id: string) => void;
+
 
   onAddToCart: () => void;
 
@@ -67,10 +67,10 @@ export default function ProductDetailsContent({
   gallery,
 
   sizes,
-  colors,
+
 
   selectedSize,
-  selectedColor,
+
 
   quantity,
 
@@ -81,7 +81,7 @@ export default function ProductDetailsContent({
   onDecrease,
 
   onSizeChange,
-  onColorChange,
+
 
   onAddToCart,
   onBuyNow,
@@ -114,14 +114,14 @@ export default function ProductDetailsContent({
             <ProductInfo
               product={product}
               sizes={sizes}
-              colors={colors}
+              
               selectedSize={selectedSize}
-              selectedColor={selectedColor}
+              
               quantity={quantity}
               onIncrease={onIncrease}
               onDecrease={onDecrease}
               onSizeChange={onSizeChange}
-              onColorChange={onColorChange}
+             
               onAddToCart={onAddToCart}
               onBuyNow={onBuyNow}
             />
