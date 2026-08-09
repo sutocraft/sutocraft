@@ -62,7 +62,7 @@ export default function Footer() {
                 font-bold
                 leading-none
                 tracking-tight
-                text-[#D9A441]
+                text-[var(--theme-color)]
 
                 sm:text-[27px]
               "
@@ -87,6 +87,7 @@ export default function Footer() {
             </p>
 
             {/* Admin Login */}
+
             <Link
               href="/admin/login"
               className="
@@ -97,7 +98,7 @@ export default function Footer() {
                 opacity-[0.08]
                 transition-all
                 duration-300
-                hover:text-[#D9A441]
+                hover:text-[var(--theme-color)]
                 hover:opacity-100
               "
             >
@@ -105,6 +106,7 @@ export default function Footer() {
             </Link>
 
             {/* Social Icons */}
+
             <div
               className="
                 mt-3
@@ -115,6 +117,7 @@ export default function Footer() {
             >
 
               {/* Facebook */}
+
               <a
                 href="https://www.facebook.com/share/1KCQqtBzLU/"
                 target="_blank"
@@ -138,7 +141,7 @@ export default function Footer() {
                   hover:-translate-y-0.5
                   hover:bg-[#1877F2]
                   hover:text-white
-                  hover:ring-[#D9A441]/30
+                  hover:ring-[var(--theme-color-30)]
                 "
               >
                 <FaFacebookF
@@ -148,6 +151,7 @@ export default function Footer() {
               </a>
 
               {/* YouTube */}
+
               <a
                 href="https://youtube.com/@sutocraft?si=mIN7Bmmq-WeFOno1"
                 target="_blank"
@@ -181,6 +185,7 @@ export default function Footer() {
               </a>
 
               {/* WhatsApp */}
+
               <a
                 href="https://wa.me/8801616964247"
                 target="_blank"
@@ -254,7 +259,7 @@ export default function Footer() {
                     transition-all
                     duration-200
                     hover:translate-x-0.5
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   Home
@@ -269,7 +274,7 @@ export default function Footer() {
                     transition-all
                     duration-200
                     hover:translate-x-0.5
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   Products
@@ -284,7 +289,7 @@ export default function Footer() {
                     transition-all
                     duration-200
                     hover:translate-x-0.5
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   About Us
@@ -299,7 +304,7 @@ export default function Footer() {
                     transition-all
                     duration-200
                     hover:translate-x-0.5
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   Contact
@@ -340,6 +345,7 @@ export default function Footer() {
             >
 
               {/* Address */}
+
               <p className="flex items-start gap-2">
 
                 <span
@@ -360,6 +366,7 @@ export default function Footer() {
 
 
               {/* Phone */}
+
               <p className="flex items-start gap-2">
 
                 <span
@@ -378,7 +385,7 @@ export default function Footer() {
                     min-w-0
                     transition-colors
                     duration-200
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   +880 1616-964247
@@ -388,6 +395,7 @@ export default function Footer() {
 
 
               {/* Email */}
+
               <p className="flex items-start gap-2">
 
                 <span
@@ -407,7 +415,7 @@ export default function Footer() {
                     break-all
                     transition-colors
                     duration-200
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   sutocraftbd@gmail.com
@@ -417,6 +425,7 @@ export default function Footer() {
 
 
               {/* Website */}
+
               <p className="flex items-start gap-2">
 
                 <span
@@ -438,7 +447,7 @@ export default function Footer() {
                     break-all
                     transition-colors
                     duration-200
-                    hover:text-[#D9A441]
+                    hover:text-[var(--theme-color)]
                   "
                 >
                   www.sutocraftbd.com
@@ -488,7 +497,7 @@ export default function Footer() {
                   transition-all
                   duration-200
                   hover:translate-x-0.5
-                  hover:text-[#D9A441]
+                  hover:text-[var(--theme-color)]
                 "
               >
                 Facebook
@@ -503,7 +512,7 @@ export default function Footer() {
                   transition-all
                   duration-200
                   hover:translate-x-0.5
-                  hover:text-[#D9A441]
+                  hover:text-[var(--theme-color)]
                 "
               >
                 YouTube
@@ -564,14 +573,19 @@ export default function Footer() {
           >
 
             {/* Copyright */}
+
             <p className="shrink-0">
               © {new Date().getFullYear()} SutoCraft.
               All Rights Reserved.
             </p>
 
+
             {/* Made in Bangladesh */}
+
             <p className="shrink-0">
+
               Made with{" "}
+
               <span
                 className="
                   inline-block
@@ -583,7 +597,9 @@ export default function Footer() {
               >
                 ❤️
               </span>{" "}
+
               in Bangladesh
+
             </p>
 
           </div>
