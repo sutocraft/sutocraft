@@ -119,10 +119,10 @@ export default function ProductDetailsModal({
       "
     >
       <div
-        onClick={(e) =>
-          e.stopPropagation()
-        }
-        className="
+  onClick={(e) =>
+    e.stopPropagation()
+  }
+className="
   absolute
   inset-0
   mx-auto
@@ -131,13 +131,14 @@ export default function ProductDetailsModal({
   overflow-hidden
   bg-[#F8F5EE]
 
-  lg:h-[88vh]
-  lg:max-w-4xl
-  lg:translate-y-[6vh]
+  lg:h-[100vh]
+  lg:max-w-5xl
+  lg:translate-y-[-2vh]
+  lg:scale-[0.90]
   lg:rounded-3xl
   lg:shadow-2xl
 "
-      >
+>
         <button
           onClick={closeModal}
           className="
