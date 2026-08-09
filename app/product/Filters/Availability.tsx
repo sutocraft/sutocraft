@@ -22,7 +22,7 @@ export default function Availability({
           name="availability"
           checked={value === "all"}
           onChange={() => onChange("all")}
-          className="h-4 w-4 accent-[#98691D]"
+          className="h-4 w-4 accent-[var(--theme-color)]"
         />
 
         <span>All Products</span>
@@ -34,7 +34,7 @@ export default function Availability({
           name="availability"
           checked={value === "in-stock"}
           onChange={() => onChange("in-stock")}
-          className="h-4 w-4 accent-[#98691D]"
+          className="h-4 w-4 accent-[var(--theme-color)]"
         />
 
         <span>In Stock</span>
@@ -48,7 +48,7 @@ export default function Availability({
           onChange={() =>
             onChange("out-of-stock")
           }
-          className="h-4 w-4 accent-[#98691D]"
+          className="h-4 w-4 accent-[var(--theme-color)]"
         />
 
         <span>Out of Stock</span>
