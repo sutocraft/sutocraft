@@ -55,7 +55,7 @@ export default function ProductsSort({
           gap-3
           rounded-2xl
           border
-          border-[#E8E1CE]
+          border-[var(--theme-primary-border)]
           bg-white
           px-4
           text-sm
@@ -100,7 +100,7 @@ export default function ProductsSort({
             overflow-hidden
             rounded-2xl
             border
-            border-[#E8E1CE]
+            border-[var(--theme-primary-border)]
             bg-white
             p-2
             shadow-xl
@@ -131,7 +131,7 @@ export default function ProductsSort({
                 "
                 style={{
                   background: active
-                    ? `${themeColor}12`
+                    ? "var(--theme-color-10)"
                     : undefined,
                   color: active
                     ? themeColor
