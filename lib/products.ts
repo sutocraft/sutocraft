@@ -27,7 +27,7 @@ brand_id: string | null;
 category_id: string | null;
 sub_category_id: string | null;
 
-color_ids: string[] | null;
+
 size_ids: string[] | null;
 brand?: {
   name: string;
@@ -45,10 +45,7 @@ sizes?: {
   name: string;
 }[];
 
-colors?: {
-  id: string;
-  name: string;
-}[];
+
 };
 
 
@@ -147,17 +144,7 @@ if (data.size_ids?.length) {
   data.sizes = [];
 }
 
-// Load Colors
-if (data.color_ids?.length) {
-  const { data: colors } = await supabase
-    .from("colors")
-    .select("id,name")
-    .in("id", data.color_ids);
 
-  data.colors = colors || [];
-} else {
-  data.colors = [];
-}
 
 return data as WebsiteProduct;
 }
