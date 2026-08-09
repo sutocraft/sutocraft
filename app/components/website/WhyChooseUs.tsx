@@ -1,4 +1,7 @@
+"use client";
+
 import Container from "./Container";
+import { useTheme } from "./settings.theme_color";
 
 const features = [
   {
@@ -28,12 +31,19 @@ const features = [
 ];
 
 export default function WhyChooseUs() {
+  const { themeColor } = useTheme();
+
   return (
-    <section className="bg-[#F8F5EE] py-16 lg:py-20">
+    <section className="bg-[var(--theme-background)] py-16 lg:py-20">
       <Container>
         {/* Header */}
         <div className="mb-10 text-center lg:mb-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#98691D] sm:text-sm">
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.35em] sm:text-sm"
+            style={{
+              color: themeColor,
+            }}
+          >
             Why Choose Us
           </p>
 
@@ -53,7 +63,12 @@ export default function WhyChooseUs() {
               key={item.id}
               className="rounded-2xl bg-white p-5 text-center shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl lg:rounded-3xl lg:p-8"
             >
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#98691D]/10 text-3xl sm:h-16 sm:w-16 sm:text-4xl lg:h-20 lg:w-20 lg:text-5xl">
+              <div
+                className="mx-auto flex h-14 w-14 items-center justify-center rounded-full text-3xl sm:h-16 sm:w-16 sm:text-4xl lg:h-20 lg:w-20 lg:text-5xl"
+                style={{
+                  background: "var(--theme-color-10)",
+                }}
+              >
                 {item.icon}
               </div>
 
