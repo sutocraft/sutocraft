@@ -26,13 +26,26 @@ export default function ProductCard({
 
   const hoverColor = themeColor;
 
-  const cardBorder = "#E8E1CE";
-  const cardBackground = "#FFFFFF";
-  const imageBackground = "#F8F5EE";
-  const titleColor = "#2B2B2B";
-  const textColor = "#6B7280";
-  const badgeColor = themeColor;
-  const dangerColor = "#FF214F";
+const cardBorder =
+  "var(--theme-primary-border)";
+
+const cardBackground =
+  "var(--theme-background)";
+
+const imageBackground =
+  "#FFFFFF";
+
+const titleColor =
+  "#2B2B2B";
+
+const textColor =
+  "#1b1c1f";
+
+const badgeColor =
+  themeColor;
+
+const dangerColor =
+  "#FF214F";
 
   const imagePadding = useMemo(() => {
     return product.category?.name === "Woman"
