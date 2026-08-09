@@ -182,8 +182,7 @@ export default function ProductGallery({
             shadow-sm
           "
           style={{
-            borderColor:
-              `${themeColor}25`,
+            borderColor: "var(--theme-color-15)",
           }}
         >
 
@@ -203,8 +202,7 @@ export default function ProductGallery({
               <div
                 className="absolute inset-0 animate-pulse"
                 style={{
-                  background:
-                    `${themeColor}10`,
+                  background: "var(--theme-color-10)",
                 }}
               />
             )}
@@ -381,8 +379,7 @@ export default function ProductGallery({
                 backdrop-blur
               "
               style={{
-                background:
-                  `${themeColor}CC`,
+                background: "var(--theme-color-80)",
               }}
             >
               {active + 1} / {gallery.length}
@@ -445,8 +442,8 @@ export default function ProductGallery({
                   style={{
                     borderColor:
                       active === index
-                        ? themeColor
-                        : `${themeColor}30`,
+  ? themeColor
+  : "var(--theme-color-20)",
                   }}
                 >
 
@@ -475,8 +472,7 @@ export default function ProductGallery({
                         rounded-2xl
                       "
                       style={{
-                        background:
-                          `${themeColor}18`,
+                        background: "var(--theme-color-15)",
                       }}
                     />
 
@@ -681,8 +677,7 @@ export default function ProductGallery({
               text-white
             "
             style={{
-              background:
-                `${themeColor}CC`,
+              background: "var(--theme-color-80)",
             }}
           >
             {active + 1} / {gallery.length}
