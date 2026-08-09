@@ -130,12 +130,31 @@ export default function ProductsSort({
                   duration-200
                 "
                 style={{
-                  background: active
-                    ? "var(--theme-color-10)"
-                    : undefined,
+                  backgroundColor: active
+                    ? "color-mix(in srgb, var(--theme-color) 10%, transparent)"
+                    : "transparent",
+
                   color: active
                     ? themeColor
                     : "#2B2B2B",
+                }}
+                onMouseEnter={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.backgroundColor =
+                      "color-mix(in srgb, var(--theme-color) 7%, transparent)";
+
+                    e.currentTarget.style.color =
+                      themeColor;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!active) {
+                    e.currentTarget.style.backgroundColor =
+                      "transparent";
+
+                    e.currentTarget.style.color =
+                      "#2B2B2B";
+                  }
                 }}
               >
                 {option}
