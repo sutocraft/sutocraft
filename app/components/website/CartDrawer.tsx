@@ -248,7 +248,7 @@ const [updatingId, setUpdatingId] =
       {/* Drawer */}
 
       <aside
-  className={`fixed top-0 right-0 z-[91] flex h-dvh w-full max-w-[460px] flex-col bg-[#FDFBF7] shadow-2xl transition-transform duration-300 ${
+  className={`fixed top-0 right-0 z-[91] flex h-dvh w-full max-w-[460px] flex-col bg-[var(--theme-background)] shadow-2xl transition-transform duration-300 ${
     isOpen
       ? "translate-x-0"
       : "translate-x-full"
@@ -263,7 +263,7 @@ const [updatingId, setUpdatingId] =
         <div
           className="flex items-center justify-between border-b px-6 py-5"
           style={{
-            borderColor: `${themeColor}25`,
+            borderColor: "var(--theme-color-15)",
           }}
         >
           <div>
@@ -349,7 +349,7 @@ const [updatingId, setUpdatingId] =
 <div
   className="sticky bottom-0 border-t bg-white px-4 py-4 shadow-[0_-8px_30px_rgba(0,0,0,0.06)] sm:px-5 sm:py-5"
   style={{
-    borderColor: `${themeColor}25`,
+   borderColor: "var(--theme-color-15)",
   }}
 >
   <div className="mb-5 flex items-center justify-between">
