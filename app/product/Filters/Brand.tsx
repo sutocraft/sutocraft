@@ -29,7 +29,7 @@ export default function Brand({
           name="brand"
           checked={selectedBrand === ""}
           onChange={() => onBrandChange("")}
-          className="h-4 w-4 accent-[#98691D]"
+          className="h-4 w-4 accent-[var(--theme-color)]"
         />
 
         <span>All Brands</span>
@@ -49,7 +49,7 @@ export default function Brand({
     onBrandChange(brand);
   }
 }}
-            className="h-4 w-4 accent-[#98691D]"
+            className="h-4 w-4 accent-[var(--theme-color)]"
           />
 
           <span>{brand}</span>
