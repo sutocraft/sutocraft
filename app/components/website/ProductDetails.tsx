@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useCartFly } from "@/app/context/cart-fly-context";
 import { getImageStartPosition } from "@/lib/fly";
 
+import { supabase } from "@/lib/supabase";
+
 import {
   getProductBySlug,
   getProductGallery,
@@ -48,6 +50,10 @@ export default function ProductDetails({
   const [selectedSize, setSelectedSize] =
     useState("");
 
+    const [allSizes, setAllSizes] = useState<
+  { id: string; name: string }[]
+>([]);
+
   useEffect(() => {
     loadProduct();
   }, [slug]);
@@ -59,12 +65,23 @@ export default function ProductDetails({
       const data =
         await getProductBySlug(slug);
 
+        
+
       if (!data) {
         setLoading(false);
         return;
       }
 
       setProduct(data);
+
+      const { data: sizeData, error: sizeError } = await supabase
+  .from("sizes")
+  .select("id, name")
+  .order("name");
+
+if (!sizeError) {
+  setAllSizes(sizeData || []);
+}
 
       const images =
         await getProductGallery(
@@ -140,25 +157,29 @@ window.location.href =
   ) as HTMLImageElement | null;
 
   if (image) {
-    const pos =
-      getImageStartPosition(image);
+  const pos =
+    getImageStartPosition(image);
 
-    startFly({
-      image: product.image_url || "",
-      startX: pos.x,
-      startY: pos.y,
-    });
-  }
+  startFly({
+    image: product.image_url || "",
+    startX: pos.x,
+    startY: pos.y,
+  });
+}
 
- 
+await addToCart({
+  productId: product.id,
+  quantity,
+  sizeId: selectedSize || null,
+});
 
-  window.dispatchEvent(
-    new Event("cart-updated")
-  );
+window.dispatchEvent(
+  new Event("cart-updated")
+);
 
-  window.dispatchEvent(
-    new Event("open-cart")
-  );
+window.dispatchEvent(
+  new Event("open-cart")
+);
 }
 
     async function handleBuyNow() {
@@ -279,7 +300,7 @@ window.location.href =
     <ProductDetailsContent
       product={product}
       gallery={galleryImages}
-      sizes={product.sizes ?? []}
+      sizes={allSizes}
 
       selectedSize={selectedSize}
       quantity={quantity}
