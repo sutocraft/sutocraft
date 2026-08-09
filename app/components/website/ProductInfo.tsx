@@ -20,17 +20,13 @@ type Size = {
   name: string;
 };
 
-type Color = {
-  id: string;
-  name: string;
-  code?: string;
-};
+
 
 type Props = {
   product: WebsiteProduct;
 
   selectedSize: string;
-  selectedColor: string;
+
 
   quantity: number;
 
@@ -38,15 +34,12 @@ type Props = {
   onDecrease: () => void;
 
   sizes: Size[];
-  colors: Color[];
+
 
   onSizeChange: (
     id: string
   ) => void;
 
-  onColorChange: (
-    id: string
-  ) => void;
 
   onAddToCart: () => void;
   onBuyNow: () => void;
@@ -56,7 +49,7 @@ export default function ProductInfo({
   product,
 
   selectedSize,
-  selectedColor,
+
 
   quantity,
 
@@ -64,10 +57,9 @@ export default function ProductInfo({
   onDecrease,
 
   sizes,
-  colors,
+
 
   onSizeChange,
-  onColorChange,
 
   onAddToCart,
   onBuyNow,
@@ -611,128 +603,7 @@ export default function ProductInfo({
 
       )}
 
-      {/* Color */}
-
-      {colors.length > 0 && (
-
-        <div className="mt-8">
-
-          <h3
-  className="
-    mb-4
-    text-[15px]
-    font-bold
-    uppercase
-    tracking-[0.15em]
-  
-                "
-                style={{
-                  color:
-                    "#2B2B2B",
-                }}
-              >
-
-  Select Color
-</h3>
-
-          <div className="flex flex-wrap gap-3">
-
-            {colors.map(
-              (color) => {
-
-                const active =
-                  selectedColor ===
-                  color.id;
-
-                return (
-
-                  <button
-                    key={color.id}
-                    onClick={() =>
-                      onColorChange(
-                        color.id
-                      )
-                    }
-                    className="
-                      flex
-
-                      min-w-[110px]
-
-                      items-center
-
-                      gap-3
-
-                      rounded-2xl
-
-                      border
-
-                      px-4
-                      py-3
-
-                      transition-all
-                      duration-300
-                    "
-                    style={{
-                      borderColor:
-                        active
-                          ? themeColor
-                          : `${themeColor}30`,
-
-                      background:
-                        active
-                          ? themeColor
-                          : "#FFFFFF",
-
-                      color:
-                        active
-                          ? "#FFFFFF"
-                          : "#2B2B2B",
-                    }}
-                  >
-
-                    <span
-                      className="
-                        h-5
-                        w-5
-
-                        rounded-full
-
-                        border-2
-                      "
-                      style={{
-                        background:
-                          color.code ||
-                          themeColor,
-
-                        borderColor:
-                          active
-                            ? "#FFFFFF"
-                            : "#D1D5DB",
-                      }}
-                    />
-
-                    <span
-                      className="
-                        text-sm
-
-                        font-semibold
-                      "
-                    >
-                      {color.name}
-                    </span>
-
-                  </button>
-
-                );
-
-              }
-            )}
-
-          </div>
-
-        </div>
-
-      )}
+      
 
             {/* Quantity */}
 
