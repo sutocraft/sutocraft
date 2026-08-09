@@ -73,7 +73,7 @@ export default function WishlistButton({
         ${
           wishlisted
             ? "bg-red-500 border-red-500 text-white"
-            : "bg-white border-[#E7D8BC] text-gray-500 hover:bg-red-50 hover:text-red-500"
+            : "bg-white border-[var(--theme-primary-border)] text-gray-500 hover:bg-red-50 hover:text-red-500"
         }
       `}
     >
