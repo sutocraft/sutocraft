@@ -29,7 +29,7 @@ export default function Category({
           name="category"
           checked={selectedCategory === ""}
           onChange={() => onCategoryChange("")}
-          className="h-4 w-4 accent-[#98691D]"
+          className="h-4 w-4 accent-[var(--theme-color)]"
         />
 
         <span>All Categories</span>
@@ -49,7 +49,7 @@ export default function Category({
     onCategoryChange(category);
   }
 }}
-            className="h-4 w-4 accent-[#98691D]"
+            className="h-4 w-4 accent-[var(--theme-color)]"
           />
 
           <span>{category}</span>
