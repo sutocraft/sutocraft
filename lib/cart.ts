@@ -83,11 +83,15 @@ export async function getCartItems() {
   const { data, error } = await supabase
     .from("cart_items")
     .select(`
-      *,
-      products (
-        *
-      )
-    `)
+  *,
+  products (
+    *
+  ),
+  sizes (
+    id,
+    name
+  )
+`)
     .eq("user_id", userId)
     .order("created_at", {
       ascending: false,
