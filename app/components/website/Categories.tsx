@@ -35,11 +35,11 @@ const categories = [
 
 export default function Categories() {
   return (
-    <section className="bg-[#F8F5EE] py-16 lg:py-20">
+    <section className="bg-[var(--theme-background)] py-16 lg:py-20">
       <Container>
         {/* Header */}
         <div className="mb-10 text-center lg:mb-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#98691D] sm:text-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--theme-color)] sm:text-sm">
             Shop By Category
           </p>
 
@@ -57,10 +57,10 @@ export default function Categories() {
           {categories.map((category) => (
             <div
               key={category.id}
-              className="group cursor-pointer rounded-2xl border border-[#E8E1CE] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#98691D] hover:shadow-lg lg:rounded-3xl lg:p-6"
+              className="group cursor-pointer rounded-2xl border border-[var(--theme-primary-border)] bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--theme-color)] hover:shadow-lg lg:rounded-3xl lg:p-6"
             >
               <div className="flex justify-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F8F5EE] text-3xl transition duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-4xl">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--theme-background)] text-3xl transition duration-300 group-hover:scale-110 sm:h-16 sm:w-16 sm:text-4xl">
                   {category.image}
                 </div>
               </div>
