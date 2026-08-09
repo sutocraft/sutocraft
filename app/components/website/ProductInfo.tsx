@@ -270,10 +270,8 @@ export default function ProductInfo({
                   font-semibold
                 "
                 style={{
-                  background:
-                    `${themeColor}12`,
-                  color:
-                    themeColor,
+                  background: "var(--theme-color-10)",
+color: themeColor,
                 }}
               >
                 {product.category.name}
@@ -294,10 +292,8 @@ export default function ProductInfo({
                   font-semibold
                 "
                 style={{
-                  background:
-                    `${themeColor}12`,
-                  color:
-                    themeColor,
+                  background: "var(--theme-color-10)",
+color: themeColor,
                 }}
               >
                 {product.sub_category.name}
@@ -487,8 +483,7 @@ export default function ProductInfo({
             text-center
           "
           style={{
-            borderColor:
-              `${themeColor}25`,
+            borderColor: "var(--theme-color-15)",
           }}
         >
 
@@ -573,10 +568,10 @@ export default function ProductInfo({
       "
       style={{
         borderColor: selected
-          ? themeColor
-          : active
-          ? `${themeColor}30`
-          : "#D1D5DB",
+  ? themeColor
+  : active
+  ? "var(--theme-color-20)"
+  : "#D1D5DB",
 
         background: selected
           ? themeColor
@@ -657,8 +652,7 @@ export default function ProductInfo({
               bg-white
             "
             style={{
-              borderColor:
-                `${themeColor}30`,
+              borderColor: "var(--theme-color-20)",
             }}
           >
 
@@ -706,7 +700,7 @@ export default function ProductInfo({
     font-bold
   "
   style={{
-    borderColor: `${themeColor}30`,
+    borderColor: "var(--theme-color-20)",
     color: themeColor,
   }}
 >
@@ -748,8 +742,7 @@ export default function ProductInfo({
               py-3
             "
             style={{
-              background:
-                `${themeColor}10`,
+              background: `${themeColor}10`,
             }}
           >
 
@@ -887,8 +880,7 @@ onMouseLeave={(e) => {
           p-6
         "
         style={{
-          borderColor:
-            `${themeColor}25`,
+          borderColor: "var(--theme-color-15)",
         }}
       >
 
@@ -905,8 +897,7 @@ onMouseLeave={(e) => {
             pb-3
           "
           style={{
-            borderColor:
-              `${themeColor}15`,
+            borderColor: "var(--theme-color-15)",
           }}
         >
 
