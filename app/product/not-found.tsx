@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F8F5EE] px-4">
-      <div className="w-full max-w-lg rounded-3xl border border-[#E8E1CE] bg-white px-6 py-12 text-center shadow-sm sm:px-10">
+    <main className="flex min-h-screen items-center justify-center bg-[var(--theme-background)] px-4">
+      <div className="w-full max-w-lg rounded-3xl border border-[var(--theme-primary-border)] bg-white px-6 py-12 text-center shadow-sm sm:px-10">
 
         <div className="text-6xl">
           🛍️
         </div>
 
-        <p className="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-[#98691D]">
+        <p className="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-[var(--theme-color)]">
           SutoCraft
         </p>
 
@@ -23,7 +23,7 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="mt-7 inline-flex h-12 items-center justify-center rounded-2xl bg-[#98691D] px-7 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+          className="mt-7 inline-flex h-12 items-center justify-center rounded-2xl bg-[var(--theme-color)] px-7 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
         >
           Back To Home
         </Link>
