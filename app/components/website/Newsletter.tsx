@@ -1,12 +1,27 @@
+"use client";
+
 import Container from "./Container";
+import { useTheme } from "./settings.theme_color";
 
 export default function Newsletter() {
+  const { themeColor } = useTheme();
+
   return (
-    <section className="bg-[#98691D] py-16 lg:py-24">
+    <section
+      className="py-16 lg:py-24"
+      style={{
+        background: themeColor,
+      }}
+    >
       <Container>
         <div className="mx-auto max-w-4xl text-center">
 
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#F6E4B5] sm:text-sm">
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.35em] sm:text-sm"
+            style={{
+              color: `${themeColor}F6`,
+            }}
+          >
             Stay Connected
           </p>
 
@@ -14,7 +29,12 @@ export default function Newsletter() {
             Subscribe To Our Newsletter
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#F8EFD9] sm:text-base lg:text-lg lg:leading-8">
+          <p
+            className="mx-auto mt-6 max-w-2xl text-sm leading-7 sm:text-base lg:text-lg lg:leading-8"
+            style={{
+              color: `${themeColor}F8`,
+            }}
+          >
             Get exclusive offers, new arrivals and special discounts
             delivered directly to your inbox.
           </p>
