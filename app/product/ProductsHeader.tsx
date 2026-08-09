@@ -67,7 +67,7 @@ export default function ProductsHeader({
           {/* Breadcrumb */}
           <div
             className="
-              mb-4
+              mb-0
               flex
               items-center
               gap-2
