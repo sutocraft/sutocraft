@@ -23,6 +23,8 @@ import {
   FiUser,
 } from "react-icons/fi";
 
+import { useTheme } from "./settings.theme_color";
+
 export default function MobileBottomNav() {
   const pathname = usePathname();
 
@@ -33,6 +35,8 @@ export default function MobileBottomNav() {
     openCart,
     cartCount,
   } = useCart();
+
+  const { themeColor } = useTheme();
 
   const [user, setUser] =
     useState<any>(null);
@@ -46,8 +50,8 @@ export default function MobileBottomNav() {
    * This is stored in sessionStorage because navigating
    * to /product can remount this component.
    */
- const [activeMenu, setActiveMenu] =
-  useState<string | null>(null);
+  const [activeMenu, setActiveMenu] =
+    useState<string | null>(null);
 
   const lastScrollY =
     useRef(0);
@@ -352,10 +356,12 @@ export default function MobileBottomNav() {
           mb-2
           rounded-2xl
           border
-          border-[#E8E1CE]
           bg-white
           shadow-2xl
         "
+        style={{
+          borderColor: "var(--theme-color-20)",
+        }}
       >
 
         <div className="grid grid-cols-5">
@@ -576,7 +582,7 @@ export default function MobileBottomNav() {
                     "
                     style={{
                       backgroundColor:
-                        "#98691D",
+                        themeColor,
                     }}
                   />
                 )}
@@ -592,7 +598,7 @@ export default function MobileBottomNav() {
                     size={22}
                     style={{
                       color: active
-                        ? "#98691D"
+                        ? themeColor
                         : "#6B7280",
                     }}
                   />
@@ -640,7 +646,7 @@ export default function MobileBottomNav() {
                   "
                   style={{
                     color: active
-                      ? "#98691D"
+                      ? themeColor
                       : "#6B7280",
                   }}
                 >
