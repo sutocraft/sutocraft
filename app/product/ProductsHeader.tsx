@@ -79,7 +79,7 @@ export default function ProductsHeader({
 
             <span className="text-[#CBD5E1]">/</span>
 
-            <span className="font-semibold text-[#98691D]">
+            <span className="font-semibold text-[var(--theme-color)]">
               Products
             </span>
           </div>
@@ -106,7 +106,7 @@ export default function ProductsHeader({
                   font-semibold
                   uppercase
                   tracking-[0.32em]
-                  text-[#98691D]
+                  text-[var(--theme-color)]
                   sm:text-sm
                 "
               >
@@ -204,7 +204,7 @@ export default function ProductsHeader({
                     w-full
                     rounded-2xl
                     border
-                    border-[#E8E1CE]
+                    border-[var(--theme-primary-border)]
                     bg-white
                     pl-11
                     pr-4
@@ -213,9 +213,9 @@ export default function ProductsHeader({
                     outline-none
                     transition
                     placeholder:text-[#94A3B8]
-                    focus:border-[#98691D]
+                    focus:border-[var(--theme-color)]
                     focus:ring-2
-                    focus:ring-[#98691D]/10
+                    focus:ring-[var(--theme-color-10)]
                   "
                 />
               </div>
@@ -230,7 +230,7 @@ export default function ProductsHeader({
                     left-3
                     top-1/2
                     -translate-y-1/2
-                    text-[#98691D]
+                    text-[var(--theme-color)]
                   "
                 />
 
@@ -247,7 +247,7 @@ export default function ProductsHeader({
                     appearance-none
                     rounded-2xl
                     border
-                    border-[#E8E1CE]
+                    border-[var(--theme-primary-border)]
                     bg-white
                     pl-9
                     pr-9
@@ -255,9 +255,9 @@ export default function ProductsHeader({
                     font-medium
                     text-[#2B2B2B]
                     outline-none
-                    focus:border-[#98691D]
+                    focus:border-[var(--theme-color)]
                     focus:ring-2
-                    focus:ring-[#98691D]/10
+                    focus:ring-[var(--theme-color-10)]
                   "
                 >
                   <option value="Newest">
@@ -325,7 +325,7 @@ export default function ProductsHeader({
                   w-full
                   rounded-2xl
                   border
-                  border-[#E8E1CE]
+                  border-[var(--theme-primary-border)]
                   bg-white
                   pl-11
                   pr-4
@@ -334,9 +334,9 @@ export default function ProductsHeader({
                   outline-none
                   transition
                   placeholder:text-[#94A3B8]
-                  focus:border-[#98691D]
+                  focus:border-[var(--theme-color)]
                   focus:ring-2
-                  focus:ring-[#98691D]/10
+                  focus:ring-[var(--theme-color-10)]
                 "
               />
             </div>
@@ -371,14 +371,14 @@ export default function ProductsHeader({
                 gap-2
                 rounded-2xl
                 border
-                border-[#E8E1CE]
+                border-[var(--theme-primary-border)]
                 bg-white
                 px-2
                 text-sm
                 font-semibold
-                text-[#98691D]
+                text-[var(--theme-color)]
                 transition
-                hover:bg-[#98691D]/5
+                hover:bg-[color:var(--theme-color)]/5
               "
             >
               <SlidersHorizontal size={17} />
@@ -395,7 +395,7 @@ export default function ProductsHeader({
                   left-3
                   top-1/2
                   -translate-y-1/2
-                  text-[#98691D]
+                  text-[var(--theme-color)]
                 "
               />
 
@@ -412,7 +412,7 @@ export default function ProductsHeader({
                   appearance-none
                   rounded-2xl
                   border
-                  border-[#E8E1CE]
+                  border-[var(--theme-primary-border)]
                   bg-white
                   pl-9
                   pr-8
@@ -420,9 +420,9 @@ export default function ProductsHeader({
                   font-medium
                   text-[#2B2B2B]
                   outline-none
-                  focus:border-[#98691D]
+                  focus:border-[var(--theme-color)]
                   focus:ring-2
-                  focus:ring-[#98691D]/10
+                  focus:ring-[var(--theme-color-10)]
                 "
               >
                 <option value="Newest">
