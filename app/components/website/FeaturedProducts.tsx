@@ -33,8 +33,8 @@ export default function FeaturedProducts() {
     <section
       className="py-12 sm:py-14 lg:py-20"
       style={{
-        background: "#F8F5EE",
-      }}
+  background: "var(--theme-background)",
+}}
     >
       <Container>
 
