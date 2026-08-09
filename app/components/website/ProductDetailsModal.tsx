@@ -123,20 +123,20 @@ export default function ProductDetailsModal({
           e.stopPropagation()
         }
         className="
-          absolute
-          inset-0
-          mx-auto
-          h-screen
-          w-full
-          overflow-hidden
-          bg-[#F8F5EE]
+  absolute
+  inset-0
+  mx-auto
+  h-screen
+  w-full
+  overflow-hidden
+  bg-[#F8F5EE]
 
-          lg:h-[95vh]
-          lg:max-w-7xl
-          lg:translate-y-[2.5vh]
-          lg:rounded-3xl
-          lg:shadow-2xl
-        "
+  lg:h-[88vh]
+  lg:max-w-4xl
+  lg:translate-y-[6vh]
+  lg:rounded-3xl
+  lg:shadow-2xl
+"
       >
         <button
           onClick={closeModal}
