@@ -19,10 +19,7 @@ type Brand = {
   name: string;
 };
 
-type Color = {
-  id: string;
-  name: string;
-};
+
 
 type Size = {
   id: string;
@@ -50,17 +47,17 @@ export default function EditProductPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [colors, setColors] = useState<Color[]>([]);
+ 
   const [sizes, setSizes] = useState<Size[]>([]);
   const [stockStatuses, setStockStatuses] = useState<StockStatus[]>([]);
 
   const [categoryId, setCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [brandId, setBrandId] = useState("");
-  const [colorId, setColorId] = useState("");
+  
 const [sizeId, setSizeId] = useState("");
 
-const [colorIds, setColorIds] = useState<string[]>([]);
+
 const [sizeIds, setSizeIds] = useState<string[]>([]);
 
 const [stockStatusId, setStockStatusId] = useState("");
@@ -138,7 +135,6 @@ const [heroOrder, setHeroOrder] = useState("0");
     loadCategories();
     loadSubCategories();
     loadBrands();
-    loadColors();
     loadSizes();
     loadStockStatuses();
 
@@ -202,20 +198,6 @@ async function loadBrands() {
   setBrands(data || []);
 }
 
-async function loadColors() {
-  const { data, error } = await supabase
-    .from("colors")
-    .select("id,name")
-    .order("name");
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  setColors(data || []);
-}
-
 async function loadSizes() {
   const { data, error } = await supabase
     .from("sizes")
@@ -244,14 +226,6 @@ async function loadStockStatuses() {
   setStockStatuses(data || []);
 }
 
-function toggleColor(id: string) {
-  setColorIds((prev) =>
-    prev.includes(id)
-      ? prev.filter((x) => x !== id)
-      : [...prev, id]
-  );
-}
-
 function toggleSize(id: string) {
   setSizeIds((prev) =>
     prev.includes(id)
@@ -275,10 +249,8 @@ async function loadProduct() {
   setCategoryId(data.category_id ?? "");
   setSubCategoryId(data.sub_category_id ?? "");
   setBrandId(data.brand_id ?? "");
-  setColorId(data.color_id ?? "");
 setSizeId(data.size_id ?? "");
 
-setColorIds(data.color_ids ?? []);
 setSizeIds(data.size_ids ?? []);
   setStockStatusId(data.stock_status_id ?? "");
 
@@ -528,7 +500,7 @@ async function updateProduct() {
   !categoryId ||
   !subCategoryId ||
   !brandId ||
-  colorIds.length === 0 ||
+
   sizeIds.length === 0 ||
   !stockStatusId ||
   !name.trim() ||
@@ -644,16 +616,10 @@ async function updateProduct() {
           subCategoryId || null,
 
         brand_id:
-          brandId || null,
-
-        color_id:
-  colorIds[0] || null,
+  brandId || null,
 
 size_id:
   sizeIds[0] || null,
-
-color_ids:
-  colorIds,
 
 size_ids:
   sizeIds,
@@ -833,38 +799,7 @@ return (
 
       </select>
 
-      {/* Color */}
-
-      <div className="border border-gray-600 rounded p-3">
-
-  <p className="font-medium mb-2">
-    Available Colors
-  </p>
-
-  <div className="grid grid-cols-2 gap-2">
-
-    {colors.map((item) => (
-
-      <label
-        key={item.id}
-        className="flex items-center gap-2 cursor-pointer"
-      >
-
-        <input
-          type="checkbox"
-          checked={colorIds.includes(item.id)}
-          onChange={() => toggleColor(item.id)}
-        />
-
-        {item.name}
-
-      </label>
-
-    ))}
-
-  </div>
-
-</div>
+      {/* Color selection removed */}
 
       {/* Size */}
 
