@@ -331,7 +331,7 @@ export default function Header() {
 
       <Container>
 
-        <div className="flex h-[62px] items-center justify-between sm:h-[66px] lg:h-[70px]">
+        <div className={`relative flex h-[62px] items-center justify-between transition-all duration-300 sm:h-[66px] ${isScrolled ? "lg:h-[56px]" : "lg:h-[70px]"}`}>
 
                     {/* ===========================
               Logo
@@ -345,7 +345,7 @@ export default function Header() {
               <img
                 src={logoUrl}
                 alt={websiteName}
-                className="h-11 w-auto max-w-[220px] object-contain lg:h-12"
+                className={`h-11 w-auto max-w-[220px] object-contain transition-all duration-300 ${isScrolled ? "lg:h-10" : "lg:h-12"}`}
               />
             ) : (
               <span
@@ -363,7 +363,7 @@ export default function Header() {
               Desktop Menu
           =========================== */}
 
-          <nav className="hidden items-center gap-7 xl:gap-9 lg:flex">
+          <nav className={`hidden items-center gap-7 xl:gap-9 lg:flex transition-all duration-300 ${isScrolled ? "lg:hidden" : ""}`}>
 
             <Link
               href="/"
@@ -430,7 +430,7 @@ export default function Header() {
           <div className="hidden items-center gap-1.5 lg:flex">
 
             <button
-              className="flex h-10 w-10 items-center justify-center rounded-lg border transition"
+              className={`${isScrolled ? "hidden" : "flex"} h-10 w-10 items-center justify-center rounded-lg border transition`} 
               style={{
                 borderColor: `${themeColor}30`,
                 color: themeColor,
@@ -441,7 +441,7 @@ export default function Header() {
 
             <Link
               href="/wishlist"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border transition"
+              className={`${isScrolled ? "hidden" : "flex"} h-10 w-10 items-center justify-center rounded-lg border transition`} 
               style={{
                 borderColor: `${themeColor}30`,
                 color: themeColor,
@@ -520,16 +520,18 @@ export default function Header() {
 
             {user ? (
 
-              <UserMenu
-                profile={profile}
-                onLogout={handleLogout}
-              />
+              <div className={isScrolled ? "hidden" : "block"}>
+                <UserMenu
+                  profile={profile}
+                  onLogout={handleLogout}
+                />
+              </div>
 
             ) : (
 
               <Link
                 href="/login"
-                className="rounded-lg border px-5 py-2.5 text-sm font-semibold transition-all duration-300 hover:text-white"
+                className={`${isScrolled ? "hidden" : "inline-flex"} rounded-lg border px-5 py-2.5 text-sm font-semibold transition-all duration-300 hover:text-white`}
                 style={{
                   borderColor: themeColor,
                   color: themeColor,
@@ -631,9 +633,17 @@ export default function Header() {
             Hover opens dropdown. Mobile/tablet untouched.
            ===================================================== */}
 
-        <div className="relative hidden border-t border-[#F0E9DC] lg:block">
+        <div
+          className={`hidden lg:block transition-all duration-300 ${
+            isScrolled
+              ? "absolute inset-y-0 left-1/2 z-30 -translate-x-1/2"
+              : "relative border-t border-[#F0E9DC]"
+          }`}
+        >
           <nav
-            className="flex items-center justify-center gap-0.5 overflow-visible"
+            className={`flex items-center justify-center gap-0.5 overflow-visible transition-all duration-300 ${
+              isScrolled ? "h-full" : "py-0.5"
+            }`}
             onMouseLeave={() => setOpenCategoryId(null)}
           >
             {categoryLoading ? (
@@ -665,7 +675,7 @@ export default function Header() {
                       href={`/product?category=${encodeURIComponent(
                         category.slug || category.name
                       )}`}
-                      className="group flex h-10 items-center gap-1.5 px-3 text-[11px] font-semibold whitespace-nowrap text-[#2B2B2B] transition-colors duration-200"
+                      className={`group flex items-center gap-1.5 whitespace-nowrap text-[11px] font-semibold text-[#2B2B2B] transition-colors duration-200 ${isScrolled ? "h-full px-2.5" : "h-10 px-3"}`}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.color = themeColor;
                       }}
@@ -734,7 +744,7 @@ export default function Header() {
             ) : (
               <Link
                 href="/product"
-                className="flex h-10 items-center px-4 text-[11px] font-semibold text-[#2B2B2B]"
+                className={`flex items-center px-4 text-[11px] font-semibold text-[#2B2B2B] ${isScrolled ? "h-8 text-[10px]" : "h-10"}`}
               >
                 Shop All Products
               </Link>
