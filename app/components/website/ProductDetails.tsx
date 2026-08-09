@@ -254,7 +254,7 @@ window.location.href =
 
   if (loading) {
     return (
-      <section className="bg-[#F8F5EE]">
+      <section className="bg-[var(--theme-background)]">
 
         <div className="mx-auto max-w-7xl px-4 py-20">
 
@@ -286,7 +286,7 @@ window.location.href =
 
   if (!product) {
     return (
-      <section className="flex min-h-[60vh] items-center justify-center bg-[#F8F5EE]">
+      <section className="flex min-h-[60vh] items-center justify-center bg-[var(--theme-background)]">
 
         <h2 className="text-2xl font-bold text-[#2B2B2B]">
           Product not found
