@@ -526,10 +526,11 @@ export default function ProductCard({
          ======================================================= */}
 
       <ProductDetailsModal
-        open={open}
-        slug={product.slug}
-        onClose={() => setOpen(false)}
-      />
+  open={open}
+  slug={product.slug}
+  onClose={() => setOpen(false)}
+  useHistory={false}
+/>
     </>
   );
 }
