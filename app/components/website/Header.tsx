@@ -332,14 +332,14 @@ export default function Header() {
         duration-300
       "
       style={{
-        backdropFilter:
-          "blur(16px)",
+  backdropFilter:
+    "blur(16px)",
 
-        borderBottom:
-          isScrolled
-            ? "1px solid #ECE5D6"
-            : "1px solid transparent",
-      }}
+  borderBottom:
+    isScrolled
+      ? "1px solid var(--theme-primary-border)"
+      : "1px solid transparent",
+}}
     >
       <Container>
 
@@ -819,14 +819,14 @@ export default function Header() {
             ===================================================== */}
 
         <div
-          className="
-            hidden
-            w-full
-            border-t
-            border-[#F0E9DC]
-            lg:block
-          "
-        >
+  className="
+    hidden
+    w-full
+    border-t
+    border-[var(--theme-primary-border)]
+    lg:block
+  "
+>
 
           {/*
             IMPORTANT:
@@ -1004,18 +1004,18 @@ export default function Header() {
                           isOpen && (
                             <div
                               className="
-                                absolute
-                                left-0
-                                top-full
-                                z-[80]
-                                w-56
-                                rounded-b-xl
-                                border
-                                border-[#E8E1CE]
-                                bg-white
-                                p-1.5
-                                shadow-lg
-                              "
+  absolute
+  left-0
+  top-full
+  z-[80]
+  w-56
+  rounded-b-xl
+  border
+  border-[var(--theme-primary-border)]
+  bg-white
+  p-1.5
+  shadow-lg
+"
                               onMouseEnter={() =>
                                 setOpenCategoryId(
                                   category.id
@@ -1039,7 +1039,7 @@ export default function Header() {
                                   font-bold
                                   text-[#2B2B2B]
                                   transition-colors
-                                  hover:bg-[#FAF7F0]
+                                  hover:bg-[var(--theme-primary-soft)]
                                 "
                                 onMouseEnter={(e) => {
                                   e.currentTarget.style.color =
@@ -1079,7 +1079,7 @@ export default function Header() {
                                       font-medium
                                       text-gray-600
                                       transition-colors
-                                      hover:bg-[#FAF7F0]
+                                      hover:bg-[var(--theme-primary-soft)]
                                     "
                                     onMouseEnter={(
                                       e
@@ -1237,13 +1237,13 @@ export default function Header() {
         {menuOpen && (
 
           <div
-            className="
-              border-t
-              border-[#ECE4D5]
-              bg-white
-              lg:hidden
-            "
-          >
+  className="
+    border-t
+    border-[var(--theme-primary-border)]
+    bg-white
+    lg:hidden
+  "
+>
 
             <nav
               className="
