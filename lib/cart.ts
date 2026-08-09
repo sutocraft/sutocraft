@@ -13,13 +13,12 @@ console.count("addToCart()");
 export async function addToCart({
   productId,
   sizeId,
-  colorId,
+
   quantity,
 }: {
   
   productId: string;
   sizeId?: string | null;
-  colorId?: string |null;
   quantity: number;
 }) {
   const userId = await getCurrentUserId();
@@ -40,11 +39,7 @@ export async function addToCart({
     query = query.is("size_id", null);
   }
 
-  if (colorId) {
-    query = query.eq("color_id", colorId);
-  } else {
-    query = query.is("color_id", null);
-  }
+ 
 
   const { data: existing, error: existingError } =
     await query.maybeSingle();
@@ -71,7 +66,7 @@ export async function addToCart({
       session_id: null,
       product_id: productId,
       size_id: sizeId ?? null,
-      color_id: colorId ?? null,
+
       quantity,
     });
 
