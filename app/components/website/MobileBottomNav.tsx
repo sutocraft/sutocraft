@@ -46,20 +46,8 @@ export default function MobileBottomNav() {
    * This is stored in sessionStorage because navigating
    * to /product can remount this component.
    */
-  const [activeMenu, setActiveMenu] =
-    useState<string | null>(() => {
-      if (
-        typeof window !== "undefined"
-      ) {
-        return (
-          sessionStorage.getItem(
-            "mobile-nav-active"
-          ) || null
-        );
-      }
-
-      return null;
-    });
+ const [activeMenu, setActiveMenu] =
+  useState<string | null>(null);
 
   const lastScrollY =
     useRef(0);
