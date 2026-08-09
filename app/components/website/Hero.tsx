@@ -109,7 +109,7 @@ export default function Hero({
 
     return (
 
-      <section className="bg-[#F8F5EE]">
+      <section className="bg-[var(--theme-background)]">
 
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16">
 
@@ -165,7 +165,7 @@ lg:rounded-[40px] bg-gray-200" />
 
     return (
 
-    <section className="relative overflow-hidden bg-[#F8F5EE]">
+    <section className="relative overflow-hidden bg-[var(--theme-background)]">
 
       {/* Background */}
 
