@@ -28,7 +28,7 @@ export default function Price({
             onMinPriceChange(e.target.value)
           }
           placeholder="৳ Min"
-          className="h-10 w-full rounded-xl border border-[#E8E1CE] px-3 text-sm text-[#2B2B2B] outline-none focus:border-[#98691D]"
+          className="h-10 w-full rounded-xl border border-[var(--theme-primary-border)] px-3 text-sm text-[#2B2B2B] outline-none focus:border-[var(--theme-color)]"
         />
       </div>
 
@@ -45,7 +45,7 @@ export default function Price({
             onMaxPriceChange(e.target.value)
           }
           placeholder="৳ Max"
-          className="h-10 w-full rounded-xl border border-[#E8E1CE] px-3 text-sm text-[#2B2B2B] outline-none focus:border-[#98691D]"
+          className="h-10 w-full rounded-xl border border-[var(--theme-primary-border)] px-3 text-sm text-[#2B2B2B] outline-none focus:border-[var(--theme-color)]"
         />
       </div>
     </div>
