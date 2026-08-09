@@ -34,7 +34,7 @@ export default function ProductsGrid({
 
   if (products.length === 0) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-[#E8E1CE] bg-white px-6 text-center">
+      <div className="flex min-h-[400px] items-center justify-center rounded-3xl border border-[var(--theme-primary-border)] bg-white px-6 text-center">
         <div>
           <div className="text-5xl">
             🛍️
