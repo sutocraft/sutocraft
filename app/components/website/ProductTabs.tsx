@@ -127,7 +127,7 @@ export default function ProductTabs({
           sm:p-8
         "
         style={{
-          borderColor: `${themeColor}25`,
+          borderColor: "var(--theme-color-15)",
         }}
       >
 
@@ -236,8 +236,7 @@ export default function ProductTabs({
                     duration-300
                   "
                   style={{
-                    borderColor:
-                      `${themeColor}25`,
+                    borderColor: "var(--theme-color-15)",
                   }}
                 >
 
@@ -346,8 +345,7 @@ export default function ProductTabs({
                   text-center
                 "
                 style={{
-                  borderColor:
-                    `${themeColor}20`,
+                  borderColor: "var(--theme-color-20)",
                 }}
               >
 
