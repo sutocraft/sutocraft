@@ -70,14 +70,14 @@ export default function MobileFilterDrawer({
           w-[88%]
           max-w-[420px]
           overflow-y-auto
-          bg-[#F8F5EE]
+          bg-[var(--theme-background)]
           shadow-2xl
         "
       >
         {/* Drawer Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#E8E1CE] bg-white px-5 py-4">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--theme-primary-border)] bg-white px-5 py-4">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#98691D]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[var(--theme-color)]">
               Filter
             </p>
 
@@ -89,7 +89,7 @@ export default function MobileFilterDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E8E1CE] bg-white text-gray-500 transition hover:text-[#98691D]"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--theme-primary-border)] bg-white text-gray-500 transition hover:text-[var(--theme-color)]"
           >
             <X size={19} />
           </button>
@@ -116,7 +116,7 @@ export default function MobileFilterDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="mt-4 w-full rounded-xl bg-[#98691D] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+            className="mt-4 w-full rounded-xl bg-[var(--theme-color)] px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
           >
             Done
           </button>
