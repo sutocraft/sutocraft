@@ -73,7 +73,7 @@ export default function ProductsFilter({
           items-center
           justify-between
           border-b
-          border-[#E8DFC9]
+          border-[var(--theme-primary-border)]
           pb-3
         "
       >
@@ -85,7 +85,7 @@ export default function ProductsFilter({
               font-semibold
               uppercase
               tracking-[0.25em]
-              text-[#98691D]
+              text-[var(--theme-color)]
             "
           >
             Filter
@@ -110,7 +110,7 @@ export default function ProductsFilter({
             font-medium
             text-gray-500
             transition
-            hover:text-[#98691D]
+            hover:text-[var(--theme-color)]
           "
         >
           Reset
@@ -129,7 +129,7 @@ export default function ProductsFilter({
 
           lg:grid-cols-4
           lg:divide-x
-          lg:divide-[#E8DFC9]
+          lg:divide-[var(--theme-primary-border)]
         "
       >
         {/* ===================================================
@@ -242,7 +242,7 @@ function FilterSection({
     <div
       className="
         border-t
-        border-[#E8DFC9]
+        border-[var(--theme-primary-border)]
         pt-3
 
         first:border-t-0
