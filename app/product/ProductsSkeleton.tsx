@@ -1,7 +1,7 @@
 export default function ProductsSkeleton() {
   return (
-    <article className="overflow-hidden rounded-3xl border border-[#E8E1CE] bg-white shadow-sm">
-      <div className="aspect-[4/5] animate-pulse bg-[#F3EFE6]" />
+    <article className="overflow-hidden rounded-3xl border border-[var(--theme-primary-border)] bg-white shadow-sm">
+      <div className="aspect-[4/5] animate-pulse bg-[var(--theme-background)]" />
 
       <div className="space-y-3 p-4 sm:p-5">
         <div className="h-4 w-20 animate-pulse rounded-full bg-gray-200" />
