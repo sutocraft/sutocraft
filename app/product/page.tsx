@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import { useSearchParams } from "next/navigation";
+
 import Header from "@/app/components/website/Header";
 import Footer from "@/app/components/website/Footer";
 import Container from "@/app/components/website/Container";
@@ -12,10 +18,16 @@ import {
 } from "@/lib/products";
 
 import ProductsHeader from "./ProductsHeader";
-import ProductsFilter from "./ProductsFilter";
 import ProductsGrid from "./ProductsGrid";
 import MobileFilterDrawer from "./MobileFilterDrawer";
+
 import MobileBottomNav from "@/app/components/website/MobileBottomNav";
+
+import ProductDetailsModal from "@/app/components/website/ProductDetailsModal";
+
+import {
+  useTheme,
+} from "@/app/components/website/settings.theme_color";
 
 type SortOption =
   | "Newest"
@@ -26,6 +38,11 @@ type SortOption =
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
+
+  const {
+    themeColor,
+  } = useTheme();
+
   /* =========================================================
      PRODUCTS
      ========================================================= */
@@ -34,7 +51,8 @@ export default function ProductsPage() {
     WebsiteProduct[]
   >([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   /* =========================================================
      SEARCH
@@ -59,17 +77,20 @@ export default function ProductsPage() {
      PRICE
      ========================================================= */
 
-  const [minPrice, setMinPrice] = useState("");
+  const [minPrice, setMinPrice] =
+    useState("");
 
-  const [maxPrice, setMaxPrice] = useState("");
+  const [maxPrice, setMaxPrice] =
+    useState("");
 
   /* =========================================================
      AVAILABILITY
      ========================================================= */
 
-  const [availability, setAvailability] = useState<
-    "all" | "in-stock" | "out-of-stock"
-  >("all");
+  const [availability, setAvailability] =
+    useState<
+      "all" | "in-stock" | "out-of-stock"
+    >("all");
 
   /* =========================================================
      SORT
@@ -85,6 +106,9 @@ export default function ProductsPage() {
   const [mobileFilterOpen, setMobileFilterOpen] =
     useState(false);
 
+
+    const [sidebarProductSlug, setSidebarProductSlug] =
+  useState("");
   /* =========================================================
      SLUG HELPER
      ========================================================= */
@@ -108,7 +132,8 @@ export default function ProductsPage() {
     async function loadProducts() {
       setLoading(true);
 
-      const data = await getAllProducts();
+      const data =
+        await getAllProducts();
 
       if (mounted) {
         setProducts(data);
@@ -125,14 +150,6 @@ export default function ProductsPage() {
 
   /* =========================================================
      READ CATEGORY + SUBCATEGORY FROM URL
-
-     Example:
-
-     /product?category=man&subcategory=Polo
-
-     or
-
-     /product?category=polo-shirt&subcategory=Polo
      ========================================================= */
 
   useEffect(() => {
@@ -166,21 +183,16 @@ export default function ProductsPage() {
     /* -------------------------------------------------------
        SUBCATEGORY
 
-       First try:
+       First:
        category + subcategory
 
-       If that combination doesn't exist,
-       search subcategory independently.
-
-       This makes the Header dropdown reliable even
-       if category/subcategory database relationships
-       are not perfectly aligned.
+       Fallback:
+       subcategory only
        ------------------------------------------------------- */
 
     let matchedSubcategory = "";
 
     if (subcategoryParam) {
-      /* First: category + subcategory */
       if (matchedCategory) {
         matchedSubcategory =
           products.find((product) => {
@@ -199,10 +211,6 @@ export default function ProductsPage() {
           })?.sub_category?.name || "";
       }
 
-      /* -----------------------------------------------------
-         Fallback: subcategory only
-         ----------------------------------------------------- */
-
       if (!matchedSubcategory) {
         matchedSubcategory =
           products.find((product) => {
@@ -217,16 +225,17 @@ export default function ProductsPage() {
       }
     }
 
-    /* -------------------------------------------------------
-       APPLY URL FILTERS
-       ------------------------------------------------------- */
-
-    setSelectedCategory(matchedCategory);
+    setSelectedCategory(
+      matchedCategory
+    );
 
     setSelectedSubcategory(
       matchedSubcategory
     );
-  }, [products, searchParams]);
+  }, [
+    products,
+    searchParams,
+  ]);
 
   /* =========================================================
      FILTER + SEARCH + SORT
@@ -234,10 +243,12 @@ export default function ProductsPage() {
 
   const filteredProducts = useMemo(() => {
     const query =
-      search.trim().toLowerCase();
+      search
+        .trim()
+        .toLowerCase();
 
-    const result = products.filter(
-      (product) => {
+    const result =
+      products.filter((product) => {
         const productName =
           product.name?.toLowerCase() || "";
 
@@ -287,15 +298,6 @@ export default function ProductsPage() {
 
         /* -----------------------------------------------------
            SUBCATEGORY
-
-           THIS IS THE MAIN FIX
-
-           Header থেকে Polo select করলে:
-
-           selectedSubcategory = "Polo"
-
-           তখন শুধু Polo subcategory-এর
-           products থাকবে।
            ----------------------------------------------------- */
 
         if (
@@ -363,8 +365,7 @@ export default function ProductsPage() {
         }
 
         return true;
-      }
-    );
+      });
 
     /* =======================================================
        SORT
@@ -427,6 +428,63 @@ export default function ProductsPage() {
   }
 
   /* =========================================================
+     CATEGORY LIST
+     ========================================================= */
+
+  const categories = useMemo(() => {
+    const map = new Map<
+      string,
+      string
+    >();
+
+    products.forEach((product) => {
+      const name =
+        product.category?.name?.trim();
+
+      if (!name) return;
+
+      const key =
+        slugify(name);
+
+      if (!map.has(key)) {
+        map.set(key, name);
+      }
+    });
+
+    return Array.from(
+      map.values()
+    );
+  }, [products]);
+
+  /* =========================================================
+     NEW PRODUCTS
+     
+     Believers-style:
+     Small image + product name + price
+     ========================================================= */
+
+  const newProducts = useMemo(() => {
+    return products
+      .filter(
+        (product) =>
+          product.new_arrival === true
+      )
+      .slice(0, 5);
+  }, [products]);
+
+  /* =========================================================
+     SIDEBAR PRODUCT CLICK
+     ========================================================= */
+
+  function handleSidebarProductClick(
+  product: WebsiteProduct
+) {
+  if (!product.slug) return;
+
+  setSidebarProductSlug(product.slug);
+}
+
+  /* =========================================================
      PAGE
      ========================================================= */
 
@@ -434,140 +492,505 @@ export default function ProductsPage() {
     <>
       <Header />
 
-      <main className="min-h-screen bg-[#F8F5EE]">
-
+      <main
+        className="
+          min-h-screen
+          bg-[#F8F5EE]
+        "
+      >
         {/* ===================================================
-            PRODUCTS HEADER + DESKTOP FILTER
+            PRODUCTS HEADER
             =================================================== */}
 
         <ProductsHeader
-          total={filteredProducts.length}
+          total={
+            filteredProducts.length
+          }
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={
+            setSearch
+          }
           sort={sort}
-          onSortChange={setSort}
+          onSortChange={
+            setSort
+          }
           onMobileFilter={() =>
             setMobileFilterOpen(true)
-          }
-          desktopFilter={
-            <ProductsFilter
-              products={products}
-
-              selectedCategory={
-                selectedCategory
-              }
-
-              onCategoryChange={
-                setSelectedCategory
-              }
-
-              selectedBrand={
-                selectedBrand
-              }
-
-              onBrandChange={
-                setSelectedBrand
-              }
-
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-
-              onMinPriceChange={
-                setMinPrice
-              }
-
-              onMaxPriceChange={
-                setMaxPrice
-              }
-
-              availability={
-                availability
-              }
-
-              onAvailabilityChange={
-                setAvailability
-              }
-
-              onReset={resetFilters}
-            />
           }
         />
 
         {/* ===================================================
-            PRODUCTS
+            DESKTOP PRODUCTS AREA
+
+            Believers style:
+
+            LEFT
+            - Categories
+            - New Products
+
+            RIGHT
+            - Products
             =================================================== */}
 
         <Container>
           <div
             className="
-              py-4
-              sm:py-5
-              lg:py-5
+              w-full
+              py-5
+              sm:py-6
+              lg:py-7
             "
           >
-            <ProductsGrid
-              products={
-                filteredProducts
+            <div
+              className="
+                grid
+                grid-cols-1
+                gap-6
+
+                lg:grid-cols-[250px_minmax(0,1fr)]
+                lg:items-start
+                lg:gap-6
+
+                xl:grid-cols-[270px_minmax(0,1fr)]
+                xl:gap-7
+              "
+            >
+              {/* =================================================
+                  LEFT SIDEBAR
+                  ================================================= */}
+
+              <aside
+                className="
+                  hidden
+                  lg:block
+                  lg:min-w-0
+                "
+              >
+                {/* =================================================
+    CATEGORIES
+    ================================================= */}
+
+<section>
+  <div
+    className="
+      flex
+      items-center
+      justify-between
+      border-b
+      border-gray-200
+      pb-2
+    "
+  >
+    <h3
+      className="
+        text-sm
+        font-semibold
+        text-[#222222]
+      "
+    >
+      Categories
+    </h3>
+  </div>
+
+  <div
+    className="
+      mt-3
+      max-h-[300px]
+      overflow-y-auto
+      pr-1
+    "
+  >
+    {/* ALL */}
+
+    <button
+      type="button"
+      onClick={() => {
+        setSelectedCategory("");
+        setSelectedSubcategory("");
+      }}
+      className="
+        group
+        flex
+        w-full
+        items-center
+        gap-2
+        py-[6px]
+        text-left
+        text-[13px]
+        transition
+      "
+    >
+      <span
+        className="
+          flex
+          h-2
+          w-2
+          shrink-0
+          items-center
+          justify-center
+        "
+      >
+        <span
+          className="
+            h-[5px]
+            w-[5px]
+            rounded-full
+          "
+          style={{
+            background:
+              !selectedCategory
+                ? themeColor
+                : "#E5E7EB",
+          }}
+        />
+      </span>
+
+      <span
+        className={
+          !selectedCategory
+            ? "font-medium"
+            : "text-[#555555]"
+        }
+        style={{
+          color:
+            !selectedCategory
+              ? themeColor
+              : undefined,
+        }}
+      >
+        All
+      </span>
+    </button>
+
+    {/* CATEGORIES */}
+
+    {categories.map(
+      (category) => {
+        const active =
+          slugify(
+            selectedCategory
+          ) ===
+          slugify(category);
+
+        return (
+          <button
+            key={category}
+            type="button"
+            onClick={() => {
+              if (active) {
+                setSelectedCategory("");
+              } else {
+                setSelectedCategory(
+                  category
+                );
               }
-              loading={loading}
-            />
+
+              setSelectedSubcategory("");
+            }}
+            className="
+              group
+              flex
+              w-full
+              items-center
+              gap-2
+              py-[6px]
+              text-left
+              text-[13px]
+              transition
+            "
+          >
+            <span
+              className="
+                flex
+                h-2
+                w-2
+                shrink-0
+                items-center
+                justify-center
+              "
+            >
+              <span
+                className="
+                  h-[5px]
+                  w-[5px]
+                  rounded-full
+                "
+                style={{
+                  background:
+                    active
+                      ? themeColor
+                      : "#E5E7EB",
+                }}
+              />
+            </span>
+
+            <span
+              className={
+                active
+                  ? "font-medium"
+                  : "text-[#555555]"
+              }
+              style={{
+                color:
+                  active
+                    ? themeColor
+                    : undefined,
+              }}
+            >
+              {category}
+            </span>
+          </button>
+        );
+      }
+    )}
+  </div>
+</section>
+
+                {/* =================================================
+                    NEW PRODUCTS
+                    ================================================= */}
+
+                <section
+                  className="
+                    mt-10
+                  "
+                >
+                  <div
+                    className="
+                      border-b
+                      border-gray-200
+                      pb-2
+                    "
+                  >
+                    <h3
+                      className="
+                        text-sm
+                        font-semibold
+                        text-[#222222]
+                      "
+                    >
+                      New Products
+                    </h3>
+                  </div>
+
+                  <div
+                    className="
+                      mt-4
+                      space-y-4
+                    "
+                  >
+                    {newProducts.map(
+                      (product) => {
+                        const price =
+                          product.sale_price ??
+                          product.price;
+
+                        return (
+                          <button
+                            key={product.id}
+                            type="button"
+                            onClick={() =>
+                              handleSidebarProductClick(
+                                product
+                              )
+                            }
+                            className="
+                              flex
+                              w-full
+                              items-start
+                              gap-3
+                              text-left
+                              group
+                            "
+                          >
+                            {/* Image */}
+
+                            <div
+                              className="
+                                h-[58px]
+                                w-[58px]
+                                shrink-0
+                                overflow-hidden
+                                bg-white
+                              "
+                            >
+                              {product.image_url ? (
+                                <img
+                                  src={
+                                    product.image_url
+                                  }
+                                  alt={
+                                    product.name
+                                  }
+                                  className="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                    transition
+                                    duration-300
+                                    group-hover:scale-105
+                                  "
+                                />
+                              ) : (
+                                <div
+                                  className="
+                                    flex
+                                    h-full
+                                    w-full
+                                    items-center
+                                    justify-center
+                                    bg-gray-100
+                                    text-[10px]
+                                    text-gray-400
+                                  "
+                                >
+                                  No Image
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Details */}
+
+                            <div
+                              className="
+                                min-w-0
+                                pt-[1px]
+                              "
+                            >
+                              <p
+                                className="
+                                  line-clamp-2
+                                  text-[12px]
+                                  font-medium
+                                  leading-[16px]
+                                  text-[#222222]
+                                  transition
+                                  group-hover:opacity-70
+                                "
+                              >
+                                {product.name}
+                              </p>
+
+                              <p
+                                className="
+                                  mt-1
+                                  text-[12px]
+                                  font-medium
+                                "
+                                style={{
+                                  color:
+                                    themeColor,
+                                }}
+                              >
+                                ৳
+                                {price.toLocaleString(
+                                  "en-BD"
+                                )}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      }
+                    )}
+
+                    {!newProducts.length && (
+                      <p
+                        className="
+                          text-xs
+                          text-gray-400
+                        "
+                      >
+                        No new products
+                      </p>
+                    )}
+                  </div>
+                </section>
+              </aside>
+
+              {/* =================================================
+                  RIGHT PRODUCTS
+                  ================================================= */}
+
+              <section
+                className="
+                  min-w-0
+                "
+              >
+                <ProductsGrid
+                  products={
+                    filteredProducts
+                  }
+                  loading={
+                    loading
+                  }
+                />
+              </section>
+            </div>
           </div>
         </Container>
 
         {/* ===================================================
             MOBILE FILTER DRAWER
+
+            Existing mobile filtering remains.
             =================================================== */}
 
         <MobileFilterDrawer
-          open={mobileFilterOpen}
-
-          onClose={() =>
-            setMobileFilterOpen(false)
+          open={
+            mobileFilterOpen
           }
-
-          products={products}
-
+          onClose={() =>
+            setMobileFilterOpen(
+              false
+            )
+          }
+          products={
+            products
+          }
           selectedCategory={
             selectedCategory
           }
-
           onCategoryChange={
             setSelectedCategory
           }
-
           selectedBrand={
             selectedBrand
           }
-
           onBrandChange={
             setSelectedBrand
           }
-
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-
+          minPrice={
+            minPrice
+          }
+          maxPrice={
+            maxPrice
+          }
           onMinPriceChange={
             setMinPrice
           }
-
           onMaxPriceChange={
             setMaxPrice
           }
-
           availability={
             availability
           }
-
           onAvailabilityChange={
             setAvailability
           }
-
-          onReset={resetFilters}
+          onReset={
+            resetFilters
+          }
         />
-
       </main>
 
-      <Footer />
+            <Footer />
+
+      <ProductDetailsModal
+        open={Boolean(sidebarProductSlug)}
+        slug={sidebarProductSlug}
+        onClose={() => setSidebarProductSlug("")}
+      />
+
       <MobileBottomNav />
     </>
   );
