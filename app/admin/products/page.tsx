@@ -35,12 +35,10 @@ brands: {
   name: string;
 } | null;
 
-color_ids: string[];
+
 size_ids: string[];
 
-colors: {
-  name: string;
-} | null;
+
 
 sizes: {
   name: string;
@@ -55,9 +53,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
 const [search, setSearch] = useState("");
 
-const [allColors, setAllColors] = useState<
-  { id: string; name: string }[]
->([]);
+
 
 const [allSizes, setAllSizes] = useState<
   { id: string; name: string }[]
@@ -65,7 +61,7 @@ const [allSizes, setAllSizes] = useState<
 
   useEffect(() => {
   loadProducts();
-  loadColors();
+
   loadSizes();
 }, []);
 
@@ -77,7 +73,7 @@ const [allSizes, setAllSizes] = useState<
   categories(name),
   sub_categories(name),
   brands(name),
-  colors(name),
+
   sizes(name),
   stock_statuses(name)
 `)
@@ -91,14 +87,7 @@ const [allSizes, setAllSizes] = useState<
     setProducts((data as Product[]) || []);
   }
 
-async function loadColors() {
-  const { data } = await supabase
-    .from("colors")
-    .select("id,name")
-    .order("name");
 
-  setAllColors(data || []);
-}
 
 async function loadSizes() {
   const { data } = await supabase
@@ -109,12 +98,6 @@ async function loadSizes() {
   setAllSizes(data || []);
 }
 
-function getColorNames(ids: string[]) {
-  return allColors
-    .filter((x) => ids?.includes(x.id))
-    .map((x) => x.name)
-    .join(", ");
-}
 
 function getSizeNames(ids: string[]) {
   return allSizes
@@ -280,9 +263,7 @@ price: product.price,
   Specification
 </th>
 
-<th className="border p-2">
-  Color
-</th>
+
 
 <th className="border p-2">
   Size
@@ -428,9 +409,7 @@ price: product.price,
   </div>
 </td>
 
-<td className="border p-2">
-  {getColorNames(product.color_ids) || "-"}
-</td>
+
 
 <td className="border p-2">
   {getSizeNames(product.size_ids) || "-"}
