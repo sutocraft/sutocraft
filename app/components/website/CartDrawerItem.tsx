@@ -35,9 +35,9 @@ const regularPrice =
   product?.price ?? 0;
 
   return (
-    <div className="flex gap-4 py-4 border-b border-[#e8dcc6]">
+    <div className="flex gap-4 py-4 border-b border-[var(--theme-primary-border)]">
       {/* Image */}
-      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#f8f5ef] shadow-sm sm:h-24 sm:w-24 flex items-center justify-center">
+      <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-[var(--theme-background)] shadow-sm sm:h-24 sm:w-24 flex items-center justify-center">
         <Image
   src={image}
   alt={product?.name ?? "Product"}
@@ -89,7 +89,7 @@ className="text-xl font-bold">
   <div
     className="flex items-center overflow-hidden rounded-xl"
     style={{
-      border: `1px solid ${themeColor}40`,
+      border: "1px solid var(--theme-color-30)",
       opacity: loading ? 0.6 : 1,
     }}
   >
