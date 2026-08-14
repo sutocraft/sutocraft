@@ -129,33 +129,76 @@ export async function getOrderById(orderId: string) {
   if (historyError) throw historyError;
 
   return {
-    ...order,
+  ...order,
 
-    items: (orderItems ?? []).map((item: any) => ({
-      ...item,
-      id: item.id,
-      product_id: item.product_id,
-      name:
-        item.product_name ||
-        item.products?.name ||
-        "Product",
-      sku:
-        item.sku ||
-        item.products?.sku ||
-        null,
-      qty: item.quantity,
-      quantity: item.quantity,
-      price: Number(item.price ?? item.unit_price ?? 0),
-      image:
-        imagesByProduct[item.product_id] ||
-        item.products?.image_url ||
-        "/images/no-image.png",
-      size: item.sizes?.name || null,
-      size_id: item.size_id || null,
-    })),
+  order_items: (orderItems ?? []).map((item: any) => ({
+    ...item,
 
-    payment: payment ?? null,
-    statusHistory: statusHistory ?? [],
-    status_history: statusHistory ?? [],
-  };
+    id: item.id,
+    product_id: item.product_id,
+    product_name:
+      item.product_name ||
+      item.products?.name ||
+      "Product",
+
+    sku:
+      item.sku ||
+      item.products?.sku ||
+      null,
+
+    qty: item.quantity,
+    quantity: item.quantity,
+
+    price: Number(
+      item.price ??
+      item.unit_price ??
+      0
+    ),
+
+    unit_price: Number(
+      item.unit_price ??
+      item.price ??
+      0
+    ),
+
+    discount: Number(
+      item.discount ?? 0
+    ),
+
+    line_total: Number(
+      item.line_total ??
+      (
+        Number(item.unit_price ?? item.price ?? 0) *
+        Number(item.quantity ?? 0)
+      )
+    ),
+
+    image:
+      imagesByProduct[item.product_id] ||
+      item.products?.image_url ||
+      "/images/no-image.png",
+
+    size:
+      item.sizes?.name ||
+      null,
+
+    size_id:
+      item.size_id ||
+      null,
+
+    products:
+      item.products
+        ? {
+            ...item.products,
+          }
+        : null,
+  })),
+
+  payments: payment
+    ? [payment]
+    : [],
+
+  order_status_history:
+    statusHistory ?? [],
+};
 }
