@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { CheckCircle2, ShoppingBag } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTheme } from "@/app/components/website/settings.theme_color";
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const { themeColor } = useTheme();
 
