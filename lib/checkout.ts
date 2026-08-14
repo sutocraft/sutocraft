@@ -28,6 +28,13 @@ export type CheckoutData = {
 
   discount?: number;
 
+  /**
+   * Clear the customer's cart after successful order creation.
+   * Cart checkout: true
+   * Buy Now: false
+   */
+  clear_cart?: boolean;
+
   items: CheckoutItem[];
 };
 
@@ -112,6 +119,7 @@ export async function placeOrder(data: CheckoutData) {
     throw new Error("Please select a payment method.");
   }
 
+
   const subtotal = Number(data.subtotal) || 0;
   const shipping = Number(data.shipping) || 0;
   const discount = Number(data.discount) || 0;
@@ -155,6 +163,7 @@ export async function placeOrder(data: CheckoutData) {
   if (orderError) {
     throw orderError;
   }
+
 
   /*
    * =====================================================
@@ -256,16 +265,18 @@ export async function placeOrder(data: CheckoutData) {
    * =====================================================
    */
 
-  const { error: cartError } = await supabase
-    .from("cart_items")
-    .delete()
-    .eq("user_id", user.id);
+  if (data.clear_cart !== false) {
+    const { error: cartError } = await supabase
+      .from("cart_items")
+      .delete()
+      .eq("user_id", user.id);
 
-  if (cartError) {
-    console.error(
-      "Order created but cart could not be cleared:",
-      cartError
-    );
+    if (cartError) {
+      console.error(
+        "Order created but cart could not be cleared:",
+        cartError
+      );
+    }
   }
 
   /*
