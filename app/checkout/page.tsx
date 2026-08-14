@@ -319,7 +319,16 @@ export default function CheckoutPage() {
   /*
    * PRODUCT IMAGE
    */
- 
+  function getImage(item: CartItem) {
+    return (
+      item.products?.product_images?.find(
+        (image) => image.is_primary
+      )?.image_url ||
+      item.products?.product_images?.[0]
+        ?.image_url ||
+      "/images/no-image.png"
+    );
+  }
 
   /*
    * PLACE ORDER
