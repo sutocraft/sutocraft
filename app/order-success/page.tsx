@@ -80,3 +80,11 @@ function OrderSuccessContent() {
     </main>
   );
 }
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrderSuccessContent />
+    </Suspense>
+  );
+}
