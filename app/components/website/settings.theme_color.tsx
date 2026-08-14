@@ -9,6 +9,7 @@ import {
 
 import { getHeaderSettings } from "@/lib/header";
 
+
 type ThemeContextType = {
   themeColor: string;
   websiteName: string;
@@ -16,7 +17,9 @@ type ThemeContextType = {
   loading: boolean;
 };
 
+
 const DEFAULT_THEME_COLOR = "#98691D";
+
 
 const ThemeContext =
   createContext<ThemeContextType>({
@@ -26,11 +29,20 @@ const ThemeContext =
     loading: true,
   });
 
+
+/* =====================================================
+   COLOR NORMALIZER
+   ===================================================== */
+
 function normalizeHexColor(
   value: string
-) {
+): string {
+
   const color =
     value?.trim() || "";
+
+
+  /* 6 digit */
 
   if (
     /^#[0-9A-Fa-f]{6}$/.test(color)
@@ -38,9 +50,13 @@ function normalizeHexColor(
     return color;
   }
 
+
+  /* 3 digit */
+
   if (
     /^#[0-9A-Fa-f]{3}$/.test(color)
   ) {
+
     return (
       "#" +
       color[1] +
@@ -52,32 +68,39 @@ function normalizeHexColor(
     );
   }
 
+
   return DEFAULT_THEME_COLOR;
 }
+
+
+/* =====================================================
+   APPLY GLOBAL THEME VARIABLES
+   ===================================================== */
 
 function applyThemeVariables(
   themeColor: string
 ) {
+
   if (
-    typeof document ===
-    "undefined"
+    typeof document === "undefined"
   ) {
     return;
   }
 
+
   const root =
     document.documentElement;
+
 
   const color =
     normalizeHexColor(
       themeColor
     );
 
-  /*
-   * =====================================================
-   * MAIN THEME COLOR
-   * =====================================================
-   */
+
+  /* =====================================================
+     MAIN THEME
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-color",
@@ -90,14 +113,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * THEME LIGHT SHADES
-   *
-   * These are generated from the selected
-   * Admin Theme Color.
-   * =====================================================
-   */
+  /* =====================================================
+     LIGHT SHADES
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-light",
@@ -109,26 +127,15 @@ function applyThemeVariables(
     `color-mix(in srgb, ${color} 10%, white)`
   );
 
-  /*
-   * Main theme background.
-   *
-   * Very light version of the selected
-   * Theme Color.
-   *
-   * Example:
-   * #98691D -> light warm/gold background
-   * #800080 -> light purple background
-   * #0066CC -> light blue background
-   */
+
+  /* =====================================================
+     BACKGROUNDS
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-background",
     `color-mix(in srgb, ${color} 4%, white)`
   );
-
-  /*
-   * Slightly stronger soft background.
-   */
 
   root.style.setProperty(
     "--theme-background-soft",
@@ -136,11 +143,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * THEME BORDER
-   * =====================================================
-   */
+  /* =====================================================
+     BORDERS
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-border",
@@ -153,11 +158,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * THEME HOVER
-   * =====================================================
-   */
+  /* =====================================================
+     HOVER
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-hover",
@@ -170,11 +173,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * DARK THEME SHADES
-   * =====================================================
-   */
+  /* =====================================================
+     DARK THEME VERSION
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-dark",
@@ -182,11 +183,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * TRANSPARENT / TINTED COLORS
-   * =====================================================
-   */
+  /* =====================================================
+     TINT COLORS
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-color-05",
@@ -224,16 +223,14 @@ function applyThemeVariables(
   );
 
   root.style.setProperty(
-  "--theme-color-80",
-  `color-mix(in srgb, ${color} 80%, transparent)`
-);
+    "--theme-color-80",
+    `color-mix(in srgb, ${color} 80%, transparent)`
+  );
 
 
-  /*
-   * =====================================================
-   * RING / FOCUS
-   * =====================================================
-   */
+  /* =====================================================
+     RING
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-ring",
@@ -241,11 +238,9 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * SHADOW
-   * =====================================================
-   */
+  /* =====================================================
+     SHADOW
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-shadow",
@@ -253,29 +248,67 @@ function applyThemeVariables(
   );
 
 
-  /*
-   * =====================================================
-   * TRANSPARENT
-   * =====================================================
-   */
+  /* =====================================================
+     TRANSPARENT
+     ===================================================== */
 
   root.style.setProperty(
     "--theme-primary-transparent",
     "transparent"
   );
+
+
+  /* =====================================================
+     READABLE TEXT COLORS
+     -----------------------------------------------------
+     These do NOT become white when browser/system is
+     using dark mode.
+     ===================================================== */
+
+  root.style.setProperty(
+    "--text-primary",
+    "#1f2937"
+  );
+
+  root.style.setProperty(
+    "--text-secondary",
+    "#374151"
+  );
+
+  root.style.setProperty(
+    "--text-muted",
+    "#6b7280"
+  );
+
+  root.style.setProperty(
+    "--text-light",
+    "#9ca3af"
+  );
+
+  root.style.setProperty(
+    "--text-inverse",
+    "#ffffff"
+  );
 }
+
+
+/* =====================================================
+   THEME PROVIDER
+   ===================================================== */
 
 export function ThemeProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   const [
     themeColor,
     setThemeColor,
   ] = useState(
     DEFAULT_THEME_COLOR
   );
+
 
   const [
     websiteName,
@@ -284,10 +317,12 @@ export function ThemeProvider({
     "SutoCraft"
   );
 
+
   const [
     logoUrl,
     setLogoUrl,
   ] = useState("");
+
 
   const [
     loading,
@@ -295,63 +330,82 @@ export function ThemeProvider({
   ] = useState(true);
 
 
-  /*
-   * =====================================================
-   * LOAD SETTINGS
-   * =====================================================
-   */
+  /* =====================================================
+     LOAD SETTINGS
+     ===================================================== */
 
   useEffect(() => {
+
     loadSettings();
+
   }, []);
 
 
   async function loadSettings() {
+
     try {
+
       const settings =
         await getHeaderSettings();
+
 
       const color =
         normalizeHexColor(
           settings.theme_color ||
-            DEFAULT_THEME_COLOR
+          DEFAULT_THEME_COLOR
         );
+
 
       setThemeColor(color);
 
+
       setWebsiteName(
         settings.website_name ||
-          "SutoCraft"
+        "SutoCraft"
       );
+
 
       setLogoUrl(
         settings.logo_url ||
-          ""
+        ""
       );
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        "Failed to load theme settings:",
+        error
+      );
+
 
       setThemeColor(
         DEFAULT_THEME_COLOR
       );
+
     } finally {
+
       setLoading(false);
+
     }
   }
 
 
-  /*
-   * =====================================================
-   * APPLY GLOBAL THEME
-   * =====================================================
-   */
+  /* =====================================================
+     APPLY THEME
+     ===================================================== */
 
   useEffect(() => {
+
     applyThemeVariables(
       themeColor
     );
+
   }, [themeColor]);
 
+
+  /* =====================================================
+     CONTEXT
+     ===================================================== */
 
   return (
     <ThemeContext.Provider
@@ -368,7 +422,12 @@ export function ThemeProvider({
 }
 
 
+/* =====================================================
+   USE THEME
+   ===================================================== */
+
 export function useTheme() {
+
   return useContext(
     ThemeContext
   );
