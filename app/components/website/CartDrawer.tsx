@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   X,
   ShoppingBag,
@@ -47,6 +48,8 @@ type CartItem = {
 };
 
 export default function CartDrawer() {
+  const router = useRouter();
+
   const {
   isOpen,
   closeCart,
@@ -232,6 +235,11 @@ const [updatingId, setUpdatingId] =
     setCartCount(0);
   }
 
+  function handleProceedToCheckout() {
+    closeCart();
+    router.push("/checkout?mode=cart");
+  }
+
     return (
     <>
       {/* Backdrop */}
@@ -377,16 +385,16 @@ const [updatingId, setUpdatingId] =
   <div className="grid gap-3">
     
 
-    <Link
-      href="/checkout"
-      onClick={handleCloseDrawer}
-      className="rounded-xl py-3 text-center font-semibold text-white transition-opacity duration-200 hover:opacity-90"
+    <button
+      type="button"
+      onClick={handleProceedToCheckout}
+      className="w-full rounded-xl py-3 text-center font-semibold text-white transition-opacity duration-200 hover:opacity-90"
       style={{
         backgroundColor: themeColor,
       }}
     >
       Proceed to Checkout
-    </Link>
+    </button>
   </div>
 </div>
 
