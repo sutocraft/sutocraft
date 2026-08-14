@@ -164,6 +164,32 @@ export async function placeOrder(data: CheckoutData) {
     throw orderError;
   }
 
+  /*
+ * =====================================================
+ * 1B. CREATE INITIAL ORDER STATUS HISTORY
+ * =====================================================
+ */
+
+const { error: historyError } = await supabase
+  .from("order_status_history")
+  .insert({
+    order_id: order.id,
+    status: "Pending",
+    changed_by: user.id,
+    note: "Order placed by customer. Waiting for admin review.",
+  });
+
+if (historyError) {
+  // Roll back order if history cannot be created
+  await supabase
+    .from("orders")
+    .delete()
+    .eq("id", order.id)
+    .eq("user_id", user.id);
+
+  throw historyError;
+}
+
 
   /*
    * =====================================================
