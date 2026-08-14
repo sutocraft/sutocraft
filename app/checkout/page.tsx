@@ -447,10 +447,6 @@ export default function CheckoutPage() {
                   item.sizes?.id ||
                   null,
 
-                color_id:
-                  item.colors?.id ||
-                  null,
-
                 quantity:
                   item.quantity,
 
@@ -960,15 +956,6 @@ export default function CheckoutPage() {
                             </span>
                           )}
 
-                          {item.colors && (
-                            <span>
-                              Color:{" "}
-                              {
-                                item.colors
-                                  .name
-                              }
-                            </span>
-                          )}
                         </div>
 
                         <p
