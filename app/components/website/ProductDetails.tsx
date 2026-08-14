@@ -184,28 +184,92 @@ window.dispatchEvent(
 
     async function handleBuyNow() {
 
+  if (!product) return;
+
+  if (product.stock <= 0) {
+    alert("Out of stock.");
+    return;
+  }
+
+  if (
+    (product.sizes?.length ?? 0) > 0 &&
+    !selectedSize
+  ) {
+    alert("Select size.");
+    return;
+  }
+
+  /*
+   * BUY NOW IS NOT CART.
+   * Do not call handleAddToCart().
+   */
+  const buyNowItem = {
+    id: `buy-now-${product.id}`,
+    quantity,
+
+    products: {
+      id: product.id,
+      name: product.name,
+      price: Number(product.price || 0),
+      sale_price:
+        product.sale_price !== null &&
+        product.sale_price !== undefined
+          ? Number(product.sale_price)
+          : null,
+      sku: product.sku || null,
+      slug: product.slug,
+
+      product_images: [
+        {
+          image_url:
+            product.image_url || "",
+          is_primary: true,
+        },
+      ],
+    },
+
+    sizes:
+      selectedSize
+        ? product.sizes?.find(
+            (size) =>
+              size.id === selectedSize
+          ) || null
+        : null,
+
+    colors: null,
+  };
+
+  /*
+   * Replace any previous Buy Now item.
+   */
+  localStorage.setItem(
+    "sutocraft_buy_now",
+    JSON.stringify(buyNowItem)
+  );
+
+  localStorage.setItem(
+    "sutocraft_checkout_mode",
+    "buy_now"
+  );
+
   const user =
     await getCurrentUser();
 
   if (!user) {
 
     localStorage.setItem(
-  "login-redirect",
-  "checkout"
-);
+      "login-redirect",
+      "checkout"
+    );
 
-window.location.href =
-  "/login";
+    window.location.href =
+      "/login";
 
     return;
-
   }
 
-  await handleAddToCart();
-
   window.location.href =
-    "/checkout";
-
+    "/checkout?mode=buy-now";
 }
 
   function handleWishlist() {
