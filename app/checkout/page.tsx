@@ -907,7 +907,18 @@ export default function CheckoutPage() {
                       key={item.id}
                       className="flex gap-3"
                     >
-                      
+                      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                        <img
+                          src={getImage(
+                            item
+                          )}
+                          alt={
+                            item.products
+                              .name
+                          }
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
 
                       <div className="min-w-0 flex-1">
                         <p className="line-clamp-2 text-sm font-bold text-gray-900">
