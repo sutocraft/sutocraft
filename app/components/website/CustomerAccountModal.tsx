@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   ArrowLeft,
@@ -18,6 +18,7 @@ import {
   getCurrentProfile,
   supabase,
   updateCurrentProfile,
+  uploadAvatar,
 } from "@/lib/auth";
 import AddressSelector from "@/app/components/website/AddressSelector";
 import { useTheme } from "@/app/components/website/settings.theme_color";
@@ -603,6 +604,8 @@ function ProfileView({
   const [address, setAddress] = useState(initialProfile?.address || "");
   const [postalCode, setPostalCode] = useState(initialProfile?.postal_code || "");
   const [saving, setSaving] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -621,6 +624,42 @@ function ProfileView({
     }
     load();
   }, []);
+
+  async function handlePhotoChange(file: File | null) {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Photo size must be 5 MB or less.");
+      return;
+    }
+
+    try {
+      setUploadingPhoto(true);
+
+      const avatarUrl = await uploadAvatar(file);
+
+      setProfile((prev: any) => ({
+        ...prev,
+        avatar: avatarUrl,
+      }));
+
+      await onSaved();
+      alert("Profile photo updated.");
+    } catch (error: any) {
+      console.error("Profile photo upload failed:", error);
+      alert(error?.message || "Profile photo update failed.");
+    } finally {
+      setUploadingPhoto(false);
+      if (photoInputRef.current) {
+        photoInputRef.current.value = "";
+      }
+    }
+  }
 
   async function handleSave() {
     if (!division) return alert("Please select Division.");
@@ -672,12 +711,22 @@ function ProfileView({
               {profile?.full_name?.charAt(0) || "C"}
             </div>
           )}
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => handlePhotoChange(e.target.files?.[0] || null)}
+          />
+
           <button
             type="button"
-            className="rounded-xl px-5 py-2.5 font-semibold text-white"
+            onClick={() => photoInputRef.current?.click()}
+            disabled={uploadingPhoto}
+            className="rounded-xl px-5 py-2.5 font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
             style={{ backgroundColor: themeColor }}
           >
-            Change Photo
+            {uploadingPhoto ? "Uploading..." : "Change Photo"}
           </button>
         </div>
 
