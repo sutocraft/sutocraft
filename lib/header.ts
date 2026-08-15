@@ -20,7 +20,7 @@ export async function getHeaderSettings(): Promise<HeaderSettings> {
     .single();
 
   return {
-    website_name: data?.website_name ?? "SutoCraft",
+    website_name: data?.website_name ?? "JayanHub",
     logo_url: data?.logo_url ?? "",
     theme_color: data?.theme_color ?? "#98691D",
   };
