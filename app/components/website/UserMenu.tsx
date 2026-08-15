@@ -55,6 +55,21 @@ export default function UserMenu({ profile, onLogout }: Props) {
     };
   }, [open, accountView]);
 
+  // Open the updated customer account popup after a normal login.
+  // Desktop only, so this does not race with MobileBottomNav.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    if (!isDesktop) return;
+
+    if (localStorage.getItem("open-account-after-login") === "true") {
+      localStorage.removeItem("open-account-after-login");
+      setOpen(false);
+      setAccountView("dashboard");
+    }
+  }, []);
+
   function openAccount(view: AccountView) {
     setOpen(false);
     setAccountView(view);
