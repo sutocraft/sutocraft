@@ -361,7 +361,7 @@ export function ThemeProvider({
 
       setWebsiteName(
         settings.website_name ||
-        "SutoCraft"
+        "JayanHub"
       );
 
 
