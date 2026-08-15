@@ -24,7 +24,7 @@ const DEFAULT_THEME_COLOR = "#98691D";
 const ThemeContext =
   createContext<ThemeContextType>({
     themeColor: DEFAULT_THEME_COLOR,
-    websiteName: "SutoCraft",
+    websiteName: "JayanHub",
     logoUrl: "",
     loading: true,
   });
@@ -314,7 +314,7 @@ export function ThemeProvider({
     websiteName,
     setWebsiteName,
   ] = useState(
-    "SutoCraft"
+    "JayanHub"
   );
 
 
