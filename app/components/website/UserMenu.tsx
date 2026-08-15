@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
-import Link from "next/link";
 import {
   X,
   UserRound,
@@ -13,24 +13,39 @@ import {
   LogOut,
   ChevronRight,
 } from "lucide-react";
+import CustomerAccountModal from "./CustomerAccountModal";
 
 type Props = {
   profile: any;
   onLogout: () => void;
 };
 
+type AccountView =
+  | "dashboard"
+  | "orders"
+  | "wishlist"
+  | "addresses"
+  | "profile"
+  | "password";
+
 export default function UserMenu({ profile, onLogout }: Props) {
   const [open, setOpen] = useState(false);
+  const [accountView, setAccountView] = useState<AccountView | null>(null);
 
   useEffect(() => {
-    if (!open) return;
+    const locked = open || Boolean(accountView);
+    const previousOverflow = document.body.style.overflow;
+
+    if (locked) document.body.style.overflow = "hidden";
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      if (accountView) {
+        setAccountView(null);
+      } else {
+        setOpen(false);
+      }
     };
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     window.addEventListener("keydown", onKeyDown);
 
@@ -38,21 +53,26 @@ export default function UserMenu({ profile, onLogout }: Props) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [open, accountView]);
+
+  function openAccount(view: AccountView) {
+    setOpen(false);
+    setAccountView(view);
+  }
 
   function handleLogout() {
     setOpen(false);
+    setAccountView(null);
     onLogout();
   }
 
   return (
     <>
-      {/* Header account button */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open account menu"
-        className="flex items-center gap-3 rounded-xl border border-[#DCCEB6] bg-white px-3 py-2 hover:shadow-md transition"
+        className="flex items-center gap-3 rounded-xl border border-[#DCCEB6] bg-white px-3 py-2 transition hover:shadow-md"
       >
         {profile?.avatar ? (
           <Image
@@ -60,10 +80,10 @@ export default function UserMenu({ profile, onLogout }: Props) {
             alt={profile?.full_name || "Avatar"}
             width={44}
             height={44}
-            className="h-11 w-11 rounded-full object-cover border border-[#DCCEB6]"
+            className="h-11 w-11 rounded-full border border-[#DCCEB6] object-cover"
           />
         ) : (
-          <div className="h-11 w-11 rounded-full bg-[#EEF2F7] flex items-center justify-center text-[#183153] font-bold text-lg border border-[#DCCEB6]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#DCCEB6] bg-[#EEF2F7] text-lg font-bold text-[#183153]">
             {profile?.full_name?.charAt(0) || <UserRound size={20} />}
           </div>
         )}
@@ -76,34 +96,32 @@ export default function UserMenu({ profile, onLogout }: Props) {
         </div>
       </button>
 
-      {open && (
-        <>
-          {/* Overlay */}
+      {open && typeof document !== "undefined" &&
+        createPortal(
+          <>
           <button
             type="button"
             aria-label="Close account menu"
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-[90] bg-black/30 cursor-default"
+            className="fixed inset-0 z-[90] cursor-default bg-black/30"
           />
 
-          {/* Drawer */}
           <aside
-            className="fixed right-0 top-0 z-[100] h-screen w-full max-w-[390px] bg-white shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 z-[100] flex h-screen w-full max-w-[390px] flex-col bg-white shadow-2xl"
             aria-label="Account drawer"
           >
-            {/* Drawer header */}
             <div className="flex items-center justify-between border-b border-[#E7D8BC] px-6 py-5">
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex min-w-0 items-center gap-3">
                 {profile?.avatar ? (
                   <Image
                     src={profile.avatar}
                     alt={profile?.full_name || "Avatar"}
                     width={52}
                     height={52}
-                    className="h-13 w-13 rounded-full object-cover border border-[#DCCEB6]"
+                    className="h-[52px] w-[52px] shrink-0 rounded-full border border-[#DCCEB6] object-cover"
                   />
                 ) : (
-                  <div className="h-[52px] w-[52px] shrink-0 rounded-full bg-[#EEF2F7] flex items-center justify-center text-[#183153] font-bold text-xl border border-[#DCCEB6]">
+                  <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full border border-[#DCCEB6] bg-[#EEF2F7] text-xl font-bold text-[#183153]">
                     {profile?.full_name?.charAt(0) || <UserRound size={22} />}
                   </div>
                 )}
@@ -122,13 +140,12 @@ export default function UserMenu({ profile, onLogout }: Props) {
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="ml-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#DCCEB6] text-[#183153] hover:bg-[#F8F4EC] transition"
+                className="ml-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#DCCEB6] text-[#183153] transition hover:bg-[#F8F4EC]"
               >
                 <X size={20} />
               </button>
             </div>
 
-            {/* Account info */}
             <div className="border-b border-[#E7D8BC] px-6 py-5">
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                 Account
@@ -140,84 +157,84 @@ export default function UserMenu({ profile, onLogout }: Props) {
               )}
             </div>
 
-            {/* Navigation */}
             <nav className="flex-1 overflow-y-auto px-4 py-4">
-              <DrawerLink
-                href="/account"
+              <DrawerButton
                 icon={<UserRound size={19} />}
                 label="My Account"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("dashboard")}
               />
-              <DrawerLink
-                href="/account/orders"
+              <DrawerButton
                 icon={<Package size={19} />}
                 label="My Orders"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("orders")}
               />
-              <DrawerLink
-                href="/account/wishlist"
+              <DrawerButton
                 icon={<Heart size={19} />}
                 label="Wishlist"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("wishlist")}
               />
-              <DrawerLink
-                href="/account/addresses"
+              <DrawerButton
                 icon={<MapPin size={19} />}
                 label="Addresses"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("addresses")}
               />
-              <DrawerLink
-                href="/account/profile"
+              <DrawerButton
                 icon={<UserRound size={19} />}
                 label="Edit Profile"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("profile")}
               />
-              <DrawerLink
-                href="/account/change-password"
+              <DrawerButton
                 icon={<KeyRound size={19} />}
                 label="Change Password"
-                onClick={() => setOpen(false)}
+                onClick={() => openAccount("password")}
               />
             </nav>
 
-            {/* Logout */}
             <div className="border-t border-[#E7D8BC] p-4">
               <button
                 type="button"
                 onClick={handleLogout}
-                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold text-red-600 hover:bg-red-50 transition"
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold text-red-600 transition hover:bg-red-50"
               >
                 <LogOut size={19} />
                 <span>Logout</span>
               </button>
             </div>
           </aside>
-        </>
+          </>,
+          document.body
+        )}
+
+      {accountView && (
+        <CustomerAccountModal
+          profile={profile}
+          initialView={accountView}
+          onClose={() => setAccountView(null)}
+          onLogout={handleLogout}
+        />
       )}
     </>
   );
 }
 
-function DrawerLink({
-  href,
+function DrawerButton({
   icon,
   label,
   onClick,
 }: {
-  href: string;
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
 }) {
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
       onClick={onClick}
-      className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-[#183153] hover:bg-[#F8F4EC] hover:text-[#98691D] transition-colors"
+      className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-[#183153] transition-colors hover:bg-[#F8F4EC] hover:text-[#98691D]"
     >
       <span className="shrink-0">{icon}</span>
       <span className="flex-1 font-medium">{label}</span>
       <ChevronRight size={17} className="text-gray-400" />
-    </Link>
+    </button>
   );
 }
