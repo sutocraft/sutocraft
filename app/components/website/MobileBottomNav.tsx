@@ -7,7 +7,11 @@ import {
 } from "next/navigation";
 
 import { useCart } from "@/lib/cart-context";
-import { getCurrentUser } from "@/lib/auth";
+import {
+  getCurrentUser,
+  getCurrentUserProfile,
+  logoutCustomer,
+} from "@/lib/auth";
 
 import {
   useEffect,
@@ -24,6 +28,7 @@ import {
 } from "react-icons/fi";
 
 import { useTheme } from "./settings.theme_color";
+import CustomerAccountModal from "./CustomerAccountModal";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
@@ -40,6 +45,12 @@ export default function MobileBottomNav() {
 
   const [user, setUser] =
     useState<any>(null);
+
+  const [profile, setProfile] =
+    useState<any>(null);
+
+  const [accountOpen, setAccountOpen] =
+    useState(false);
 
   const [showNav, setShowNav] =
     useState(true);
@@ -112,14 +123,40 @@ export default function MobileBottomNav() {
 
   useEffect(() => {
     async function loadUser() {
-      const currentUser =
-        await getCurrentUser();
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
 
-      setUser(currentUser);
+        if (currentUser) {
+          const currentProfile = await getCurrentUserProfile();
+          setProfile(currentProfile);
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        console.error("Failed to load mobile account:", error);
+        setUser(null);
+        setProfile(null);
+      }
     }
 
     loadUser();
   }, []);
+
+
+  async function handleLogout() {
+    try {
+      await logoutCustomer();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setAccountOpen(false);
+      setUser(null);
+      setProfile(null);
+      setActiveNavigation(null);
+      window.location.href = "/";
+    }
+  }
 
 
   /* =========================================================
@@ -343,7 +380,7 @@ export default function MobileBottomNav() {
         lg:hidden
 
         ${
-          showNav && !isOpen
+          showNav && !isOpen && !accountOpen
             ? "translate-y-0"
             : "translate-y-full"
         }
@@ -360,7 +397,7 @@ export default function MobileBottomNav() {
           shadow-2xl
         "
         style={{
-          borderColor: "var(--theme-color-20)",
+          borderColor: `${themeColor}30`,
         }}
       >
 
@@ -518,9 +555,19 @@ export default function MobileBottomNav() {
                     );
 
                     if (currentUser) {
-                      navigate(
-                        "/account"
-                      );
+                      try {
+                        const currentProfile =
+                          await getCurrentUserProfile();
+
+                        setUser(currentUser);
+                        setProfile(currentProfile);
+                        setAccountOpen(true);
+                      } catch (error) {
+                        console.error(
+                          "Failed to load customer account:",
+                          error
+                        );
+                      }
                     } else {
                       localStorage.setItem(
                         "login-redirect",
@@ -659,6 +706,15 @@ export default function MobileBottomNav() {
 
         </div>
       </div>
+
+      {accountOpen && user && (
+        <CustomerAccountModal
+          profile={profile}
+          initialView="dashboard"
+          onClose={() => setAccountOpen(false)}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 }
