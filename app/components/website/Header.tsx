@@ -67,6 +67,9 @@ export default function Header() {
   const [isScrolled, setIsScrolled] =
     useState(false);
 
+  const [isHeaderHidden, setIsHeaderHidden] =
+    useState(false);
+
   /* =========================================================
      DESKTOP CATEGORY NAVIGATION
      ========================================================= */
@@ -246,10 +249,44 @@ export default function Header() {
      ========================================================= */
 
   useEffect(() => {
+    const lastScrollY = {
+      current: 0,
+    };
+
     function handleScroll() {
+      const currentScrollY =
+        window.scrollY;
+
       setIsScrolled(
-        window.scrollY > 10
+        currentScrollY > 10
       );
+
+      // Always show the header at the very top.
+      if (currentScrollY <= 10) {
+        setIsHeaderHidden(false);
+        lastScrollY.current =
+          currentScrollY;
+        return;
+      }
+
+      // Hide while scrolling down.
+      if (
+        currentScrollY >
+        lastScrollY.current
+      ) {
+        setIsHeaderHidden(true);
+      }
+
+      // Show while scrolling up.
+      if (
+        currentScrollY <
+        lastScrollY.current
+      ) {
+        setIsHeaderHidden(false);
+      }
+
+      lastScrollY.current =
+        currentScrollY;
     }
 
     window.addEventListener(
@@ -322,7 +359,7 @@ export default function Header() {
 
   return (
     <header
-      className="
+      className={`
         sticky
         top-0
         z-50
@@ -330,7 +367,12 @@ export default function Header() {
         bg-white
         transition-all
         duration-300
-      "
+        ${
+          isHeaderHidden
+            ? "-translate-y-full"
+            : "translate-y-0"
+        }
+      `}
       style={{
   backdropFilter:
     "blur(16px)",
