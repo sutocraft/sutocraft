@@ -3,38 +3,40 @@
 import { useRef } from "react";
 
 type Props = {
-  onSelect: (file: File) => void;
+  onSelect: (file: File) => void | Promise<void>;
 };
 
 export default function AvatarUploader({ onSelect }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   function openPicker() {
-    inputRef.current?.click();
+    const input = inputRef.current;
+    if (!input) return;
+    input.value = "";
+    input.click();
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-
     if (!file) return;
 
-    const allowed = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-    ];
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
 
     if (!allowed.includes(file.type)) {
       alert("Only JPG, PNG or WEBP allowed.");
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Maximum file size is 2 MB.");
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Maximum file size is 5 MB.");
       return;
     }
 
-    onSelect(file);
+    try {
+      await onSelect(file);
+    } catch (error: any) {
+      alert(error?.message || "Profile photo update failed.");
+    }
   }
 
   return (
@@ -50,8 +52,8 @@ export default function AvatarUploader({ onSelect }: Props) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
-        hidden
+        accept="image/jpeg,image/png,image/webp"
+        className="sr-only"
         onChange={handleChange}
       />
     </>
