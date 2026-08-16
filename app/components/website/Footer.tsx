@@ -67,7 +67,7 @@ export default function Footer() {
                 sm:text-[27px]
               "
             >
-              SutoCraft
+              JayanHub
             </h2>
 
             <p
