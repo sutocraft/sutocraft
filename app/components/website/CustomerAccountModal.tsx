@@ -483,7 +483,7 @@ function OrdersView({ themeColor }: { themeColor: string }) {
           title="No Orders Yet"
           text="You haven't placed any order yet."
           action="Start Shopping"
-          href="/products"
+          href="/product"
         />
       ) : (
         <div className="overflow-hidden rounded-2xl border border-[#E7D8BC] bg-white">
