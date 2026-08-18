@@ -1,7 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
 import { createPortal } from "react-dom";
 import {
   ArrowLeft,
@@ -12,7 +19,7 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { getOrders } from "@/lib/orders";
+import { getOrders, getOrderById } from "@/lib/orders";
 import { getWishlist, removeFromWishlist } from "@/lib/wishlist";
 import {
   getCurrentProfile,
@@ -319,6 +326,11 @@ function OrdersView({ themeColor }: { themeColor: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState("");
+
   useEffect(() => {
     let active = true;
 
@@ -326,17 +338,30 @@ function OrdersView({ themeColor }: { themeColor: string }) {
       try {
         setLoading(true);
         setError("");
+
         const data = await getOrders();
-        if (active) setOrders((data || []) as Order[]);
+
+        if (active) {
+          setOrders((data || []) as Order[]);
+        }
       } catch (err: any) {
-        console.error("Failed to load orders:", err);
-        if (active) setError(err?.message || "Unable to load your orders.");
+        console.error("Failed to load your orders:", err);
+
+        if (active) {
+          setError(
+            err?.message ||
+              "Unable to load your orders."
+          );
+        }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
     load();
+
     return () => {
       active = false;
     };
@@ -344,54 +369,115 @@ function OrdersView({ themeColor }: { themeColor: string }) {
 
   const filteredOrders = useMemo(() => {
     const keyword = search.trim().toLowerCase();
+
     if (!keyword) return orders;
 
     return orders.filter((order) => {
-      const number = order.order_number || order.id || "";
+      const number =
+        order.order_number ||
+        order.id ||
+        "";
+
       return (
         number.toLowerCase().includes(keyword) ||
-        String(order.status || "").toLowerCase().includes(keyword) ||
-        String(order.payment_method || "").toLowerCase().includes(keyword)
+        String(order.status || "")
+          .toLowerCase()
+          .includes(keyword) ||
+        String(order.payment_method || "")
+          .toLowerCase()
+          .includes(keyword)
       );
     });
   }, [orders, search]);
 
+  async function handleViewDetails(orderId: string) {
+    try {
+      setDetailsError("");
+      setDetailsLoading(true);
+      setExpandedOrder(orderId);
+      setSelectedOrder(null);
+
+      const data = await getOrderById(orderId);
+
+      if (!data) {
+        throw new Error(
+          "Order details could not be found."
+        );
+      }
+
+      setSelectedOrder(data);
+    } catch (err: any) {
+      console.error(
+        "Failed to load order details:",
+        err
+      );
+
+      setDetailsError(
+        err?.message ||
+          "Unable to load order details."
+      );
+    } finally {
+      setDetailsLoading(false);
+    }
+  }
+
+  function closeDetails() {
+    setExpandedOrder(null);
+    setSelectedOrder(null);
+    setDetailsError("");
+  }
+
   return (
     <div>
+      {/* HEADER */}
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-[#183153]">My Orders</h3>
+          <h3 className="text-2xl font-bold text-[#183153]">
+            My Orders
+          </h3>
+
           <p className="mt-1 text-sm text-gray-500">
-            View your order history and current order status.
+            View your order history and current
+            order status.
           </p>
         </div>
 
         <div className="text-sm text-gray-500">
           Total Orders:
-          <span className="ml-2 font-bold" style={{ color: themeColor }}>
+          <span
+            className="ml-2 font-bold"
+            style={{ color: themeColor }}
+          >
             {filteredOrders.length}
           </span>
         </div>
       </div>
 
+      {/* SEARCH */}
       <div className="mb-5 rounded-2xl border border-[#E7D8BC] bg-white p-4">
         <input
           type="text"
           placeholder="Search Order Number..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
           className="w-full rounded-xl border border-[#DCCEB6] px-4 py-3 text-[#183153] outline-none focus:border-[#A8741A] sm:max-w-sm"
         />
       </div>
 
+      {/* ERROR */}
       {error && (
         <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
+      {/* LOADING */}
       {loading ? (
-        <PanelMessage text="Loading your orders..." />
+        <PanelMessage
+          text="Loading your orders..."
+        />
       ) : filteredOrders.length === 0 ? (
         <PanelMessage
           title="No Orders Yet"
@@ -400,37 +486,538 @@ function OrdersView({ themeColor }: { themeColor: string }) {
           href="/products"
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-[#E7D8BC] bg-white">
-          <table className="min-w-full text-sm">
-            <thead className="bg-[#F8F4EC] text-left text-[#183153]">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Order</th>
-                <th className="px-4 py-3 font-semibold">Date</th>
-                <th className="px-4 py-3 font-semibold">Total</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="border-t border-[#EFE5D5]">
-                  <td className="px-4 py-4 font-semibold text-[#183153]">
-                    {order.order_number || order.id}
-                  </td>
-                  <td className="px-4 py-4 text-gray-600">
-                    {formatDate(order.created_at)}
-                  </td>
-                  <td className="px-4 py-4 text-gray-700">
-                    ৳{Number(order.total || 0).toLocaleString("en-BD")}
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className="rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
-                      {order.status}
-                    </span>
-                  </td>
+        <div className="overflow-hidden rounded-2xl border border-[#E7D8BC] bg-white">
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-[#F8F4EC] text-left text-[#183153]">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">
+                    Order
+                  </th>
+
+                  <th className="px-4 py-3 font-semibold">
+                    Date
+                  </th>
+
+                  <th className="px-4 py-3 font-semibold">
+                    Total
+                  </th>
+
+                  <th className="px-4 py-3 font-semibold">
+                    Status
+                  </th>
+
+                  <th className="px-4 py-3 text-right font-semibold">
+                    Action
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {filteredOrders.map((order) => {
+  const expanded =
+    expandedOrder === order.id;
+
+  return (
+    <React.Fragment key={order.id}>
+                      <tr className="border-t border-[#EFE5D5]">
+                        <td className="px-4 py-4 font-semibold text-[#183153]">
+                          {order.order_number ||
+                            order.id}
+                        </td>
+
+                        <td className="px-4 py-4 text-gray-600">
+                          {formatDate(
+                            order.created_at
+                          )}
+                        </td>
+
+                        <td className="px-4 py-4 font-semibold">
+                          <span
+                            style={{
+                              color: themeColor,
+                            }}
+                          >
+                            ৳
+                            {Number(
+                              order.total || 0
+                            ).toLocaleString(
+                              "en-BD"
+                            )}
+                          </span>
+                        </td>
+
+                        <td className="px-4 py-4">
+                          <span className="rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
+                            {order.status}
+                          </span>
+                        </td>
+
+                        <td className="px-4 py-4 text-right">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              expanded
+                                ? closeDetails()
+                                : handleViewDetails(
+                                    order.id
+                                  )
+                            }
+                            className="rounded-xl border px-4 py-2 text-sm font-semibold transition"
+                            style={{
+                              borderColor:
+                                themeColor,
+                              color: themeColor,
+                            }}
+                          >
+                            {expanded
+                              ? "Hide Details"
+                              : "View Details"}
+                          </button>
+                        </td>
+                      </tr>
+
+                      {expanded && (
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="border-t border-[#E7D8BC] bg-[#FCFAF6] p-4 sm:p-6"
+                          >
+                            {detailsLoading ? (
+                              <div className="py-10 text-center">
+                                <div
+                                  className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-gray-200"
+                                  style={{
+                                    borderTopColor:
+                                      themeColor,
+                                  }}
+                                />
+
+                                <p className="mt-3 text-sm text-gray-500">
+                                  Loading order details...
+                                </p>
+                              </div>
+                            ) : detailsError ? (
+                              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                                {detailsError}
+                              </div>
+                            ) : selectedOrder ? (
+                              <div className="space-y-5">
+
+                                {/* ORDER SUMMARY */}
+                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                    <div>
+                                      <h4
+                                        className="text-lg font-bold"
+                                        style={{
+                                          color:
+                                            themeColor,
+                                        }}
+                                      >
+                                        Order Details
+                                      </h4>
+
+                                      <p className="mt-1 text-sm text-gray-500">
+                                        {selectedOrder.order_number ||
+                                          selectedOrder.id}
+                                      </p>
+                                    </div>
+
+                                    <span className="w-fit rounded-full bg-[#F8F4EC] px-4 py-2 text-xs font-semibold text-[#183153]">
+                                      {selectedOrder.status}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* CUSTOMER + PAYMENT */}
+                                <div className="grid gap-5 lg:grid-cols-2">
+
+                                  {/* CUSTOMER */}
+                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                    <h4
+                                      className="font-bold"
+                                      style={{
+                                        color:
+                                          themeColor,
+                                      }}
+                                    >
+                                      Delivery Information
+                                    </h4>
+
+                                    <div className="mt-4 space-y-2 text-sm text-[#183153]">
+                                      <p>
+                                        <strong>
+                                          Name:
+                                        </strong>{" "}
+                                        {selectedOrder.customer_name ||
+                                          "-"}
+                                      </p>
+
+                                      <p>
+                                        <strong>
+                                          Phone:
+                                        </strong>{" "}
+                                        {selectedOrder.phone ||
+                                          "-"}
+                                      </p>
+
+                                      {selectedOrder.email && (
+                                        <p>
+                                          <strong>
+                                            Email:
+                                          </strong>{" "}
+                                          {
+                                            selectedOrder.email
+                                          }
+                                        </p>
+                                      )}
+
+                                      <p>
+                                        <strong>
+                                          Address:
+                                        </strong>{" "}
+                                        {
+                                          selectedOrder.address ||
+                                          "-"
+                                        }
+                                      </p>
+
+                                      <p>
+                                        <strong>
+                                          Shipping:
+                                        </strong>{" "}
+                                        {
+                                          selectedOrder.shipping_method ||
+                                          "Standard"
+                                        }
+                                      </p>
+                                    </div>
+                                  </div>
+
+                                  {/* PAYMENT */}
+                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                    <h4
+                                      className="font-bold"
+                                      style={{
+                                        color:
+                                          themeColor,
+                                      }}
+                                    >
+                                      Payment Information
+                                    </h4>
+
+                                    <div className="mt-4 space-y-2 text-sm text-[#183153]">
+                                      <p>
+                                        <strong>
+                                          Method:
+                                        </strong>{" "}
+                                        {
+                                          selectedOrder
+                                            .payment
+                                            ?.payment_method ||
+                                          selectedOrder.payment_method ||
+                                          "-"
+                                        }
+                                      </p>
+
+                                      <p>
+                                        <strong>
+                                          Payment Status:
+                                        </strong>{" "}
+                                        {
+                                          selectedOrder
+                                            .payment
+                                            ?.status ||
+                                          selectedOrder.payment_status ||
+                                          "Pending"
+                                        }
+                                      </p>
+
+                                      {selectedOrder
+                                        .payment
+                                        ?.transaction_id && (
+                                        <p>
+                                          <strong>
+                                            Transaction ID:
+                                          </strong>{" "}
+                                          {
+                                            selectedOrder
+                                              .payment
+                                              .transaction_id
+                                          }
+                                        </p>
+                                      )}
+
+                                      <p>
+                                        <strong>
+                                          Amount:
+                                        </strong>{" "}
+                                        ৳
+                                        {Number(
+                                          selectedOrder
+                                            .payment
+                                            ?.amount ??
+                                            selectedOrder.total ??
+                                            0
+                                        ).toLocaleString(
+                                          "en-BD"
+                                        )}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* PRODUCTS */}
+                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                  <h4
+                                    className="font-bold"
+                                    style={{
+                                      color:
+                                        themeColor,
+                                    }}
+                                  >
+                                    Ordered Products
+                                  </h4>
+
+                                  <div className="mt-4 space-y-3">
+                                    {(
+                                      selectedOrder.items ||
+                                      []
+                                    ).map(
+                                      (
+                                        item: any,
+                                        index: number
+                                      ) => (
+                                        <div
+                                          key={
+                                            item.id ||
+                                            `${selectedOrder.id}-${index}`
+                                          }
+                                          className="flex flex-col gap-4 rounded-xl border border-[#EFE5D5] p-3 sm:flex-row sm:items-center sm:justify-between"
+                                        >
+                                          <div className="flex min-w-0 items-center gap-3">
+                                            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E7D8BC] bg-[#F8F4EC]">
+                                              <Image
+                                                src={
+                                                  item.image ||
+                                                  "/images/no-image.png"
+                                                }
+                                                alt={
+                                                  item.product_name ||
+                                                  "Product"
+                                                }
+                                                width={64}
+                                                height={64}
+                                                className="h-full w-full object-cover"
+                                              />
+                                            </div>
+
+                                            <div className="min-w-0">
+                                              <p className="font-semibold text-[#183153]">
+                                                {item.product_name ||
+                                                  item.products
+                                                    ?.name ||
+                                                  "Product"}
+                                              </p>
+
+                                              {item.sku && (
+                                                <p className="mt-1 text-xs text-gray-500">
+                                                  SKU:{" "}
+                                                  {item.sku}
+                                                </p>
+                                              )}
+
+                                              {item.size && (
+                                                <p className="mt-1 text-xs text-gray-500">
+                                                  Size:{" "}
+                                                  {item.size}
+                                                </p>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          <div className="flex items-center justify-between gap-6 text-sm sm:justify-end">
+                                            <div>
+                                              <p className="text-gray-500">
+                                                Qty
+                                              </p>
+
+                                              <p className="font-semibold text-[#183153]">
+                                                {
+                                                  item.quantity
+                                                }
+                                              </p>
+                                            </div>
+
+                                            <div>
+                                              <p className="text-gray-500">
+                                                Price
+                                              </p>
+
+                                              <p
+                                                className="font-semibold"
+                                                style={{
+                                                  color:
+                                                    themeColor,
+                                                }}
+                                              >
+                                                ৳
+                                                {Number(
+                                                  item.price ||
+                                                    0
+                                                ).toLocaleString(
+                                                  "en-BD"
+                                                )}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* TOTAL */}
+                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                  <div className="ml-auto max-w-md space-y-2 text-sm">
+
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Subtotal
+                                      </span>
+
+                                      <span className="font-medium">
+                                        ৳
+                                        {Number(
+                                          selectedOrder.subtotal ||
+                                            0
+                                        ).toLocaleString(
+                                          "en-BD"
+                                        )}
+                                      </span>
+                                    </div>
+
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Shipping
+                                      </span>
+
+                                      <span className="font-medium">
+                                        ৳
+                                        {Number(
+                                          selectedOrder.shipping ||
+                                            selectedOrder.shipping_charge ||
+                                            0
+                                        ).toLocaleString(
+                                          "en-BD"
+                                        )}
+                                      </span>
+                                    </div>
+
+                                    {Number(
+                                      selectedOrder.discount ||
+                                        0
+                                    ) > 0 && (
+                                      <div className="flex justify-between">
+                                        <span className="text-gray-500">
+                                          Discount
+                                        </span>
+
+                                        <span className="font-medium text-green-600">
+                                          - ৳
+                                          {Number(
+                                            selectedOrder.discount
+                                          ).toLocaleString(
+                                            "en-BD"
+                                          )}
+                                        </span>
+                                      </div>
+                                    )}
+
+                                    <div className="border-t border-[#E7D8BC] pt-3">
+                                      <div className="flex justify-between text-lg font-bold">
+                                        <span>
+                                          Grand Total
+                                        </span>
+
+                                        <span
+                                          style={{
+                                            color:
+                                              themeColor,
+                                          }}
+                                        >
+                                          ৳
+                                          {Number(
+                                            selectedOrder.total ||
+                                              0
+                                          ).toLocaleString(
+                                            "en-BD"
+                                          )}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* STATUS HISTORY */}
+                                {selectedOrder.statusHistory
+                                  ?.length > 0 && (
+                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+                                    <h4
+                                      className="font-bold"
+                                      style={{
+                                        color:
+                                          themeColor,
+                                      }}
+                                    >
+                                      Order Status History
+                                    </h4>
+
+                                    <div className="mt-4 space-y-3">
+                                      {selectedOrder.statusHistory.map(
+                                        (
+                                          history: any,
+                                          index: number
+                                        ) => (
+                                          <div
+                                            key={
+                                              history.id ||
+                                              index
+                                            }
+                                            className="flex items-center justify-between rounded-lg bg-[#F8F4EC] px-4 py-3"
+                                          >
+                                            <span className="font-semibold text-[#183153]">
+                                              {
+                                                history.status
+                                              }
+                                            </span>
+
+                                            <span className="text-xs text-gray-500">
+                                              {history.created_at
+                                                ? formatDate(
+                                                    history.created_at
+                                                  )
+                                                : ""}
+                                            </span>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+
+                              </div>
+                            ) : null}
+                          </td>
+                        </tr>
+                      )}
+                        </React.Fragment>
+  );
+})}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
