@@ -1073,7 +1073,7 @@ function WishlistView({ themeColor }: { themeColor: string }) {
           title="Your Wishlist is Empty"
           text="Browse products and add your favorite items."
           action="Browse Products"
-          href="/products"
+          href="/product"
         />
       ) : (
         <div className="space-y-3">
