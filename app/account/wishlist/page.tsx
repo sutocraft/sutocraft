@@ -199,7 +199,7 @@ async function handleRemove(id: string) {
             </p>
 
             <Link
-              href="/products"
+              href="/product"
               className="inline-block mt-8 px-8 py-3 rounded-xl bg-[#A8741A] text-white font-semibold hover:opacity-90 transition"
             >
               Browse Products
