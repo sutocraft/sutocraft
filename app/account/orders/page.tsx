@@ -274,7 +274,7 @@ export default function OrdersPage() {
 
             {!search && (
               <Link
-                href="/products"
+                href="/product"
                 className="mt-8 inline-block rounded-xl px-8 py-3 font-semibold text-white transition hover:opacity-90"
                 style={{
                   backgroundColor: themeColor,
