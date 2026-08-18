@@ -546,7 +546,7 @@ export default function CheckoutPage() {
           </p>
 
           <Link
-            href="/products"
+            href="/product"
             className="mt-6 rounded-xl px-7 py-3 font-semibold text-white"
             style={{
               backgroundColor:
@@ -566,7 +566,7 @@ export default function CheckoutPage() {
       <section className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
           <Link
-            href="/"
+            href="/product"
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-gray-900"
           >
             <ArrowLeft size={17} />
