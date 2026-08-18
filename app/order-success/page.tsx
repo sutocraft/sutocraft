@@ -59,7 +59,7 @@ function OrderSuccessContent() {
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
-            href="/"
+            href="/product"
             className="rounded-xl px-6 py-3 font-semibold text-white"
             style={{
               backgroundColor: themeColor,
