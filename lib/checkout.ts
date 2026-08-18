@@ -48,8 +48,6 @@ async function generateOrderNumber() {
   const datePart = `${yy}${mm}${dd}`;
   const prefix = `SC-${datePart}-`;
 
-  // Read today's order numbers and use ONLY the exact 4-digit serial format.
-  // Old formats such as SC-260814-170607 are intentionally ignored.
   const { data: existingOrders, error } = await supabase
     .from("orders")
     .select("order_number")
@@ -60,7 +58,10 @@ async function generateOrderNumber() {
   }
 
   let maxSerial = 0;
-  const serialPattern = new RegExp(`^SC-${datePart}-(\\d{4})$`);
+
+  const serialPattern = new RegExp(
+    `^SC-${datePart}-(\\d{4})$`
+  );
 
   for (const row of existingOrders ?? []) {
     const value = String(row.order_number ?? "");
@@ -68,7 +69,11 @@ async function generateOrderNumber() {
 
     if (match) {
       const serial = Number(match[1]);
-      if (Number.isInteger(serial) && serial > maxSerial) {
+
+      if (
+        Number.isInteger(serial) &&
+        serial > maxSerial
+      ) {
         maxSerial = serial;
       }
     }
@@ -125,16 +130,35 @@ export async function placeOrder(data: CheckoutData) {
   const discount = Number(data.discount) || 0;
   const total = Number(data.total) || subtotal + shipping - discount;
 
-  /*
-   * =====================================================
-   * 1. CREATE ORDER
-   * =====================================================
-   */
+/*
+ * =====================================================
+ * 1. CREATE ORDER
+ * =====================================================
+ *
+ * Duplicate order number protection:
+ * If two customers place an order at exactly the same
+ * time, both may initially receive the same serial.
+ *
+ * PostgreSQL unique constraint will reject one of them.
+ * We then generate the next number and retry.
+ */
 
-  const { data: order, error: orderError } = await supabase
+let order: any = null;
+let orderError: any = null;
+
+const MAX_ORDER_NUMBER_RETRIES = 5;
+
+for (
+  let attempt = 1;
+  attempt <= MAX_ORDER_NUMBER_RETRIES;
+  attempt++
+) {
+  const orderNumber = await generateOrderNumber();
+
+  const result = await supabase
     .from("orders")
     .insert({
-      order_number: await generateOrderNumber(),
+      order_number: orderNumber,
       user_id: user.id,
 
       customer_name: data.customer_name.trim(),
@@ -160,9 +184,55 @@ export async function placeOrder(data: CheckoutData) {
     .select()
     .single();
 
-  if (orderError) {
-    throw orderError;
+  order = result.data;
+  orderError = result.error;
+
+  /*
+   * SUCCESS
+   */
+  if (!orderError) {
+    break;
   }
+
+  /*
+   * Only retry duplicate order_number errors.
+   *
+   * PostgreSQL unique violation:
+   * 23505
+   *
+   * Constraint:
+   * orders_order_number_key
+   */
+  const isDuplicateOrderNumber =
+    orderError.code === "23505" &&
+    (
+      String(orderError.message || "").includes(
+        "orders_order_number_key"
+      ) ||
+      String(orderError.details || "").includes(
+        "order_number"
+      )
+    );
+
+  if (!isDuplicateOrderNumber) {
+    break;
+  }
+
+  /*
+   * Another customer already took this number.
+   * Wait very briefly and generate the next number.
+   */
+  await new Promise((resolve) =>
+    setTimeout(resolve, 100)
+  );
+}
+
+if (orderError || !order) {
+  throw (
+    orderError ||
+    new Error("Unable to create order. Please try again.")
+  );
+}
 
   /*
  * =====================================================
