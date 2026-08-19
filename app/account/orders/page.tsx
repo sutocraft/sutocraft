@@ -419,7 +419,7 @@ export default function OrdersPage() {
 
                         <td className="px-7 py-6">
                           <Link
-                            href={`/account/orders/${order.id}`}
+                            href={`/orders/${order.id}`}
                             className="inline-flex items-center rounded-lg border px-5 py-2 font-semibold transition"
                             style={{
                               borderColor:
