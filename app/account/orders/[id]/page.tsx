@@ -352,7 +352,7 @@ export default function OrderDetailsPage() {
           </div>
 
           <Link
-            href="/account/orders"
+            href="/orders"
             className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-medium transition hover:text-white"
             style={{
               borderColor:
