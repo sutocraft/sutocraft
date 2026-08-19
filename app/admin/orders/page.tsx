@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Check,
-  Clock3,
   CreditCard,
   Eye,
   RefreshCw,
@@ -103,9 +102,18 @@ export default function AdminOrdersPage() {
     useState<string | null>(null);
 
   const [processingApproval, setProcessingApproval] =
-    useState<string | null>(null);
+  useState<string | null>(null);
 
-  const [search, setSearch] = useState("");
+const [search, setSearch] = useState("");
+
+const [rejectingOrder, setRejectingOrder] =
+  useState<Order | null>(null);
+
+const [rejectionReason, setRejectionReason] =
+  useState("");
+
+const [rejectModalError, setRejectModalError] =
+  useState("");
 
   async function checkAdmin() {
     const profile = await getCurrentUserProfile();
@@ -402,63 +410,169 @@ export default function AdminOrdersPage() {
     }
   }
 
-  async function rejectPayment(order: Order) {
-    try {
-      setProcessingPayment(order.id);
-      setError("");
+async function rejectPayment() {
+  if (!rejectingOrder) return;
 
-      const payment = getPayment(order);
+  const cleanReason = rejectionReason.trim();
 
-      if (!payment) {
-        throw new Error(
-          "No payment record found."
-        );
-      }
+  if (!cleanReason) {
+    setRejectModalError("Rejection reason is required.");
+    return;
+  }
 
-      const { error: paymentError } =
-        await supabase
-          .from("payments")
-          .update({
-            status: "Rejected",
-            rejected_at:
-              new Date().toISOString(),
-          })
-          .eq("id", payment.id)
-          .eq("order_id", order.id);
+  try {
+    setRejectModalError("");
 
-      if (paymentError) {
-        throw paymentError;
-      }
+    const {
+      data: payment,
+      error: paymentFetchError,
+    } = await supabase
+      .from("payments")
+      .select("id, payment_method, transaction_id, status")
+      .eq("order_id", rejectingOrder.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-      const { error: orderError } =
-        await supabase
-          .from("orders")
-          .update({
-            payment_status: "Rejected",
-            status: "Rejected",
-            updated_at:
-              new Date().toISOString(),
-          })
-          .eq("id", order.id);
-
-      if (orderError) {
-        throw orderError;
-      }
-
-      await loadOrders(false);
-    } catch (err: any) {
-      console.error(
-        "Payment rejection error:",
-        err
-      );
-
-      setError(
-        err?.message ||
-          "Unable to reject payment."
-      );
-    } finally {
-      setProcessingPayment(null);
+    if (paymentFetchError) {
+      throw paymentFetchError;
     }
+
+    if (!payment?.id) {
+      throw new Error("Payment record not found for this order.");
+    }
+
+    /*
+     * =====================================================
+     * 1. REJECT PAYMENT
+     * =====================================================
+     *
+     * IMPORTANT:
+     * rejection_reason MUST be sent to payments table.
+     *
+     * Cash:
+     *   Transaction ID is NOT required.
+     *
+     * Other methods:
+     *   Existing database trigger will validate transaction ID.
+     */
+    const { data: updatedPayment, error: paymentError } =
+      await supabase
+        .from("payments")
+        .update({
+          status: "Rejected",
+          rejection_reason: cleanReason,
+          admin_note: "Payment rejected by admin.",
+          rejected_by: (await supabase.auth.getUser()).data.user?.id,
+          rejected_at: new Date().toISOString(),
+        })
+        .eq("id", payment.id)
+        .eq("order_id", rejectingOrder.id)
+        .select()
+        .single();
+
+    if (paymentError) {
+      throw paymentError;
+    }
+
+    if (!updatedPayment) {
+      throw new Error("Payment rejection was not saved.");
+    }
+
+    /*
+     * =====================================================
+     * 2. UPDATE ORDER PAYMENT STATUS
+     * =====================================================
+     */
+    const { error: orderError } = await supabase
+  .from("orders")
+  .update({
+    status: "Rejected",
+    rejection_reason: cleanReason,
+    rejected_by: (await supabase.auth.getUser()).data.user?.id,
+    rejected_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  })
+  .eq("id", rejectingOrder.id);
+
+if (orderError) {
+  throw orderError;
+}
+
+    /*
+     * =====================================================
+     * 3. ORDER STATUS
+     * =====================================================
+     *
+     * Keep order status as Rejected.
+     */
+    const { error: statusError } = await supabase
+      .from("orders")
+      .update({
+        status: "Rejected",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", rejectingOrder.id);
+
+    if (statusError) {
+      throw statusError;
+    }
+
+    /*
+     * =====================================================
+     * 4. STATUS HISTORY
+     * =====================================================
+     */
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const { error: historyError } = await supabase
+      .from("order_status_history")
+      .insert({
+        order_id: rejectingOrder.id,
+        status: "Rejected",
+        changed_by: user?.id ?? null,
+        note: cleanReason,
+      });
+
+    if (historyError) {
+      throw historyError;
+    }
+
+    /*
+     * =====================================================
+     * 5. CLEAN UI STATE
+     * =====================================================
+     */
+    setRejectingOrder(null);
+    setRejectionReason("");
+    setRejectModalError("");
+
+    await loadOrders(false);
+
+  } catch (err: any) {
+
+    console.error("Payment rejection error:", err);
+
+    setRejectModalError(
+      err?.message ||
+      err?.error_description ||
+      "Unable to reject payment."
+    );
+  }
+}
+
+  function openRejectModal(order: Order) {
+    setError("");
+    setRejectionReason("");
+    setRejectingOrder(order);
+  }
+
+  function closeRejectModal() {
+    if (processingPayment) return;
+    setRejectingOrder(null);
+    setRejectionReason("");
   }
 
   return (
@@ -817,42 +931,54 @@ export default function AdminOrdersPage() {
                                 {payment.status}
                               </p>
 
+                              {payment.rejection_reason && (
+                                <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-3">
+                                  <p className="text-xs font-bold uppercase tracking-wide text-red-600">
+                                    Rejection Reason
+                                  </p>
+                                  <p className="mt-1 text-sm text-red-700">
+                                    {payment.rejection_reason}
+                                  </p>
+                                </div>
+                              )}
+
                               {payment.status !==
-                                "Approved" &&
-                                payment.payment_method !==
-                                  "Cash" && (
+                                "Approved" && (
                                   <div className="flex flex-wrap gap-2 pt-2">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        verifyPayment(
-                                          order
-                                        )
-                                      }
-                                      disabled={
-                                        processingPayment ===
+                                    {payment.payment_method !==
+                                      "Cash" && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          verifyPayment(
+                                            order
+                                          )
+                                        }
+                                        disabled={
+                                          processingPayment ===
+                                          order.id
+                                        }
+                                        className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                                        style={{
+                                          backgroundColor:
+                                            themeColor,
+                                        }}
+                                      >
+                                        <ShieldCheck
+                                          size={16}
+                                        />
+
+                                        {processingPayment ===
                                         order.id
-                                      }
-                                      className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                                      style={{
-                                        backgroundColor:
-                                          themeColor,
-                                      }}
-                                    >
-                                      <ShieldCheck
-                                        size={16}
-                                      />
-
-                                      {processingPayment ===
-                                      order.id
-                                        ? "Verifying..."
-                                        : "Verify Payment"}
-                                    </button>
+                                          ? "Verifying..."
+                                          : "Verify Payment"}
+                                      </button>
+                                    )}
 
                                     <button
                                       type="button"
                                       onClick={() =>
-                                        rejectPayment(
+                                        openRejectModal(
                                           order
                                         )
                                       }
@@ -1060,6 +1186,89 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </div>
+
+      {rejectingOrder && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reject-payment-title"
+        >
+          <div className="w-full max-w-lg rounded-2xl border border-[#E7D8BC] bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#E7D8BC] px-5 py-4">
+              <div>
+                <h2
+                  id="reject-payment-title"
+                  className="text-xl font-bold"
+                  style={{ color: themeColor }}
+                >
+                  Reject Payment
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  {rejectingOrder.order_number || rejectingOrder.id}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeRejectModal}
+                disabled={!!processingPayment}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#DCCEB6] text-gray-600 transition hover:bg-[#F8F4EC] disabled:opacity-50"
+                aria-label="Close rejection dialog"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="p-5">
+              <div className="mb-4 rounded-xl bg-[#F8F4EC] p-4 text-sm text-gray-700">
+                <p><strong>Customer:</strong> {rejectingOrder.customer_name}</p>
+                <p className="mt-1"><strong>Payment:</strong> {rejectingOrder.payment_method || "N/A"}</p>
+                <p className="mt-1"><strong>Amount:</strong> ৳ {Number(rejectingOrder.total || 0).toLocaleString()}</p>
+              </div>
+
+              <label
+                htmlFor="payment-rejection-reason"
+                className="mb-2 block text-sm font-semibold text-[#183153]"
+              >
+                Rejection Reason <span className="text-red-600">*</span>
+              </label>
+
+              <textarea
+                id="payment-rejection-reason"
+                rows={4}
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                placeholder="Enter the reason for rejecting this payment..."
+                disabled={!!processingPayment}
+                className="w-full resize-none rounded-xl border border-[#DCCEB6] bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#A8741A] focus:ring-4 focus:ring-[#A8741A]/15 disabled:bg-gray-100"
+                autoFocus
+              />
+
+              <div className="mt-5 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={closeRejectModal}
+                  disabled={!!processingPayment}
+                  className="rounded-xl border border-[#DCCEB6] bg-white px-5 py-3 text-sm font-semibold text-[#183153] transition hover:bg-[#F8F4EC] disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={rejectPayment}
+                  disabled={!!processingPayment || !rejectionReason.trim()}
+                  className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <XCircle size={17} />
+                  {processingPayment ? "Rejecting..." : "Reject Payment"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
