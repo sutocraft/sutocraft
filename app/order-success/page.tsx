@@ -69,7 +69,7 @@ function OrderSuccessContent() {
           </Link>
 
           <Link
-            href="/account/orders"
+            href="/orders"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
           >
             <ShoppingBag size={18} />
