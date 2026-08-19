@@ -35,12 +35,28 @@ export async function getOrders() {
   if (!userId) return [];
 
   const { data, error } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", {
-      ascending: false,
-    });
+  .from("orders")
+  .select(`
+    *,
+    payments (
+      id,
+      order_id,
+      payment_method,
+      transaction_id,
+      amount,
+      status,
+      rejection_reason,
+      admin_note,
+      submitted_at,
+      approved_at,
+      rejected_at,
+      created_at
+    )
+  `)
+  .eq("user_id", userId)
+  .order("created_at", {
+    ascending: false,
+  });
 
   if (error) throw error;
 
