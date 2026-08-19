@@ -45,6 +45,21 @@ type Props = {
   onLogout: () => void;
 };
 
+type Payment = {
+  id: string;
+  order_id: string;
+  payment_method: string;
+  transaction_id: string | null;
+  amount: number | null;
+  status: string;
+  rejection_reason: string | null;
+  admin_note: string | null;
+  submitted_at: string | null;
+  approved_at: string | null;
+  rejected_at: string | null;
+  created_at: string;
+};
+
 type Order = {
   id: string;
   order_number: string | null;
@@ -53,6 +68,8 @@ type Order = {
   status: string;
   payment_status: string | null;
   payment_method: string | null;
+
+  payments?: Payment[];
 };
 
 export default function CustomerAccountModal({
@@ -548,10 +565,23 @@ function OrdersView({ themeColor }: { themeColor: string }) {
                         </td>
 
                         <td className="px-4 py-4">
-                          <span className="rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
-                            {order.status}
-                          </span>
-                        </td>
+  <span className="rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
+    {order.status}
+  </span>
+
+  {order.status === "Rejected" &&
+    order.payments?.[0]?.rejection_reason && (
+      <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2">
+        <p className="text-xs font-semibold text-red-600">
+          Rejection Reason
+        </p>
+
+        <p className="mt-1 text-xs leading-5 text-red-700">
+          {order.payments[0].rejection_reason}
+        </p>
+      </div>
+    )}
+</td>
 
                         <td className="px-4 py-4 text-right">
                           <button
