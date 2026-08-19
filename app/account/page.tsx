@@ -137,7 +137,7 @@ async function loadCounts() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
           <Link
-            href="/account/orders"
+            href="/orders"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-bold text-[#183153]">
@@ -150,7 +150,7 @@ async function loadCounts() {
           </Link>
 
           <Link
-            href="/account/wishlist"
+            href="/wishlist"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-bold text-[#183153]">
@@ -163,7 +163,7 @@ async function loadCounts() {
           </Link>
 
           <Link
-            href="/account/addresses"
+            href="/addresses"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-bold text-[#183153]">
@@ -176,7 +176,7 @@ async function loadCounts() {
           </Link>
 
           <Link
-            href="/account/profile"
+            href="/profile"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-bold text-[#183153]">
