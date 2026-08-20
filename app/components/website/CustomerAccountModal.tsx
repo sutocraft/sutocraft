@@ -1,14 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, {
-  FormEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-
+import { Fragment, FormEvent, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   ArrowLeft,
@@ -16,16 +9,24 @@ import {
   KeyRound,
   MapPin,
   Package,
+  Truck,
+  CheckCircle2,
   UserRound,
   X,
+  RefreshCw,
 } from "lucide-react";
-import { getOrders, getOrderById } from "@/lib/orders";
+import {
+  getOrders,
+  getOrderById,
+  submitOrderPayment,
+  cancelCustomerOrder,
+} from "@/lib/orders";
 import { getWishlist, removeFromWishlist } from "@/lib/wishlist";
+import { addToCart } from "@/lib/cart";
 import {
   getCurrentProfile,
   supabase,
   updateCurrentProfile,
-  uploadAvatar,
 } from "@/lib/auth";
 import AddressSelector from "@/app/components/website/AddressSelector";
 import { useTheme } from "@/app/components/website/settings.theme_color";
@@ -45,21 +46,6 @@ type Props = {
   onLogout: () => void;
 };
 
-type Payment = {
-  id: string;
-  order_id: string;
-  payment_method: string;
-  transaction_id: string | null;
-  amount: number | null;
-  status: string;
-  rejection_reason: string | null;
-  admin_note: string | null;
-  submitted_at: string | null;
-  approved_at: string | null;
-  rejected_at: string | null;
-  created_at: string;
-};
-
 type Order = {
   id: string;
   order_number: string | null;
@@ -68,8 +54,12 @@ type Order = {
   status: string;
   payment_status: string | null;
   payment_method: string | null;
-
-  payments?: Payment[];
+  rejection_reason?: string | null;
+  courier_name?: string | null;
+  tracking_number?: string | null;
+  estimated_delivery_date?: string | null;
+  shipped_at?: string | null;
+  delivered_at?: string | null;
 };
 
 export default function CustomerAccountModal({
@@ -342,11 +332,15 @@ function OrdersView({ themeColor }: { themeColor: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [cancelReason, setCancelReason] = useState("");
+  const [actionBusy, setActionBusy] = useState(false);
+  const [actionMessage, setActionMessage] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -355,54 +349,64 @@ function OrdersView({ themeColor }: { themeColor: string }) {
       try {
         setLoading(true);
         setError("");
-
         const data = await getOrders();
-
-        if (active) {
-          setOrders((data || []) as Order[]);
-        }
+        if (active) setOrders((data || []) as Order[]);
       } catch (err: any) {
-        console.error("Failed to load your orders:", err);
-
-        if (active) {
-          setError(
-            err?.message ||
-              "Unable to load your orders."
-          );
-        }
+        console.error("Failed to load orders:", err);
+        if (active) setError(err?.message || "Unable to load your orders.");
       } finally {
-        if (active) {
-          setLoading(false);
-        }
+        if (active) setLoading(false);
       }
     }
 
     load();
-
     return () => {
       active = false;
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    async function subscribe() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || !active) return;
+      channel = supabase.channel(`customer-orders-${user.id}`)
+        .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `user_id=eq.${user.id}` }, async (payload) => {
+          if (!active) return;
+          try {
+            const orderId = String((payload.new as any)?.id || (payload.old as any)?.id || "");
+            if (orderId && expandedOrder === orderId) {
+              const detail = await getOrderById(orderId);
+              if (detail) setSelectedOrder(detail);
+            }
+            const list = await getOrders();
+            if (active) setOrders((list || []) as Order[]);
+          } catch (err) {
+            console.error("Realtime order refresh failed:", err);
+          }
+        })
+        .subscribe();
+    }
+    subscribe();
+    return () => {
+      active = false;
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [expandedOrder]);
+
   const filteredOrders = useMemo(() => {
     const keyword = search.trim().toLowerCase();
-
     if (!keyword) return orders;
 
     return orders.filter((order) => {
-      const number =
-        order.order_number ||
-        order.id ||
-        "";
-
+      const number = order.order_number || order.id || "";
       return (
         number.toLowerCase().includes(keyword) ||
-        String(order.status || "")
-          .toLowerCase()
-          .includes(keyword) ||
-        String(order.payment_method || "")
-          .toLowerCase()
-          .includes(keyword)
+        String(order.status || "").toLowerCase().includes(keyword) ||
+        String(order.payment_method || "").toLowerCase().includes(keyword) ||
+        String(order.payment_status || "").toLowerCase().includes(keyword)
       );
     });
   }, [orders, search]);
@@ -410,97 +414,192 @@ function OrdersView({ themeColor }: { themeColor: string }) {
   async function handleViewDetails(orderId: string) {
     try {
       setDetailsError("");
+      setActionMessage("");
+      setTransactionId("");
+      setCancelReason("");
       setDetailsLoading(true);
       setExpandedOrder(orderId);
       setSelectedOrder(null);
 
       const data = await getOrderById(orderId);
-
-      if (!data) {
-        throw new Error(
-          "Order details could not be found."
-        );
-      }
-
+      if (!data) throw new Error("Order details could not be found.");
       setSelectedOrder(data);
     } catch (err: any) {
-      console.error(
-        "Failed to load order details:",
-        err
-      );
-
-      setDetailsError(
-        err?.message ||
-          "Unable to load order details."
-      );
+      console.error("Failed to load order details:", err);
+      setDetailsError(err?.message || "Unable to load order details.");
     } finally {
       setDetailsLoading(false);
     }
   }
 
-  function closeDetails() {
-    setExpandedOrder(null);
-    setSelectedOrder(null);
-    setDetailsError("");
+  function handleToggleDetails(orderId: string) {
+    if (expandedOrder === orderId) {
+      setExpandedOrder(null);
+      setSelectedOrder(null);
+      setDetailsError("");
+      setActionMessage("");
+      setTransactionId("");
+      setCancelReason("");
+      return;
+    }
+    handleViewDetails(orderId);
+  }
+
+  async function refreshOrder(orderId: string) {
+    const [detail, list] = await Promise.all([
+      getOrderById(orderId),
+      getOrders(),
+    ]);
+    if (detail) setSelectedOrder(detail);
+    setOrders((list || []) as Order[]);
+  }
+
+  async function refreshOrders() {
+    try {
+      setRefreshing(true);
+      setError("");
+      const list = await getOrders();
+      setOrders((list || []) as Order[]);
+      if (selectedOrder?.id) {
+        const detail = await getOrderById(selectedOrder.id);
+        if (detail) setSelectedOrder(detail);
+      }
+    } catch (err: any) {
+      console.error("Failed to refresh orders:", err);
+      setError(err?.message || "Unable to refresh your orders.");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  async function handlePaymentSubmit() {
+    if (!selectedOrder?.id) return;
+    const value = transactionId.trim();
+    if (!value) {
+      setActionMessage("Please enter the Transaction ID.");
+      return;
+    }
+
+    try {
+      setActionBusy(true);
+      setActionMessage("");
+      await submitOrderPayment(selectedOrder.id, value);
+      setTransactionId("");
+      setActionMessage("Payment submitted successfully. Waiting for verification.");
+      await refreshOrder(selectedOrder.id);
+    } catch (err: any) {
+      setActionMessage(err?.message || "Unable to submit payment.");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+  async function handleCancelOrder() {
+    if (!selectedOrder?.id) return;
+    const value = cancelReason.trim();
+    if (!value) {
+      setActionMessage("Please write a cancellation reason.");
+      return;
+    }
+
+    try {
+      setActionBusy(true);
+      setActionMessage("");
+      await cancelCustomerOrder(selectedOrder.id, value);
+      setCancelReason("");
+      setActionMessage("Your order has been cancelled.");
+      await refreshOrder(selectedOrder.id);
+    } catch (err: any) {
+      setActionMessage(err?.message || "Unable to cancel this order.");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+
+  async function handleReorder(order: any) {
+    try {
+      setActionBusy(true);
+      setActionMessage("");
+
+      const items = order?.order_items || [];
+      if (!items.length) {
+        throw new Error("No products were found in this order.");
+      }
+
+      for (const item of items) {
+        const productId = item.product_id || item.product?.id;
+        if (!productId) continue;
+
+        await addToCart({
+          productId,
+          sizeId: item.size_id || item.size?.id || null,
+          quantity: Number(item.quantity || 1),
+        });
+      }
+
+      setActionMessage("Items added to your cart.");
+      window.location.href = "/cart";
+    } catch (err: any) {
+      console.error("Re-order error:", err);
+      setActionMessage(err?.message || "Unable to re-order this item.");
+    } finally {
+      setActionBusy(false);
+    }
+  }
+
+  function handleReview(order: any) {
+    // Review storage/UI is not part of the current locked Order System.
+    // Keep the action visible without inventing a new database schema.
+    setActionMessage(
+      `Review option selected for ${order?.order_number || "this order"}.`
+    );
   }
 
   return (
     <div>
-      {/* HEADER */}
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-[#183153]">
-            My Orders
-          </h3>
-
+          <h3 className="text-2xl font-bold text-[#183153]">My Orders</h3>
           <p className="mt-1 text-sm text-gray-500">
-            View your order history and current
-            order status.
+            View your order history and current order status.
           </p>
         </div>
-
-        <div className="text-sm text-gray-500">
-          Total Orders:
-          <span
-            className="ml-2 font-bold"
-            style={{ color: themeColor }}
-          >
+        <div className="flex items-center gap-3 text-sm text-gray-500">
+          <span>Total Orders:</span>
+          <span className="ml-2 font-bold" style={{ color: themeColor }}>
             {filteredOrders.length}
           </span>
+          <button type="button" onClick={refreshOrders} disabled={refreshing} title="Refresh orders" aria-label="Refresh orders" className="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-white transition hover:bg-[#F8F4EC] disabled:cursor-not-allowed disabled:opacity-50" style={{ borderColor: themeColor, color: themeColor }}>
+            <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
+          </button>
         </div>
       </div>
 
-      {/* SEARCH */}
       <div className="mb-5 rounded-2xl border border-[#E7D8BC] bg-white p-4">
         <input
           type="text"
           placeholder="Search Order Number..."
           value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
           className="w-full rounded-xl border border-[#DCCEB6] px-4 py-3 text-[#183153] outline-none focus:border-[#A8741A] sm:max-w-sm"
         />
       </div>
 
-      {/* ERROR */}
       {error && (
         <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
-      {/* LOADING */}
       {loading ? (
-        <PanelMessage
-          text="Loading your orders..."
-        />
+        <PanelMessage text="Loading your orders..." />
       ) : filteredOrders.length === 0 ? (
         <PanelMessage
           title="No Orders Yet"
           text="You haven't placed any order yet."
           action="Start Shopping"
-          href="/product"
+          href="/products"
         />
       ) : (
         <div className="overflow-hidden rounded-2xl border border-[#E7D8BC] bg-white">
@@ -508,101 +607,64 @@ function OrdersView({ themeColor }: { themeColor: string }) {
             <table className="min-w-full text-sm">
               <thead className="bg-[#F8F4EC] text-left text-[#183153]">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">
-                    Order
-                  </th>
-
-                  <th className="px-4 py-3 font-semibold">
-                    Date
-                  </th>
-
-                  <th className="px-4 py-3 font-semibold">
-                    Total
-                  </th>
-
-                  <th className="px-4 py-3 font-semibold">
-                    Status
-                  </th>
-
-                  <th className="px-4 py-3 text-right font-semibold">
-                    Action
-                  </th>
+                  <th className="px-4 py-3 font-semibold">Order</th>
+                  <th className="px-4 py-3 font-semibold">Date</th>
+                  <th className="px-4 py-3 font-semibold">Total</th>
+                  <th className="px-4 py-3 font-semibold">Status</th>
+                  <th className="px-4 py-3 text-right font-semibold">Action</th>
                 </tr>
               </thead>
-
               <tbody>
                 {filteredOrders.map((order) => {
-  const expanded =
-    expandedOrder === order.id;
+                  const expanded = expandedOrder === order.id;
+                  const payment = Array.isArray((order as any).payments)
+                    ? (order as any).payments?.[0]
+                    : null;
+                  const rejectionReason =
+                    order.rejection_reason || payment?.rejection_reason;
+                  const rejected =
+                    String(order.payment_status || payment?.status || "")
+                      .toLowerCase() === "rejected";
 
-  return (
-    <React.Fragment key={order.id}>
+                  return (
+                    <Fragment key={order.id}>
                       <tr className="border-t border-[#EFE5D5]">
                         <td className="px-4 py-4 font-semibold text-[#183153]">
-                          {order.order_number ||
-                            order.id}
+                          {order.order_number || order.id}
                         </td>
-
                         <td className="px-4 py-4 text-gray-600">
-                          {formatDate(
-                            order.created_at
-                          )}
+                          {formatDate(order.created_at)}
                         </td>
-
-                        <td className="px-4 py-4 font-semibold">
-                          <span
-                            style={{
-                              color: themeColor,
-                            }}
-                          >
-                            ৳
-                            {Number(
-                              order.total || 0
-                            ).toLocaleString(
-                              "en-BD"
-                            )}
+                        <td className="px-4 py-4 text-gray-700">
+                          <span className="font-semibold" style={{ color: themeColor }}>
+                            ৳{Number(order.total || 0).toLocaleString("en-BD")}
                           </span>
                         </td>
-
-                        <td className="px-4 py-4">
-  <span className="rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
-    {order.status}
-  </span>
-
-  {order.status === "Rejected" &&
-    order.payments?.[0]?.rejection_reason && (
-      <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2">
-        <p className="text-xs font-semibold text-red-600">
-          Rejection Reason
-        </p>
-
-        <p className="mt-1 text-xs leading-5 text-red-700">
-          {order.payments[0].rejection_reason}
-        </p>
-      </div>
-    )}
-</td>
-
-                        <td className="px-4 py-4 text-right">
+                        <td className="px-4 py-4 align-top">
+                          <div className="space-y-2">
+                            <span className="inline-flex rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
+                              {order.status}
+                            </span>
+        {rejected && rejectionReason && (
+                              <div className="max-w-[210px] rounded-lg border border-red-200 bg-red-50 px-3 py-2">
+                                <p className="text-[10px] font-bold uppercase tracking-wide text-red-600">
+                                  Rejection Reason
+                                </p>
+                                <p className="mt-1 text-xs font-bold leading-5 text-red-700">
+                                  {rejectionReason}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-right align-top">
                           <button
                             type="button"
-                            onClick={() =>
-                              expanded
-                                ? closeDetails()
-                                : handleViewDetails(
-                                    order.id
-                                  )
-                            }
-                            className="rounded-xl border px-4 py-2 text-sm font-semibold transition"
-                            style={{
-                              borderColor:
-                                themeColor,
-                              color: themeColor,
-                            }}
+                            onClick={() => handleToggleDetails(order.id)}
+                            className="inline-flex items-center justify-center rounded-xl border px-4 py-2 text-sm font-semibold transition hover:bg-[#F8F4EC]"
+                            style={{ borderColor: themeColor, color: themeColor }}
                           >
-                            {expanded
-                              ? "Hide Details"
-                              : "View Details"}
+                            {expanded ? "Hide Details" : "View Details"}
                           </button>
                         </td>
                       </tr>
@@ -616,14 +678,10 @@ function OrdersView({ themeColor }: { themeColor: string }) {
                             {detailsLoading ? (
                               <div className="py-10 text-center">
                                 <div
-                                  className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-gray-200"
-                                  style={{
-                                    borderTopColor:
-                                      themeColor,
-                                  }}
+                                  className="mx-auto h-9 w-9 animate-spin rounded-full border-4 border-gray-200"
+                                  style={{ borderTopColor: themeColor }}
                                 />
-
-                                <p className="mt-3 text-sm text-gray-500">
+                                <p className="mt-4 text-sm text-gray-500">
                                   Loading order details...
                                 </p>
                               </div>
@@ -632,421 +690,360 @@ function OrdersView({ themeColor }: { themeColor: string }) {
                                 {detailsError}
                               </div>
                             ) : selectedOrder ? (
-                              <div className="space-y-5">
-
-                                {/* ORDER SUMMARY */}
-                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                    <div>
-                                      <h4
-                                        className="text-lg font-bold"
-                                        style={{
-                                          color:
-                                            themeColor,
-                                        }}
-                                      >
-                                        Order Details
-                                      </h4>
-
-                                      <p className="mt-1 text-sm text-gray-500">
-                                        {selectedOrder.order_number ||
-                                          selectedOrder.id}
-                                      </p>
-                                    </div>
-
-                                    <span className="w-fit rounded-full bg-[#F8F4EC] px-4 py-2 text-xs font-semibold text-[#183153]">
-                                      {selectedOrder.status}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* CUSTOMER + PAYMENT */}
-                                <div className="grid gap-5 lg:grid-cols-2">
-
-                                  {/* CUSTOMER */}
-                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                    <h4
-                                      className="font-bold"
-                                      style={{
-                                        color:
-                                          themeColor,
-                                      }}
-                                    >
-                                      Delivery Information
-                                    </h4>
-
-                                    <div className="mt-4 space-y-2 text-sm text-[#183153]">
-                                      <p>
-                                        <strong>
-                                          Name:
-                                        </strong>{" "}
-                                        {selectedOrder.customer_name ||
-                                          "-"}
-                                      </p>
-
-                                      <p>
-                                        <strong>
-                                          Phone:
-                                        </strong>{" "}
-                                        {selectedOrder.phone ||
-                                          "-"}
-                                      </p>
-
-                                      {selectedOrder.email && (
-                                        <p>
-                                          <strong>
-                                            Email:
-                                          </strong>{" "}
-                                          {
-                                            selectedOrder.email
-                                          }
-                                        </p>
-                                      )}
-
-                                      <p>
-                                        <strong>
-                                          Address:
-                                        </strong>{" "}
-                                        {
-                                          selectedOrder.address ||
-                                          "-"
-                                        }
-                                      </p>
-
-                                      <p>
-                                        <strong>
-                                          Shipping:
-                                        </strong>{" "}
-                                        {
-                                          selectedOrder.shipping_method ||
-                                          "Standard"
-                                        }
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  {/* PAYMENT */}
-                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                    <h4
-                                      className="font-bold"
-                                      style={{
-                                        color:
-                                          themeColor,
-                                      }}
-                                    >
-                                      Payment Information
-                                    </h4>
-
-                                    <div className="mt-4 space-y-2 text-sm text-[#183153]">
-                                      <p>
-                                        <strong>
-                                          Method:
-                                        </strong>{" "}
-                                        {
-                                          selectedOrder
-                                            .payment
-                                            ?.payment_method ||
-                                          selectedOrder.payment_method ||
-                                          "-"
-                                        }
-                                      </p>
-
-                                      <p>
-                                        <strong>
-                                          Payment Status:
-                                        </strong>{" "}
-                                        {
-                                          selectedOrder
-                                            .payment
-                                            ?.status ||
-                                          selectedOrder.payment_status ||
-                                          "Pending"
-                                        }
-                                      </p>
-
-                                      {selectedOrder
-                                        .payment
-                                        ?.transaction_id && (
-                                        <p>
-                                          <strong>
-                                            Transaction ID:
-                                          </strong>{" "}
-                                          {
-                                            selectedOrder
-                                              .payment
-                                              .transaction_id
-                                          }
-                                        </p>
-                                      )}
-
-                                      <p>
-                                        <strong>
-                                          Amount:
-                                        </strong>{" "}
-                                        ৳
-                                        {Number(
-                                          selectedOrder
-                                            .payment
-                                            ?.amount ??
-                                            selectedOrder.total ??
-                                            0
-                                        ).toLocaleString(
-                                          "en-BD"
-                                        )}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* PRODUCTS */}
-                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                  <h4
-                                    className="font-bold"
-                                    style={{
-                                      color:
-                                        themeColor,
-                                    }}
-                                  >
-                                    Ordered Products
-                                  </h4>
-
-                                  <div className="mt-4 space-y-3">
-                                    {(
-                                      selectedOrder.items ||
-                                      []
-                                    ).map(
-                                      (
-                                        item: any,
-                                        index: number
-                                      ) => (
-                                        <div
-                                          key={
-                                            item.id ||
-                                            `${selectedOrder.id}-${index}`
-                                          }
-                                          className="flex flex-col gap-4 rounded-xl border border-[#EFE5D5] p-3 sm:flex-row sm:items-center sm:justify-between"
-                                        >
-                                          <div className="flex min-w-0 items-center gap-3">
-                                            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E7D8BC] bg-[#F8F4EC]">
-                                              <Image
-                                                src={
-                                                  item.image ||
-                                                  "/images/no-image.png"
-                                                }
-                                                alt={
-                                                  item.product_name ||
-                                                  "Product"
-                                                }
-                                                width={64}
-                                                height={64}
-                                                className="h-full w-full object-cover"
-                                              />
-                                            </div>
-
-                                            <div className="min-w-0">
-                                              <p className="font-semibold text-[#183153]">
-                                                {item.product_name ||
-                                                  item.products
-                                                    ?.name ||
-                                                  "Product"}
-                                              </p>
-
-                                              {item.sku && (
-                                                <p className="mt-1 text-xs text-gray-500">
-                                                  SKU:{" "}
-                                                  {item.sku}
-                                                </p>
-                                              )}
-
-                                              {item.size && (
-                                                <p className="mt-1 text-xs text-gray-500">
-                                                  Size:{" "}
-                                                  {item.size}
-                                                </p>
-                                              )}
-                                            </div>
-                                          </div>
-
-                                          <div className="flex items-center justify-between gap-6 text-sm sm:justify-end">
-                                            <div>
-                                              <p className="text-gray-500">
-                                                Qty
-                                              </p>
-
-                                              <p className="font-semibold text-[#183153]">
-                                                {
-                                                  item.quantity
-                                                }
-                                              </p>
-                                            </div>
-
-                                            <div>
-                                              <p className="text-gray-500">
-                                                Price
-                                              </p>
-
-                                              <p
-                                                className="font-semibold"
-                                                style={{
-                                                  color:
-                                                    themeColor,
-                                                }}
-                                              >
-                                                ৳
-                                                {Number(
-                                                  item.price ||
-                                                    0
-                                                ).toLocaleString(
-                                                  "en-BD"
-                                                )}
-                                              </p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      )
-                                    )}
-                                  </div>
-                                </div>
-
-                                {/* TOTAL */}
-                                <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                  <div className="ml-auto max-w-md space-y-2 text-sm">
-
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-500">
-                                        Subtotal
-                                      </span>
-
-                                      <span className="font-medium">
-                                        ৳
-                                        {Number(
-                                          selectedOrder.subtotal ||
-                                            0
-                                        ).toLocaleString(
-                                          "en-BD"
-                                        )}
-                                      </span>
-                                    </div>
-
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-500">
-                                        Shipping
-                                      </span>
-
-                                      <span className="font-medium">
-                                        ৳
-                                        {Number(
-                                          selectedOrder.shipping ||
-                                            selectedOrder.shipping_charge ||
-                                            0
-                                        ).toLocaleString(
-                                          "en-BD"
-                                        )}
-                                      </span>
-                                    </div>
-
-                                    {Number(
-                                      selectedOrder.discount ||
-                                        0
-                                    ) > 0 && (
-                                      <div className="flex justify-between">
-                                        <span className="text-gray-500">
-                                          Discount
-                                        </span>
-
-                                        <span className="font-medium text-green-600">
-                                          - ৳
-                                          {Number(
-                                            selectedOrder.discount
-                                          ).toLocaleString(
-                                            "en-BD"
-                                          )}
-                                        </span>
-                                      </div>
-                                    )}
-
-                                    <div className="border-t border-[#E7D8BC] pt-3">
-                                      <div className="flex justify-between text-lg font-bold">
-                                        <span>
-                                          Grand Total
-                                        </span>
-
-                                        <span
-                                          style={{
-                                            color:
-                                              themeColor,
-                                          }}
-                                        >
-                                          ৳
-                                          {Number(
-                                            selectedOrder.total ||
-                                              0
-                                          ).toLocaleString(
-                                            "en-BD"
-                                          )}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* STATUS HISTORY */}
-                                {selectedOrder.statusHistory
-                                  ?.length > 0 && (
-                                  <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
-                                    <h4
-                                      className="font-bold"
-                                      style={{
-                                        color:
-                                          themeColor,
-                                      }}
-                                    >
-                                      Order Status History
-                                    </h4>
-
-                                    <div className="mt-4 space-y-3">
-                                      {selectedOrder.statusHistory.map(
-                                        (
-                                          history: any,
-                                          index: number
-                                        ) => (
-                                          <div
-                                            key={
-                                              history.id ||
-                                              index
-                                            }
-                                            className="flex items-center justify-between rounded-lg bg-[#F8F4EC] px-4 py-3"
-                                          >
-                                            <span className="font-semibold text-[#183153]">
-                                              {
-                                                history.status
-                                              }
-                                            </span>
-
-                                            <span className="text-xs text-gray-500">
-                                              {history.created_at
-                                                ? formatDate(
-                                                    history.created_at
-                                                  )
-                                                : ""}
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-
-                              </div>
+                              <CustomerOrderDetailsPanel
+                                order={selectedOrder}
+                                themeColor={themeColor}
+                                transactionId={transactionId}
+                                setTransactionId={setTransactionId}
+                                cancelReason={cancelReason}
+                                setCancelReason={setCancelReason}
+                                actionBusy={actionBusy}
+                                actionMessage={actionMessage}
+                                onSubmitPayment={handlePaymentSubmit}
+                                onCancelOrder={handleCancelOrder}
+                                onReorder={handleReorder}
+                                onReview={handleReview}
+                              />
                             ) : null}
                           </td>
                         </tr>
                       )}
-                        </React.Fragment>
-  );
-})}
+                    </Fragment>
+                  );
+                })}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CustomerOrderDetailsPanel({
+  order,
+  themeColor,
+  transactionId,
+  setTransactionId,
+  cancelReason,
+  setCancelReason,
+  actionBusy,
+  actionMessage,
+  onSubmitPayment,
+  onCancelOrder,
+  onReorder,
+  onReview,
+}: any) {
+  const payment = order.payments?.[0] || order.payment || null;
+  const paymentStatus = String(
+    payment?.status || order.payment_status || "Pending"
+  );
+  const status = String(order.status || "Pending");
+  const paymentStatusKey = paymentStatus.toLowerCase();
+  const statusKey = status.toLowerCase();
+  const rejected = paymentStatusKey === "rejected";
+  const submitted = paymentStatusKey === "submitted";
+  const paymentApproved = paymentStatusKey === "approved" || paymentStatusKey === "paid";
+  const canCancel = statusKey === "pending" && paymentStatusKey === "pending";
+  const needsPayment = statusKey === "pending" && !paymentApproved && !submitted;
+  const rejectionReason = payment?.rejection_reason || order.rejection_reason;
+
+  const state =
+    rejected
+      ? [
+          "Payment Needs Correction",
+          "Your payment was rejected. Correct the information and submit the transaction ID again.",
+        ]
+      : submitted
+        ? [
+            "Payment Under Verification",
+            "Your payment has been submitted and is waiting for admin verification.",
+          ]
+        : paymentApproved && statusKey === "pending"
+          ? [
+              "Payment Approved",
+              "Your payment is approved. Your order is waiting for final approval.",
+            ]
+          : statusKey === "confirmed"
+            ? [
+                "Order Confirmed",
+                "Your order has been confirmed and is ready for processing.",
+              ]
+            : statusKey === "processing"
+              ? [
+                  "Order Processing",
+                  "Your order is being prepared for shipment.",
+                ]
+              : statusKey === "shipped"
+                ? [
+                    "Order Shipped",
+                    "Your order has been handed over to the courier and is on the way.",
+                  ]
+                : statusKey === "delivered"
+                  ? [
+                      "Order Delivered",
+                      "Your order has been delivered successfully.",
+                    ]
+                  : statusKey === "completed"
+                    ? [
+                        "Order Completed",
+                        "Your order is complete. Thank you for shopping with us.",
+                      ]
+                    : statusKey === "cancelled"
+                      ? [
+                          "Order Cancelled",
+                          "This order has been cancelled.",
+                        ]
+                      : [
+                          "Payment Required",
+                          "Your order is received. Submit your transaction ID from this panel.",
+                        ];
+
+  const lifecycleSteps = [
+    "Pending",
+    "Confirmed",
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Completed",
+  ];
+  const currentLifecycleIndex = lifecycleSteps.findIndex(
+    (step) => step.toLowerCase() === statusKey
+  );
+
+
+  return (
+    <div className="space-y-5">
+      <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h4 className="font-bold" style={{ color: themeColor }}>
+              {state[0]}
+            </h4>
+            <p className="mt-1 text-sm text-gray-500">{state[1]}</p>
+          </div>
+          <span className="w-fit rounded-full bg-[#F8F4EC] px-3 py-1 text-xs font-semibold text-[#183153]">
+            Order: {status}
+          </span>
+        </div>
+
+        {statusKey !== "cancelled" && (
+          <div className="mt-5 rounded-xl border border-[#E7D8BC] bg-[#FCFAF6] p-4">
+            <div className="flex items-center gap-2">
+              <Truck size={17} style={{ color: themeColor }} />
+              <p className="text-sm font-bold text-[#183153]">Order Progress</p>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-6">
+              {lifecycleSteps.map((step, index) => {
+                const active = currentLifecycleIndex >= index;
+                return (
+                  <div key={step} className="flex items-center gap-2 sm:block">
+                    <div
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold"
+                      style={{
+                        borderColor: active ? themeColor : "#DCCEB6",
+                        backgroundColor: active ? themeColor : "white",
+                        color: active ? "white" : "#718096",
+                      }}
+                    >
+                      {active ? <CheckCircle2 size={15} /> : index + 1}
+                    </div>
+                    <p
+                      className="mt-1 text-xs font-semibold sm:text-center"
+                      style={{ color: active ? themeColor : "#718096" }}
+                    >
+                      {step}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {rejected && rejectionReason && (
+          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-3">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-red-600">
+              Rejection Reason
+            </p>
+            <p className="mt-1 text-sm font-bold text-red-700">{rejectionReason}</p>
+          </div>
+        )}
+
+        {(needsPayment || rejected) && (
+          <div className="mt-4 rounded-xl border border-[#E7D8BC] bg-[#FCFAF6] p-4">
+            <label className="mb-2 block text-sm font-semibold text-[#183153]">
+              Transaction ID
+            </label>
+            <input
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              disabled={actionBusy}
+              placeholder="Enter your transaction ID"
+              className="w-full rounded-xl border border-[#DCCEB6] bg-white px-4 py-3 text-sm text-[#183153] outline-none focus:border-[#A8741A]"
+            />
+            <button
+              type="button"
+              onClick={onSubmitPayment}
+              disabled={actionBusy || !transactionId.trim()}
+              className="mt-3 rounded-xl px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              style={{ backgroundColor: themeColor }}
+            >
+              {actionBusy ? "Submitting..." : rejected ? "Submit Payment Again" : "Submit Payment"}
+            </button>
+          </div>
+        )}
+
+        {submitted && payment?.transaction_id && (
+          <div className="mt-4 rounded-xl bg-[#F8F4EC] px-4 py-3 text-sm text-[#183153]">
+            Transaction ID: <strong>{payment.transaction_id}</strong>
+          </div>
+        )}
+
+        {canCancel && (
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+            <p className="font-bold text-red-700">Cancel Order</p>
+            <textarea
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              rows={3}
+              disabled={actionBusy}
+              placeholder="Please write your cancellation reason"
+              className="mt-3 w-full resize-none rounded-xl border border-red-200 bg-white px-4 py-3 text-sm outline-none"
+            />
+            <button
+              type="button"
+              onClick={onCancelOrder}
+              disabled={actionBusy || !cancelReason.trim()}
+              className="mt-3 rounded-xl border border-red-300 bg-white px-5 py-3 text-sm font-semibold text-red-600 disabled:opacity-50"
+            >
+              {actionBusy ? "Cancelling..." : "Cancel Order"}
+            </button>
+          </div>
+        )}
+
+        {actionMessage && (
+          <div className="mt-4 rounded-xl border border-[#E7D8BC] bg-[#F8F4EC] px-4 py-3 text-sm font-medium text-[#183153]">
+            {actionMessage}
+          </div>
+        )}
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+          <h4 className="font-bold" style={{ color: themeColor }}>
+            Delivery Information
+          </h4>
+          <div className="mt-4 space-y-2 text-sm text-[#183153]">
+            <p><strong>Name:</strong> {order.customer_name || "-"}</p>
+            <p><strong>Phone:</strong> {order.phone || "-"}</p>
+            {order.email && <p><strong>Email:</strong> {order.email}</p>}
+            <p><strong>Address:</strong> {order.address || "-"}</p>
+            <p><strong>Shipping:</strong> {order.shipping_method || "Standard"}</p>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+          <h4 className="font-bold" style={{ color: themeColor }}>
+            Payment Information
+          </h4>
+          <div className="mt-4 space-y-2 text-sm text-[#183153]">
+            <p><strong>Method:</strong> {payment?.payment_method || order.payment_method || "-"}</p>
+            <p><strong>Payment Status:</strong> {paymentStatus}</p>
+            {payment?.transaction_id && <p className="break-all"><strong>Transaction ID:</strong> {payment.transaction_id}</p>}
+            <p><strong>Amount:</strong> ৳{Number(payment?.amount ?? order.total ?? 0).toLocaleString("en-BD")}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h4 className="font-bold" style={{ color: themeColor }}>Ordered Products</h4>
+          <span className="text-xs text-gray-500">{order.order_items?.length || 0} item(s)</span>
+        </div>
+        <div className="mt-4 space-y-3">
+          {(order.order_items || []).map((item: any, index: number) => (
+            <div key={item.id || index} className="flex items-center justify-between gap-4 rounded-xl border border-[#EFE5D5] p-3">
+              <div className="min-w-0">
+                <p className="font-semibold text-[#183153]">{item.product_name || "Product"}</p>
+                {item.sku && <p className="mt-1 text-xs text-gray-500">SKU: {item.sku}</p>}
+                {item.size && <p className="mt-1 text-xs text-gray-500">Size: {item.size}</p>}
+              </div>
+              <div className="shrink-0 text-right text-sm">
+                <p className="text-gray-500">Qty: {item.quantity ?? item.qty ?? 0}</p>
+                <p className="font-semibold" style={{ color: themeColor }}>৳{Number(item.price ?? item.unit_price ?? 0).toLocaleString("en-BD")}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {(statusKey === "shipped" || statusKey === "delivered" || statusKey === "completed") && (
+        <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+          <h4 className="font-bold" style={{ color: themeColor }}>Shipment Tracking</h4>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3 text-sm">
+            <div><p className="text-xs text-gray-500">Courier</p><p className="mt-1 font-semibold text-[#183153]">{order.courier_name || "-"}</p></div>
+            <div><p className="text-xs text-gray-500">Tracking Number</p><p className="mt-1 break-all font-semibold text-[#183153]">{order.tracking_number || "-"}</p></div>
+            <div><p className="text-xs text-gray-500">Estimated Delivery</p><p className="mt-1 font-semibold text-[#183153]">{order.estimated_delivery_date || "-"}</p></div>
+          </div>
+        </div>
+      )}
+
+      {statusKey === "completed" && (
+        <div className="rounded-xl border border-green-200 bg-green-50 p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-bold text-green-700">Order Completed</p>
+              <p className="mt-1 text-sm text-green-700/80">
+                Your order is complete. You can order the same products again or leave a review.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => onReorder?.(order)}
+                disabled={actionBusy}
+                className="rounded-xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                style={{ backgroundColor: themeColor }}
+              >
+                {actionBusy ? "Working..." : "Re-order"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onReview?.(order)}
+                disabled={actionBusy}
+                className="rounded-xl border border-[#DCCEB6] bg-white px-5 py-3 text-sm font-bold text-[#183153] transition hover:bg-[#FCFAF6] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Review
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+        <div className="flex justify-between gap-5 text-sm"><span className="text-gray-500">Subtotal</span><span>৳{Number(order.subtotal || 0).toLocaleString("en-BD")}</span></div>
+        <div className="mt-2 flex justify-between gap-5 text-sm"><span className="text-gray-500">Shipping</span><span>৳{Number(order.shipping ?? order.shipping_charge ?? 0).toLocaleString("en-BD")}</span></div>
+        {Number(order.discount || 0) > 0 && <div className="mt-2 flex justify-between gap-5 text-sm"><span className="text-gray-500">Discount</span><span className="text-green-600">- ৳{Number(order.discount).toLocaleString("en-BD")}</span></div>}
+        <div className="mt-3 border-t border-[#E7D8BC] pt-3 flex justify-between gap-5 text-lg font-bold"><span>Grand Total</span><span style={{ color: themeColor }}>৳{Number(order.total || 0).toLocaleString("en-BD")}</span></div>
+      </div>
+
+      {order.order_status_history?.length > 0 && (
+        <div className="rounded-xl border border-[#E7D8BC] bg-white p-5">
+          <h4 className="font-bold" style={{ color: themeColor }}>Order Status History</h4>
+          <div className="mt-4 space-y-3">
+            {order.order_status_history.map((history: any, index: number) => (
+              <div key={history.id || index} className="flex flex-col gap-1 rounded-lg bg-[#F8F4EC] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <span className="font-semibold text-[#183153]">{history.status || "Updated"}</span>
+                  {history.note && <p className="mt-1 text-xs text-gray-500">{history.note}</p>}
+                </div>
+                <span className="text-xs text-gray-500">{history.created_at ? formatDate(history.created_at) : ""}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -1103,7 +1100,7 @@ function WishlistView({ themeColor }: { themeColor: string }) {
           title="Your Wishlist is Empty"
           text="Browse products and add your favorite items."
           action="Browse Products"
-          href="/product"
+          href="/products"
         />
       ) : (
         <div className="space-y-3">
@@ -1221,8 +1218,6 @@ function ProfileView({
   const [address, setAddress] = useState(initialProfile?.address || "");
   const [postalCode, setPostalCode] = useState(initialProfile?.postal_code || "");
   const [saving, setSaving] = useState(false);
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const photoInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -1241,42 +1236,6 @@ function ProfileView({
     }
     load();
   }, []);
-
-  async function handlePhotoChange(file: File | null) {
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file.");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Photo size must be 5 MB or less.");
-      return;
-    }
-
-    try {
-      setUploadingPhoto(true);
-
-      const avatarUrl = await uploadAvatar(file);
-
-      setProfile((prev: any) => ({
-        ...prev,
-        avatar: avatarUrl,
-      }));
-
-      await onSaved();
-      alert("Profile photo updated.");
-    } catch (error: any) {
-      console.error("Profile photo upload failed:", error);
-      alert(error?.message || "Profile photo update failed.");
-    } finally {
-      setUploadingPhoto(false);
-      if (photoInputRef.current) {
-        photoInputRef.current.value = "";
-      }
-    }
-  }
 
   async function handleSave() {
     if (!division) return alert("Please select Division.");
@@ -1328,22 +1287,12 @@ function ProfileView({
               {profile?.full_name?.charAt(0) || "C"}
             </div>
           )}
-          <input
-            ref={photoInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handlePhotoChange(e.target.files?.[0] || null)}
-          />
-
           <button
             type="button"
-            onClick={() => photoInputRef.current?.click()}
-            disabled={uploadingPhoto}
-            className="rounded-xl px-5 py-2.5 font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl px-5 py-2.5 font-semibold text-white"
             style={{ backgroundColor: themeColor }}
           >
-            {uploadingPhoto ? "Uploading..." : "Change Photo"}
+            Change Photo
           </button>
         </div>
 
@@ -1626,9 +1575,8 @@ function ReadonlyField({ label, value }: { label: string; value: any }) {
 
 function formatDate(date: string) {
   if (!date) return "-";
-  return new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
+  return new Date(date).toLocaleString("en-GB", {
+    timeZone: "Asia/Dhaka", day: "2-digit", month: "short", year: "numeric",
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
   });
 }
