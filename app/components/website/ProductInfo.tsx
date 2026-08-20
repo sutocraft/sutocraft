@@ -373,145 +373,6 @@ color: themeColor,
 
       </div>
 
-      {/* Feature Cards */}
-      
-
-      <div
-        className="
-          mt-8
-
-          grid
-
-          grid-cols-3
-
-          gap-3
-        "
-      >
-
-        <div
-          className="
-            rounded-2xl
-
-            border
-
-            bg-white
-
-            p-4
-
-            text-center
-          "
-          style={{
-            borderColor:
-              `${themeColor}25`,
-          }}
-        >
-
-          <Truck
-            size={22}
-            className="mx-auto mb-2"
-            style={{
-              color:
-                themeColor,
-            }}
-          />
-
-          <p
-  className="
-    text-xs
-    font-semibold
-  "
-  style={{
-    color: themeColor,
-  }}
->
-  Fast Delivery
-</p>
-
-        </div>
-
-        <div
-          className="
-            rounded-2xl
-
-            border
-
-            bg-white
-
-            p-4
-
-            text-center
-          "
-          style={{
-            borderColor:
-              `${themeColor}25`,
-          }}
-        >
-
-          <ShieldCheck
-            size={22}
-            className="mx-auto mb-2"
-            style={{
-              color:
-                themeColor,
-            }}
-          />
-
-          <p
-  className="
-    text-xs
-    font-semibold
-  "
-  style={{
-    color: themeColor,
-  }}
->
-  Quality
-</p>
-
-        </div>
-
-        <div
-          className="
-            rounded-2xl
-
-            border
-
-            bg-white
-
-            p-4
-
-            text-center
-          "
-          style={{
-            borderColor: "var(--theme-color-15)",
-          }}
-        >
-
-          <PackageCheck
-            size={22}
-            className="mx-auto mb-2"
-            style={{
-              color:
-                themeColor,
-            }}
-          />
-
-          <p
-  className="
-    text-xs
-    font-semibold
-  "
-  style={{
-    color: themeColor,
-  }}
->
-  Quality
-</p>
-
-        </div>
-
-      </div>
-
             {/* Size */}
 
       {sizes.length > 0 && (
@@ -865,6 +726,145 @@ onMouseLeave={(e) => {
 
       </div>
 
+      {/* Feature Cards */}
+      
+
+      <div
+        className="
+          mt-8
+
+          grid
+
+          grid-cols-3
+
+          gap-3
+        "
+      >
+
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor:
+              `${themeColor}25`,
+          }}
+        >
+
+          <Truck
+            size={22}
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
+          />
+
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Fast Delivery
+</p>
+
+        </div>
+
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor:
+              `${themeColor}25`,
+          }}
+        >
+
+          <ShieldCheck
+            size={22}
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
+          />
+
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Quality
+</p>
+
+        </div>
+
+        <div
+          className="
+            rounded-2xl
+
+            border
+
+            bg-white
+
+            p-4
+
+            text-center
+          "
+          style={{
+            borderColor: "var(--theme-color-15)",
+          }}
+        >
+
+          <PackageCheck
+            size={22}
+            className="mx-auto mb-2"
+            style={{
+              color:
+                themeColor,
+            }}
+          />
+
+          <p
+  className="
+    text-xs
+    font-semibold
+  "
+  style={{
+    color: themeColor,
+  }}
+>
+  Quality
+</p>
+
+        </div>
+
+      </div>
+
             {/* Extra Information */}
 
       <div
@@ -1001,5 +1001,3 @@ onMouseLeave={(e) => {
   );
 
 }
-
-
