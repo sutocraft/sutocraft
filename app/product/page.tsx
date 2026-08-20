@@ -469,7 +469,7 @@ export default function ProductsPage() {
         (product) =>
           product.new_arrival === true
       )
-      .slice(0, 5);
+      .slice(0, 4);
   }, [products]);
 
   /* =========================================================
