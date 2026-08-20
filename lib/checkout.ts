@@ -22,16 +22,13 @@ export type CheckoutData = {
 
   payment_method: string;
 
+  transaction_id?: string | null;
+
   shipping_method?: string | null;
   shipping_charge?: number;
 
   discount?: number;
 
-  /**
-   * Clear the customer's cart after successful order creation.
-   * Cart checkout: true
-   * Buy Now: false
-   */
   clear_cart?: boolean;
 
   items: CheckoutItem[];
