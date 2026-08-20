@@ -4,9 +4,9 @@ import ProductGallery from "./ProductGallery";
 import ProductInfo from "./ProductInfo";
 import ProductActions from "./ProductActions";
 import ProductTabs from "./ProductTabs";
+import RelatedProducts from "./RelatedProducts";
 
 import type { WebsiteProduct } from "@/lib/products";
-import RelatedProducts from "./RelatedProducts";
 
 type GalleryImage = {
   id: string;
@@ -16,12 +16,6 @@ type GalleryImage = {
 type Size = {
   id: string;
   name: string;
-};
-
-type Color = {
-  id: string;
-  name: string;
-  code?: string;
 };
 
 type Props = {
@@ -60,26 +54,40 @@ export default function ProductDetailsContent({
   product,
   gallery,
   sizes,
+
   selectedSize,
+
   quantity,
+
   wishlist,
   loading,
+
   onIncrease,
   onDecrease,
+
   onSizeChange,
+
   onAddToCart,
   onBuyNow,
+
   onWishlist,
   onShare,
+
   reviews = [],
 }: Props) {
+  /*
+   * Build gallery list.
+   *
+   * Main product image stays first.
+   * Gallery images follow after it.
+   */
   const images = [
     product.image_url,
     ...gallery.map((g) => g.image_url),
   ].filter(Boolean) as string[];
 
   return (
-    <section className="bg-[var(--theme-background)]">
+    <section className="w-full bg-[var(--theme-background)]">
       <div
         className="
           mx-auto
@@ -89,53 +97,49 @@ export default function ProductDetailsContent({
           py-6
           sm:px-5
           sm:py-8
-          lg:px-8
-          lg:py-10
+          lg:px-7
+          lg:py-8
         "
       >
         {/* =====================================================
-            TOP AREA
-            LEFT  = MAIN IMAGE + GALLERY
-            RIGHT = RELATED PRODUCTS
-           ===================================================== */}
+            TOP SECTION
+            Desktop:
+            Left  = Main Image + Gallery
+            Right = Related Products 2 x 2
+            Mobile:
+            One column
+        ===================================================== */}
 
         <div
           className="
             grid
             w-full
             min-w-0
-            items-stretch
+            grid-cols-1
             gap-6
-            lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]
+            lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]
+            lg:items-start
             lg:gap-7
           "
         >
-          {/* ===================================================
+          {/* =================================================
               LEFT
-              MAIN PRODUCT IMAGE + GALLERY
-             =================================================== */}
+              Main Product Image + Gallery
+          ================================================= */}
+
+          <div className="w-full min-w-0 lg:pt-15">
+  <ProductGallery
+    images={images}
+    productName={product.name}
+  />
+</div>
+
+          {/* =================================================
+              RIGHT
+              Related Products
+          ================================================= */}
 
           <div className="w-full min-w-0">
-            <ProductGallery
-              images={images}
-              productName={product.name}
-            />
-          </div>
-
-          {/* ===================================================
-              RIGHT
-              RELATED PRODUCTS
-             =================================================== */}
-
-          <div
-            className="
-              flex
-              w-full
-              min-w-0
-              flex-col
-              lg:h-full
-            "
-          >
             <RelatedProducts
               currentProduct={product}
             />
@@ -144,8 +148,13 @@ export default function ProductDetailsContent({
 
         {/* =====================================================
             FULL WIDTH PRODUCT INFORMATION
-            BELOW IMAGE + RELATED PRODUCTS
-           ===================================================== */}
+
+            This intentionally comes AFTER the top two-column
+            section.
+
+            Therefore ProductInfo no longer becomes a right-side
+            sidebar.
+        ===================================================== */}
 
         <div
           className="
@@ -153,68 +162,61 @@ export default function ProductDetailsContent({
             w-full
             min-w-0
             border-t
-            border-[var(--theme-primary-border)]
             pt-7
-            lg:mt-8
-            lg:pt-8
           "
+          style={{
+            borderColor:
+              "var(--theme-primary-border)",
+          }}
         >
-          <div
-            className="
-              grid
-              w-full
-              min-w-0
-              gap-6
-              xl:grid-cols-[minmax(0,1fr)_minmax(280px,380px)]
-              xl:items-start
-            "
-          >
-            {/* =================================================
-                PRODUCT INFO
-               ================================================= */}
+          {/* =================================================
+              PRODUCT INFORMATION
+              Full Width
+          ================================================= */}
 
-            <div className="min-w-0">
-              <ProductInfo
-                product={product}
-                sizes={sizes}
-                selectedSize={selectedSize}
-                quantity={quantity}
-                onIncrease={onIncrease}
-                onDecrease={onDecrease}
-                onSizeChange={onSizeChange}
-                onAddToCart={onAddToCart}
-                onBuyNow={onBuyNow}
-              />
-            </div>
+          <div className="w-full min-w-0">
+            <ProductInfo
+              product={product}
+              sizes={sizes}
+              selectedSize={selectedSize}
+              quantity={quantity}
+              onIncrease={onIncrease}
+              onDecrease={onDecrease}
+              onSizeChange={onSizeChange}
+              onAddToCart={onAddToCart}
+              onBuyNow={onBuyNow}
+            />
+          </div>
 
-            {/* =================================================
-                ACTIONS / SHARE / WISHLIST
-               ================================================= */}
+          {/* =================================================
+              PRODUCT ACTIONS
+              Full Width
+          ================================================= */}
 
-            <div className="min-w-0">
-              <ProductActions
-                inStock={product.stock > 0}
-                loading={loading}
-                wishlist={wishlist}
-                onAddToCart={onAddToCart}
-                onBuyNow={onBuyNow}
-                onWishlist={onWishlist}
-                onShare={onShare}
-              />
-            </div>
+          <div className="mt-6 w-full min-w-0">
+            <ProductActions
+              inStock={product.stock > 0}
+              loading={loading}
+              wishlist={wishlist}
+              onAddToCart={onAddToCart}
+              onBuyNow={onBuyNow}
+              onWishlist={onWishlist}
+              onShare={onShare}
+            />
           </div>
         </div>
 
         {/* =====================================================
             PRODUCT TABS
-           ===================================================== */}
+            Description / Specification / Reviews
+            Full Width
+        ===================================================== */}
 
         <div
           className="
-            mt-8
+            mt-7
             w-full
             min-w-0
-            lg:mt-10
           "
         >
           <ProductTabs
