@@ -21,7 +21,6 @@ export type CheckoutData = {
   total: number;
 
   payment_method: string;
-  transaction_id?: string | null;
 
   shipping_method?: string | null;
   shipping_charge?: number;
@@ -329,15 +328,13 @@ export async function placeOrder(data: CheckoutData) {
       payment_method:
         data.payment_method,
 
-      transaction_id:
-        data.transaction_id?.trim() ||
-        null,
-
       amount:
         total,
 
       status:
         "Pending",
+
+      transaction_id: null,
     });
 
   if (paymentError) {
