@@ -102,7 +102,6 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState("");
 
   const [paymentMethod, setPaymentMethod] = useState("Cash");
-  const [transactionId, setTransactionId] = useState("");
 
   const [checkoutMode, setCheckoutMode] =
     useState<"cart" | "buy_now">("cart");
@@ -310,12 +309,6 @@ export default function CheckoutPage() {
     shipping -
     discount;
 
-  const requiresTransactionId =
-    paymentMethod === "bKash" ||
-    paymentMethod === "Nagad" ||
-    paymentMethod === "Card" ||
-    paymentMethod === "Others";
-
   /*
    * PRODUCT IMAGE
    */
@@ -365,16 +358,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (
-        requiresTransactionId &&
-        !transactionId.trim()
-      ) {
-        setError(
-          "Please enter the transaction ID."
-        );
-        return;
-      }
-
       setPlacingOrder(true);
 
       const order =
@@ -402,9 +385,7 @@ export default function CheckoutPage() {
           payment_method:
             paymentMethod,
 
-          transaction_id:
-            transactionId.trim() ||
-            null,
+          transaction_id: null,
 
           shipping_method:
             "Standard",
@@ -771,10 +752,6 @@ export default function CheckoutPage() {
                           setPaymentMethod(
                             method.value
                           );
-
-                          setTransactionId(
-                            ""
-                          );
                         }}
                         className={`flex items-center gap-3 rounded-xl border p-4 text-left transition ${
                           selected
@@ -856,30 +833,6 @@ export default function CheckoutPage() {
                   }
                 )}
               </div>
-
-              {/* TRANSACTION ID */}
-              {requiresTransactionId && (
-                <div className="mt-5">
-                  <label className="mb-2 block text-sm font-bold text-gray-900">
-                    Transaction ID *
-                  </label>
-
-                  <input
-                    value={transactionId}
-                    onChange={(e) =>
-                      setTransactionId(
-                        e.target.value
-                      )
-                    }
-                    placeholder="Enter payment transaction ID"
-                    className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-gray-500 focus:ring-2 focus:ring-gray-100"
-                  />
-
-                  <p className="mt-2 text-xs font-medium text-gray-500">
-                    Enter the transaction/reference number from your payment.
-                  </p>
-                </div>
-              )}
 
               {/* CASH MESSAGE */}
               {paymentMethod ===
