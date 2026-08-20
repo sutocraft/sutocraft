@@ -157,6 +157,10 @@ export async function getOrderById(orderId: string) {
       item.products?.name ||
       "Product",
 
+    product_slug:
+      item.products?.slug ||
+      null,
+
     sku:
       item.sku ||
       item.products?.sku ||
@@ -409,6 +413,23 @@ export async function cancelCustomerOrder(
 
   if (order.status !== "Pending" || order.payment_status !== "Pending") {
     throw new Error("This order can no longer be cancelled by the customer.");
+  }
+
+  // Once a transaction ID has been submitted, the order is already in
+  // payment verification. It must not become cancellable just because the
+  // payment_status value remains "Pending" in the database.
+  const { data: payment, error: paymentError } = await supabase
+    .from("payments")
+    .select("transaction_id,status")
+    .eq("order_id", order.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (paymentError) throw paymentError;
+
+  if (payment?.transaction_id?.trim()) {
+    throw new Error("This order can no longer be cancelled after payment submission.");
   }
 
   const now = new Date().toISOString();
