@@ -14,6 +14,7 @@ import {
 
 import { addToCart } from "@/lib/cart";
 import { getCurrentUser } from "@/lib/auth";
+import { getProductReviewsBySku } from "@/lib/reviews";
 
 import ProductDetailsContent from "./ProductDetailsContent";
 
@@ -46,6 +47,8 @@ export default function ProductDetails({
 
   const [quantity, setQuantity] =
     useState(1);
+
+  const [productReviews, setProductReviews] = useState<any[]>([]);
 
   const [selectedSize, setSelectedSize] =
     useState("");
@@ -89,6 +92,18 @@ if (!sizeError) {
         );
 
       setGallery(images);
+
+      if (data.sku) {
+        try {
+          const reviews = await getProductReviewsBySku(data.sku);
+          setProductReviews(reviews || []);
+        } catch (error) {
+          console.error("Failed to load product reviews:", error);
+          setProductReviews([]);
+        }
+      } else {
+        setProductReviews([]);
+      }
 
       if (data.sizes?.length) {
         setSelectedSize(
@@ -365,6 +380,7 @@ window.dispatchEvent(
       product={product}
       gallery={galleryImages}
       sizes={allSizes}
+      reviews={productReviews}
 
       selectedSize={selectedSize}
       quantity={quantity}
@@ -377,6 +393,7 @@ window.dispatchEvent(
       onBuyNow={handleBuyNow}
       onWishlist={handleWishlist}
       onShare={handleShare}
+      reviews={productReviews}
     />
   );
 }
