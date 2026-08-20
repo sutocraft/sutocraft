@@ -376,25 +376,24 @@ window.dispatchEvent(
   }
 
     return (
-    <ProductDetailsContent
-      product={product}
-      gallery={galleryImages}
-      sizes={allSizes}
-      reviews={productReviews}
+   <ProductDetailsContent
+  product={product}
+  gallery={galleryImages}
+  sizes={allSizes}
+  reviews={productReviews}
 
-      selectedSize={selectedSize}
-      quantity={quantity}
-      wishlist={wishlist}
-      loading={loading}
-      onIncrease={increaseQuantity}
-      onDecrease={decreaseQuantity}
-      onSizeChange={setSelectedSize}
-      onAddToCart={handleAddToCart}
-      onBuyNow={handleBuyNow}
-      onWishlist={handleWishlist}
-      onShare={handleShare}
-      reviews={productReviews}
-    />
+  selectedSize={selectedSize}
+  quantity={quantity}
+  wishlist={wishlist}
+  loading={loading}
+  onIncrease={increaseQuantity}
+  onDecrease={decreaseQuantity}
+  onSizeChange={setSelectedSize}
+  onAddToCart={handleAddToCart}
+  onBuyNow={handleBuyNow}
+  onWishlist={handleWishlist}
+  onShare={handleShare}
+/>
   );
 }
 
