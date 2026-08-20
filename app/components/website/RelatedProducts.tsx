@@ -25,10 +25,10 @@ export default function RelatedProducts({
         const allProducts = await getAllProducts();
 
         const currentCategoryId =
-          currentProduct.category?.id || "";
+  currentProduct.category_id || "";
 
-        const currentSubCategoryId =
-          currentProduct.sub_category?.id || "";
+const currentSubCategoryId =
+  currentProduct.sub_category_id || "";
 
         const currentSku =
           String(currentProduct.sku || "").trim();
@@ -51,17 +51,17 @@ export default function RelatedProducts({
          * 2. Same category
          */
         const sameSubCategory = available.filter(
-          (item) =>
-            currentSubCategoryId &&
-            item.sub_category?.id === currentSubCategoryId
-        );
+  (item) =>
+    currentSubCategoryId &&
+    item.sub_category_id === currentSubCategoryId
+);
 
-        const sameCategory = available.filter(
-          (item) =>
-            currentCategoryId &&
-            item.category?.id === currentCategoryId &&
-            item.sub_category?.id !== currentSubCategoryId
-        );
+const sameCategory = available.filter(
+  (item) =>
+    currentCategoryId &&
+    item.category_id === currentCategoryId &&
+    item.sub_category_id !== currentSubCategoryId
+);
 
         const related = [
           ...sameSubCategory,
@@ -91,8 +91,8 @@ export default function RelatedProducts({
   }, [
     currentProduct.id,
     currentProduct.sku,
-    currentProduct.category?.id,
-    currentProduct.sub_category?.id,
+    currentProduct.category_id,
+currentProduct.sub_category_id,
   ]);
 
   if (!products.length) {
