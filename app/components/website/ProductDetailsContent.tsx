@@ -60,6 +60,8 @@ type Props = {
   onWishlist: () => void;
 
   onShare: () => void;
+
+  reviews?: any[];
 };
 
 export default function ProductDetailsContent({
@@ -87,6 +89,7 @@ export default function ProductDetailsContent({
   onBuyNow,
   onWishlist,
   onShare,
+  reviews = [],
 }: Props) {
   const images = [
     product.image_url,
@@ -147,7 +150,7 @@ export default function ProductDetailsContent({
           <ProductTabs
             description={product.description}
             specification={product.specification}
-            reviews={[]}
+            reviews={reviews}
           />
 
         </div>
