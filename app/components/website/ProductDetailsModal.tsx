@@ -1,17 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import ProductDetails from "./ProductDetails";
-
 import MobileBottomNav from "./MobileBottomNav";
 
 type Props = {
   open: boolean;
   slug: string;
   onClose: () => void;
-
-  // Default true keeps existing Home Page behavior
   useHistory?: boolean;
 };
 
@@ -21,6 +18,55 @@ export default function ProductDetailsModal({
   onClose,
   useHistory = true,
 }: Props) {
+  const [currentSlug, setCurrentSlug] =
+    useState(slug);
+
+  /*
+   * Keep current product synchronized
+   */
+  useEffect(() => {
+    setCurrentSlug(slug);
+  }, [slug]);
+
+  /*
+   * Related Products changes the product
+   * inside the SAME popup.
+   */
+  useEffect(() => {
+    if (!open) return;
+
+    const handleProductChange = (
+      event: Event
+    ) => {
+      const customEvent =
+        event as CustomEvent<{
+          slug?: string;
+        }>;
+
+      const nextSlug =
+        customEvent.detail?.slug;
+
+      if (!nextSlug) return;
+
+      setCurrentSlug(nextSlug);
+    };
+
+    window.addEventListener(
+      "product-modal-change",
+      handleProductChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "product-modal-change",
+        handleProductChange
+      );
+    };
+  }, [open]);
+
+  /*
+   * Lock background scrolling
+   */
   useEffect(() => {
     if (!open) return;
 
@@ -30,15 +76,6 @@ export default function ProductDetailsModal({
       "product-modal-open"
     );
 
-    /*
-     * Only create a browser history entry when requested.
-     *
-     * Home Page:
-     * useHistory = true  → existing behavior
-     *
-     * Products Page desktop:
-     * useHistory = false → no extra history entry
-     */
     if (useHistory) {
       window.history.pushState(
         { productModal: true },
@@ -53,15 +90,15 @@ export default function ProductDetailsModal({
     const handleKeyDown = (
       e: KeyboardEvent
     ) => {
-      if (e.key === "Escape") {
-        if (
-          useHistory &&
-          window.history.state?.productModal
-        ) {
-          window.history.back();
-        } else {
-          onClose();
-        }
+      if (e.key !== "Escape") return;
+
+      if (
+        useHistory &&
+        window.history.state?.productModal
+      ) {
+        window.history.back();
+      } else {
+        onClose();
       }
     };
 
@@ -119,52 +156,94 @@ export default function ProductDetailsModal({
       "
     >
       <div
-  onClick={(e) =>
-    e.stopPropagation()
-  }
-className="
-  absolute
-  inset-0
-  mx-auto
-  h-screen
-  w-full
-  overflow-hidden
-  bg-[var(--theme-background)]
+        onClick={(e) =>
+          e.stopPropagation()
+        }
+        className="
+          absolute
+          left-1/2
+          top-1/2
+          -translate-x-1/2
+          -translate-y-1/2
 
-  lg:h-[100vh]
-  lg:max-w-5xl
-  lg:translate-y-[-2vh]
-  lg:scale-[0.90]
-  lg:rounded-3xl
-  lg:shadow-2xl
-"
->
+          w-[96vw]
+          max-w-[1080px]
+
+          h-[92vh]
+          max-h-[900px]
+
+          overflow-hidden
+          rounded-2xl
+          sm:rounded-3xl
+
+          bg-[var(--theme-background)]
+          shadow-2xl
+
+          sm:w-[94vw]
+          lg:w-[1000px]
+        "
+      >
+        {/* Close Button */}
         <button
+          type="button"
           onClick={closeModal}
           className="
             absolute
-            right-5
-            top-5
-            z-50
+            right-4
+            top-4
+            z-[100]
+
             flex
-            h-11
-            w-11
+            h-10
+            w-10
             items-center
             justify-center
+
             rounded-full
             bg-white
             text-[#2B2B2B]
-            shadow-lg
+
+            shadow-md
             transition
+
             hover:bg-[var(--theme-color)]
             hover:text-white
           "
         >
-          <X size={22} />
+          <X size={20} />
         </button>
 
-        <div className="relative h-full overflow-y-auto pb-24">
-          <ProductDetails slug={slug} />
+        {/*
+         * Compact content scale.
+         *
+         * CSS zoom is used instead of transform: scale()
+         * so the scroll height and layout remain correct.
+         *
+         * Desktop: 88%
+         * Smaller screens: normal size
+         */}
+        <div
+          className="
+            relative
+            h-full
+            overflow-y-auto
+            overflow-x-hidden
+            overscroll-contain
+            pb-6
+            sm:pb-8
+          "
+        >
+          <div
+            className="
+              w-full
+              origin-top
+              lg:[zoom:0.72]
+            "
+          >
+            <ProductDetails
+              slug={currentSlug}
+            />
+          </div>
 
           <div className="lg:hidden">
             <MobileBottomNav />
