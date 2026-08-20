@@ -14,6 +14,7 @@ import {
   UserRound,
   X,
   RefreshCw,
+  Star,
 } from "lucide-react";
 import {
   getOrders,
@@ -23,6 +24,8 @@ import {
 } from "@/lib/orders";
 import { getWishlist, removeFromWishlist } from "@/lib/wishlist";
 import { addToCart } from "@/lib/cart";
+import ProductDetailsModal from "@/app/components/website/ProductDetailsModal";
+import ReviewModal from "./ReviewModal";
 import {
   getCurrentProfile,
   supabase,
@@ -169,7 +172,7 @@ export default function CustomerAccountModal({
             />
           )}
 
-          {view === "orders" && <OrdersView themeColor={themeColor} />}
+          {view === "orders" && <OrdersView themeColor={themeColor} profile={profile} />}
 
           {view === "wishlist" && (
             <WishlistView themeColor={themeColor} />
@@ -327,7 +330,13 @@ function DashboardView({
   );
 }
 
-function OrdersView({ themeColor }: { themeColor: string }) {
+function OrdersView({
+  themeColor,
+  profile,
+}: {
+  themeColor: string;
+  profile: any;
+}) {
   const [search, setSearch] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -364,37 +373,6 @@ function OrdersView({ themeColor }: { themeColor: string }) {
       active = false;
     };
   }, []);
-
-  useEffect(() => {
-    let active = true;
-    let channel: ReturnType<typeof supabase.channel> | null = null;
-
-    async function subscribe() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user || !active) return;
-      channel = supabase.channel(`customer-orders-${user.id}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `user_id=eq.${user.id}` }, async (payload) => {
-          if (!active) return;
-          try {
-            const orderId = String((payload.new as any)?.id || (payload.old as any)?.id || "");
-            if (orderId && expandedOrder === orderId) {
-              const detail = await getOrderById(orderId);
-              if (detail) setSelectedOrder(detail);
-            }
-            const list = await getOrders();
-            if (active) setOrders((list || []) as Order[]);
-          } catch (err) {
-            console.error("Realtime order refresh failed:", err);
-          }
-        })
-        .subscribe();
-    }
-    subscribe();
-    return () => {
-      active = false;
-      if (channel) supabase.removeChannel(channel);
-    };
-  }, [expandedOrder]);
 
   const filteredOrders = useMemo(() => {
     const keyword = search.trim().toLowerCase();
@@ -445,21 +423,13 @@ function OrdersView({ themeColor }: { themeColor: string }) {
     handleViewDetails(orderId);
   }
 
-  async function refreshOrder(orderId: string) {
-    const [detail, list] = await Promise.all([
-      getOrderById(orderId),
-      getOrders(),
-    ]);
-    if (detail) setSelectedOrder(detail);
-    setOrders((list || []) as Order[]);
-  }
-
   async function refreshOrders() {
     try {
       setRefreshing(true);
       setError("");
       const list = await getOrders();
       setOrders((list || []) as Order[]);
+
       if (selectedOrder?.id) {
         const detail = await getOrderById(selectedOrder.id);
         if (detail) setSelectedOrder(detail);
@@ -470,6 +440,15 @@ function OrdersView({ themeColor }: { themeColor: string }) {
     } finally {
       setRefreshing(false);
     }
+  }
+
+  async function refreshOrder(orderId: string) {
+    const [detail, list] = await Promise.all([
+      getOrderById(orderId),
+      getOrders(),
+    ]);
+    if (detail) setSelectedOrder(detail);
+    setOrders((list || []) as Order[]);
   }
 
   async function handlePaymentSubmit() {
@@ -517,46 +496,80 @@ function OrdersView({ themeColor }: { themeColor: string }) {
   }
 
 
-  async function handleReorder(order: any) {
+  const [reorderSlug, setReorderSlug] = useState("");
+  const [reorderOpen, setReorderOpen] = useState(false);
+  const [reviewItem, setReviewItem] = useState<any>(null);
+  const [reviewOrder, setReviewOrder] = useState<any>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+
+  async function getProductSlugBySku(sku: string) {
+    const cleanSku = String(sku || "").trim();
+    if (!cleanSku) return null;
+
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, slug, sku")
+      .eq("sku", cleanSku)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data?.slug || null;
+  }
+
+  async function openProductFromOrder(order: any, purpose: "reorder" | "review") {
+    const item = order?.order_items?.[0];
+    const sku = String(item?.sku || "").trim();
+
+    if (!item || !sku) {
+      setActionMessage("This order does not contain a valid product SKU.");
+      return;
+    }
+
     try {
       setActionBusy(true);
       setActionMessage("");
 
-      const items = order?.order_items || [];
-      if (!items.length) {
-        throw new Error("No products were found in this order.");
+      const slug = await getProductSlugBySku(sku);
+      if (!slug) {
+        throw new Error(`Product with SKU ${sku} was not found.`);
       }
 
-      for (const item of items) {
-        const productId = item.product_id || item.product?.id;
-        if (!productId) continue;
-
-        await addToCart({
-          productId,
-          sizeId: item.size_id || item.size?.id || null,
-          quantity: Number(item.quantity || 1),
-        });
+      if (purpose === "reorder") {
+        setReorderSlug(slug);
+        setReorderOpen(true);
+      } else {
+        setReviewOrder(order);
+        setReviewItem(item);
+        setReviewOpen(true);
       }
-
-      setActionMessage("Items added to your cart.");
-      window.location.href = "/cart";
-    } catch (err: any) {
-      console.error("Re-order error:", err);
-      setActionMessage(err?.message || "Unable to re-order this item.");
+    } catch (error: any) {
+      setActionMessage(error?.message || "Unable to open the product.");
     } finally {
       setActionBusy(false);
     }
   }
 
-  function handleReview(order: any) {
-    // Review storage/UI is not part of the current locked Order System.
-    // Keep the action visible without inventing a new database schema.
-    setActionMessage(
-      `Review option selected for ${order?.order_number || "this order"}.`
-    );
+  async function handleReorder(order: any) {
+    await openProductFromOrder(order, "reorder");
+  }
+
+  async function handleReview(order: any) {
+    await openProductFromOrder(order, "review");
+  }
+
+  function closeProductReorder() {
+    setReorderOpen(false);
+    setReorderSlug("");
+  }
+
+  function closeReview() {
+    setReviewOpen(false);
+    setReviewItem(null);
+    setReviewOrder(null);
   }
 
   return (
+    <>
     <div>
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -565,12 +578,20 @@ function OrdersView({ themeColor }: { themeColor: string }) {
             View your order history and current order status.
           </p>
         </div>
-        <div className="flex items-center gap-3 text-sm text-gray-500">
-          <span>Total Orders:</span>
+        <div className="text-sm text-gray-500">
+          Total Orders:
           <span className="ml-2 font-bold" style={{ color: themeColor }}>
             {filteredOrders.length}
           </span>
-          <button type="button" onClick={refreshOrders} disabled={refreshing} title="Refresh orders" aria-label="Refresh orders" className="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-white transition hover:bg-[#F8F4EC] disabled:cursor-not-allowed disabled:opacity-50" style={{ borderColor: themeColor, color: themeColor }}>
+          <button
+            type="button"
+            onClick={refreshOrders}
+            disabled={refreshing}
+            title="Refresh orders"
+            aria-label="Refresh orders"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-white transition hover:bg-[#F8F4EC] disabled:cursor-not-allowed disabled:opacity-50"
+            style={{ borderColor: themeColor, color: themeColor }}
+          >
             <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
           </button>
         </div>
@@ -717,6 +738,20 @@ function OrdersView({ themeColor }: { themeColor: string }) {
         </div>
       )}
     </div>
+    <ProductDetailsModal
+      open={reorderOpen}
+      slug={reorderSlug}
+      onClose={closeProductReorder}
+    />
+
+    <ReviewModal
+      open={reviewOpen}
+      order={reviewOrder}
+      item={reviewItem}
+      themeColor={themeColor}
+      onClose={closeReview}
+    />
+  </>
   );
 }
 
@@ -1014,8 +1049,9 @@ function CustomerOrderDetailsPanel({
                 type="button"
                 onClick={() => onReview?.(order)}
                 disabled={actionBusy}
-                className="rounded-xl border border-[#DCCEB6] bg-white px-5 py-3 text-sm font-bold text-[#183153] transition hover:bg-[#FCFAF6] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#DCCEB6] bg-white px-5 py-3 text-sm font-bold text-[#183153] transition hover:bg-[#FCFAF6] disabled:cursor-not-allowed disabled:opacity-50"
               >
+                <Star size={16} />
                 Review
               </button>
             </div>
@@ -1575,8 +1611,9 @@ function ReadonlyField({ label, value }: { label: string; value: any }) {
 
 function formatDate(date: string) {
   if (!date) return "-";
-  return new Date(date).toLocaleString("en-GB", {
-    timeZone: "Asia/Dhaka", day: "2-digit", month: "short", year: "numeric",
-    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 }
