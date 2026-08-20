@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { WebsiteProduct } from "@/lib/products";
 
@@ -10,6 +10,7 @@ import {
 
 import WishlistButton from "./WishlistButton";
 import ProductDetailsModal from "./ProductDetailsModal";
+import { getProductReviewSummary } from "@/lib/reviews";
 
 type Props = {
   product: WebsiteProduct;
@@ -19,6 +20,41 @@ export default function ProductCard({
   product,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [reviewSummary, setReviewSummary] = useState({
+    average: 0,
+    count: 0,
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    const loadReviewSummary = async () => {
+      try {
+        const summary = await getProductReviewSummary(product.sku || "");
+        if (active) {
+          setReviewSummary(summary);
+        }
+      } catch (error) {
+        console.error("Failed to load product review summary:", error);
+      }
+    };
+
+    loadReviewSummary();
+
+    const handleReviewUpdate = () => {
+      loadReviewSummary();
+    };
+
+    window.addEventListener("product-reviews-updated", handleReviewUpdate);
+
+    return () => {
+      active = false;
+      window.removeEventListener(
+        "product-reviews-updated",
+        handleReviewUpdate
+      );
+    };
+  }, [product.sku]);
 
   const {
     themeColor,
@@ -224,6 +260,29 @@ const dangerColor =
           </div>
         </div>
 
+
+        {/* REVIEW SUMMARY */}
+        <div className="px-2 pt-2 sm:px-3 sm:pt-3 lg:px-4">
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm">
+            <span style={{ color: themeColor }}>
+              ★★★★★
+            </span>
+            <span
+              className="font-medium"
+              style={{ color: textColor }}
+            >
+              {reviewSummary.count > 0
+                ? reviewSummary.average.toFixed(1)
+                : "0.0"}
+            </span>
+            <span
+              className="text-[10px] sm:text-xs"
+              style={{ color: textColor }}
+            >
+              ({reviewSummary.count})
+            </span>
+          </div>
+        </div>
 
         {/* =====================================================
             CONTENT
