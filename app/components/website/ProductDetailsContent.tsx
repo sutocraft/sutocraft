@@ -6,6 +6,7 @@ import ProductActions from "./ProductActions";
 import ProductTabs from "./ProductTabs";
 
 import type { WebsiteProduct } from "@/lib/products";
+import RelatedProducts from "./RelatedProducts";
 
 
 type GalleryImage = {
@@ -145,15 +146,17 @@ export default function ProductDetailsContent({
 
         {/* Product Tabs */}
 
-        <div className="mt-14">
+                <div className="mt-14">
 
           <ProductTabs
             description={product.description}
             specification={product.specification}
-            reviews={reviews}
+            reviews={[]}
           />
 
         </div>
+
+        <RelatedProducts currentProduct={product} />
 
       </div>
 
