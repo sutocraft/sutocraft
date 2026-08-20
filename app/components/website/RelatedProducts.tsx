@@ -243,42 +243,46 @@ export default function RelatedProducts({
         lg:h-full
       "
     >
-      {/* =====================================================
-          HEADER
-         ===================================================== */}
+{/* =====================================================
+    HEADER
+   ===================================================== */}
 
-      <div
-        className="
-          mb-4
-          shrink-0
-        "
-      >
-        <p
-          className="
-            text-[9px]
-            font-bold
-            uppercase
-            tracking-[0.25em]
-          "
-          style={{
-            color: themeColor,
-          }}
-        >
-          You May Also Like
-        </p>
+<div
+  className="
+    mb-4
+    flex
+    shrink-0
+    flex-col
+    items-end
+    text-right
+  "
+>
+  <p
+    className="
+      text-[9px]
+      font-bold
+      uppercase
+      tracking-[0.25em]
+    "
+    style={{
+      color: themeColor,
+    }}
+  >
+    You May Also Like
+  </p>
 
-        <h2
-          className="
-            mt-1
-            text-lg
-            font-bold
-            text-[#183153]
-            sm:text-xl
-          "
-        >
-          Related Products
-        </h2>
-      </div>
+  <h2
+    className="
+      mt-1
+      text-lg
+      font-bold
+      text-[#183153]
+      sm:text-xl
+    "
+  >
+    Related Products
+  </h2>
+</div>
 
       {/* =====================================================
           PRODUCTS GRID
@@ -341,75 +345,55 @@ export default function RelatedProducts({
                  ================================================= */}
 
               <div
-                className="
-                  relative
-                  aspect-[4/5]
-                  w-full
-                  shrink-0
-                  overflow-hidden
-                  bg-white
-                "
-              >
-                {item.image_url ? (
-                  <img
-                    src={item.image_url}
-                    alt={item.name}
-                    className="
-                      h-full
-                      w-full
-                      object-contain
-                      p-2
-                      transition-transform
-                      duration-300
-                      group-hover:scale-105
-                    "
-                  />
-                ) : (
-                  <div
-                    className="
-                      flex
-                      h-full
-                      items-center
-                      justify-center
-                      text-3xl
-                    "
-                  >
-                    👕
-                  </div>
-                )}
+  className="
+    relative
+    aspect-[4.8/5]
+    w-full
+    overflow-hidden
+    bg-white
+  "
+>
+  {item.image_url ? (
+    <img
+      src={item.image_url}
+      alt={item.name}
+      className="
+        h-full
+        w-full
+        object-contain
+        p-3
+        transition-transform
+        duration-300
+        group-hover:scale-105
+      "
+    />
+  ) : (
+    <div className="flex h-full items-center justify-center text-3xl">
+      👕
+    </div>
+  )}
 
-                {/* =================================================
-                    DISCOUNT BADGE
-                   ================================================= */}
-
-                {Number(
-                  item.discount_percentage || 0
-                ) > 0 && (
-                  <span
-                    className="
-                      absolute
-                      right-2
-                      top-2
-                      rounded-full
-                      px-2
-                      py-1
-                      text-[8px]
-                      font-bold
-                      text-white
-                    "
-                    style={{
-                      backgroundColor:
-                        themeColor,
-                    }}
-                  >
-                    -
-                    {
-                      item.discount_percentage
-                    }
-                    %
-                  </span>
-                )}
-              </div>
+  {item.discount_percentage > 0 && (
+    <span
+      className="
+        absolute
+        right-2
+        top-2
+        rounded-full
+        px-2
+        py-1
+        text-[8px]
+        font-bold
+        text-white
+      "
+      style={{
+        backgroundColor: "#FF214F",
+      }}
+    >
+      -{item.discount_percentage}%
+    </span>
+  )}
+</div>
 
               {/* =================================================
                   PRODUCT INFORMATION
